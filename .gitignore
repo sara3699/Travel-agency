@@ -31,3 +31,6 @@ yarn-error.log*
 # and CLAUDE.md rule 3 keeps those out of the repo.
 # Delete these two lines if you decide the project pages should be versioned.
 .memory/
+
+# Claude Code local overrides - machine-specific paths, not shared
+.claude/settings.local.json
