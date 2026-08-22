@@ -1,0 +1,33 @@
+# Environment - real secrets, never committed
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+.next/
+out/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+
+# Supabase CLI local state
+.supabase/
+
+# Memory vault - stays local. It accumulates client and traveller details,
+# and CLAUDE.md rule 3 keeps those out of the repo.
+# Delete these two lines if you decide the project pages should be versioned.
+.memory/
