@@ -4,9 +4,11 @@
 > points to, or under `.memory/`. Rules for working here: `CLAUDE.md`.
 
 <!-- auto:memory:start -->
-> 🧠 **Auto-memory** (2026-08-22T11:31-07:00): machine-owned block, edits inside are overwritten.
-> pipeline: OK · 2026-08-22T11:16 · processed 0 (full 0/lite 0) · skipped 0 · errors 0 · nets +0 · archived +0 · pending 61 · cost $0.00
-> pending review: 61 → `.memory/_inbox/pending/` · search: `python3 .memory/.system/bin/mem search "…"` (from the workspace root; works on the host machine and inside a cloud sandbox)
+> 🧠 **Auto-memory** (2026-08-22T12:32-07:00): machine-owned block, edits inside are overwritten.
+> pipeline: OK · 2026-08-22T12:17 · processed 2 (full 1/lite 1) · skipped 0 · errors 0 · nets +0 · archived +2 · pending 62 · cost $0.11
+> - 2026-08-22 · (auto) Linked Travel Agency App to GitHub and Supabase (repo pushed as commit 79fb280), set up .env/.env.example/.gitignore, chose Next.js and renamed env vars with 
+> - 2026-08-22 · (auto-lite) ~/Travel Agency App: 1 prompts · "For the outcome, I want to build a website for a travel agency in the Middle East. The audience is for people who want 
+> pending review: 62 → `.memory/_inbox/pending/` · search: `python3 .memory/.system/bin/mem search "…"` (from the workspace root; works on the host machine and inside a cloud sandbox)
 <!-- auto:memory:end -->
 
 ## Routing
