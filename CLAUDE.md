@@ -42,13 +42,22 @@ deploys. These rules apply to everything under this folder.
    data-model calls, and third-party picks (booking API, payments, maps) go to
    `.memory/projects/` with an absolute date, so the reasoning survives the
    session that produced it.
-2. **Copy that ships is outbound text.** Landing copy, UI strings, confirmation
+2. **The UI/UX master document governs every interface change.** Read
+   `docs/ui-ux/README.md` and the current master document before designing,
+   building, or changing any screen, component, or string of UI copy. It carries a
+   refusal list; shipping something on it needs a dated note on the project page
+   saying why. Arabic is a build-time requirement there, not a later sprint.
+3. **Never source visual reference from "best travel website" listicles.** They are
+   in practice lists of purchasable templates, and using one regenerates the exact
+   sameness the master document exists to prevent. The named anti-references and
+   the worthwhile exemplars are both recorded in `docs/ui-ux/research/`.
+4. **Copy that ships is outbound text.** Landing copy, UI strings, confirmation
    emails, and error messages run through the `no-ai-voice` skill before they go
    into the app.
-3. **Client and traveller data is not test data.** Real names, emails, booking
+5. **Client and traveller data is not test data.** Real names, emails, booking
    references, and payment details never get committed, seeded into fixtures, or
    pasted into memory. Use invented values.
-4. **Secrets stay in the environment.** API keys for any booking, payment, or map
+6. **Secrets stay in the environment.** API keys for any booking, payment, or map
    provider live in a gitignored env file, never in this folder's memory or in
    the repo.
 
