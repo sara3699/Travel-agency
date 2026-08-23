@@ -3,7 +3,8 @@
 // Regenerate after every migration. With the Supabase CLI installed:
 //   npx supabase gen types typescript --project-id pjyyphsleahyyuvzxyjs > lib/database.types.ts
 //
-// Generated 2026-08-23 from the live schema.
+// Generated 2026-08-23 from the live schema, updated the same day when
+// profiles gained its email column.
 
 export type Json =
   | string
@@ -361,6 +362,7 @@ export type Database = {
         Row: {
           created_at: string
           display_name: string | null
+          email: string | null
           id: string
           locale: string
           phone: string | null
@@ -369,6 +371,7 @@ export type Database = {
         Insert: {
           created_at?: string
           display_name?: string | null
+          email?: string | null
           id: string
           locale?: string
           phone?: string | null
@@ -377,6 +380,7 @@ export type Database = {
         Update: {
           created_at?: string
           display_name?: string | null
+          email?: string | null
           id?: string
           locale?: string
           phone?: string | null

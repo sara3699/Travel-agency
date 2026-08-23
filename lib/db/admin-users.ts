@@ -19,7 +19,7 @@ export async function listStaff() {
 
   const { data, error } = await supabase
     .from('user_roles')
-    .select('user_id, role, granted_at, profiles:user_id ( display_name, locale )')
+    .select('user_id, role, granted_at, profiles:user_id ( display_name, email, locale )')
     .in('role', ['admin', 'employee'])
     .order('granted_at', { ascending: true });
 

@@ -63,6 +63,15 @@ work in Arabic.
 `locale`, and a honeypot field named `company` that must be present in the form and
 hidden from people.
 
+The `profiles` table carries `id`, `email`, `display_name`, `phone`, `locale` and
+timestamps. Email is a mirror of the auth record, kept current by a trigger, and it
+exists because Supabase does not expose `auth.users` through the API: without the
+mirror, a staff screen could show a name and never an address. Read it, never write
+it.
+
+Who can see a profile follows the same rule as everything else. A customer sees only
+their own row, staff see everyone, anonymous visitors are refused outright.
+
 To find out who is asking, from any server component or action:
 
 ```ts
