@@ -10,6 +10,10 @@ node_modules/
 dist/
 build/
 .next/
+# A second build target, so a verification build does not fight a running dev
+# server for `.next`. Two processes sharing it produce mismatched chunks that
+# surface as `TypeError: a[d] is not a function` at runtime.
+.next-verify/
 out/
 
 # Logs
@@ -34,3 +38,7 @@ yarn-error.log*
 
 # Claude Code local overrides - machine-specific paths, not shared
 .claude/settings.local.json
+.vercel
+
+# TypeScript incremental build info
+tsconfig.tsbuildinfo

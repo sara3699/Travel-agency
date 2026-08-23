@@ -1,0 +1,510 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ * FOUND-07. Delete the framework palette so a generic utility cannot
+ * compile. `bg-blue-500` is now a build error, not a temptation.
+ * Master doc, Part 5.
+ * ------------------------------------------------------------------ */
+@theme {
+  --color-*: initial;
+  --radius-*: initial;
+  --font-*: initial;
+}
+
+/* ------------------------------------------------------------------ *
+ * Direction A — LEDGER
+ * The honest-price thesis made literal. Warm paper, itemised, editorial.
+ * Restraint is the signature; the receipt is the brand.
+ * ------------------------------------------------------------------ */
+:root,
+[data-direction="ledger"] {
+  --ground:        oklch(0.972 0.010 85);
+  --raised:        oklch(0.995 0.006 85);
+  --sunken:        oklch(0.945 0.012 85);
+  --ink:           oklch(0.240 0.020 70);
+  --ink-soft:      oklch(0.430 0.018 70);
+  --ink-mute:      oklch(0.605 0.016 72);
+  --rule:          oklch(0.885 0.014 80);
+  --rule-soft:     oklch(0.930 0.010 82);
+  --accent:        oklch(0.500 0.085 195);
+  --accent-ink:    oklch(0.380 0.078 196);
+  --accent-wash:   oklch(0.930 0.028 195);
+  --on-accent:     oklch(0.985 0.005 195);
+  --excluded:      oklch(0.560 0.115 32);
+
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-asym: 2px;
+
+  --font-display: var(--font-newsreader), Georgia, serif;
+  --font-body:    var(--font-newsreader), Georgia, serif;
+  --font-ar:      var(--font-readex), system-ui, sans-serif;
+  --font-num:     var(--font-jetbrains), ui-monospace, monospace;
+
+  --display-weight: 500;
+  --display-track: -0.018em;
+  --card-pad: 1.15rem;
+  --band: 1px;
+}
+
+/* ------------------------------------------------------------------ *
+ * Direction B — MAJLIS
+ * Dark, warm, generous. Arabic display type is the image; there is no
+ * hero photograph. Brass on ink-green. Asymmetric corner as the mark.
+ * ------------------------------------------------------------------ */
+[data-direction="majlis"] {
+  --ground:        oklch(0.215 0.030 165);
+  --raised:        oklch(0.262 0.032 166);
+  --sunken:        oklch(0.185 0.028 165);
+  --ink:           oklch(0.940 0.016 85);
+  --ink-soft:      oklch(0.800 0.022 82);
+  --ink-mute:      oklch(0.650 0.024 80);
+  --rule:          oklch(0.340 0.030 166);
+  --rule-soft:     oklch(0.290 0.028 166);
+  --accent:        oklch(0.775 0.115 80);
+  --accent-ink:    oklch(0.845 0.105 82);
+  --accent-wash:   oklch(0.300 0.045 90);
+  --on-accent:     oklch(0.200 0.030 80);
+  --excluded:      oklch(0.660 0.105 30);
+
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-asym: 20px;
+
+  --font-display: var(--font-alexandria), system-ui, sans-serif;
+  --font-body:    var(--font-alexandria), system-ui, sans-serif;
+  --font-ar:      var(--font-alexandria), system-ui, sans-serif;
+  --font-num:     var(--font-alexandria), ui-monospace, monospace;
+
+  --display-weight: 600;
+  --display-track: -0.026em;
+  --card-pad: 1.6rem;
+  --band: 1px;
+}
+
+/* ------------------------------------------------------------------ *
+ * Direction C — ATLAS
+ * Cartographic. Strict grid, hairline rules, numbers as the hero.
+ * Cool bone ground, deep violet as the single wayfinding signal.
+ * ------------------------------------------------------------------ */
+[data-direction="atlas"] {
+  --ground:        oklch(0.966 0.004 250);
+  --raised:        oklch(1.000 0 0);
+  --sunken:        oklch(0.936 0.006 250);
+  --ink:           oklch(0.220 0.015 260);
+  --ink-soft:      oklch(0.420 0.014 260);
+  --ink-mute:      oklch(0.585 0.012 260);
+  --rule:          oklch(0.858 0.008 258);
+  --rule-soft:     oklch(0.912 0.006 258);
+  --accent:        oklch(0.460 0.150 295);
+  --accent-ink:    oklch(0.400 0.155 295);
+  --accent-wash:   oklch(0.930 0.030 295);
+  --on-accent:     oklch(0.985 0.004 295);
+  --excluded:      oklch(0.520 0.130 25);
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-asym: 0px;
+
+  --font-display: var(--font-plex), system-ui, sans-serif;
+  --font-body:    var(--font-plex), system-ui, sans-serif;
+  --font-ar:      var(--font-plex-ar), system-ui, sans-serif;
+  --font-num:     var(--font-plex-mono), ui-monospace, monospace;
+
+  --display-weight: 600;
+  --display-track: -0.014em;
+  --card-pad: 1.05rem;
+  --band: 1px;
+}
+
+/* Expose the semantic tokens to Tailwind utilities. */
+@theme inline {
+  --color-ground: var(--ground);
+  --color-raised: var(--raised);
+  --color-sunken: var(--sunken);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-mute: var(--ink-mute);
+  --color-rule: var(--rule);
+  --color-rule-soft: var(--rule-soft);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-wash: var(--accent-wash);
+  --color-on-accent: var(--on-accent);
+  --color-excluded: var(--excluded);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-ar: var(--font-ar);
+  --font-num: var(--font-num);
+}
+
+/* ------------------------------------------------------------------ *
+ * Arabic gets its own metrics. Arabic ink runs deeper than Latin and
+ * its baseline letterform is shorter, so reusing the Latin scale
+ * produces copy that reads small AND clips its descenders. That is the
+ * single most recognisable tell of a translated site. Master doc Part 4.
+ * ------------------------------------------------------------------ */
+:root {
+  --lh-latin: 1.55;
+  --lh-ar: 1.85;
+  --size-step-ar: 1.06;
+}
+
+* { box-sizing: border-box; min-width: 0; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: var(--lh-latin);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+:where(html[dir="rtl"]) body {
+  font-family: var(--font-ar);
+  line-height: var(--lh-ar);
+  font-size: calc(1rem * var(--size-step-ar));
+}
+
+/* Arabic has no case and cannot be tracked: joins break. So emphasis
+   comes from size, weight, colour and space. Never from ALL CAPS. */
+:where(html[dir="rtl"]) .eyebrow {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
+}
+:where(html[dir="ltr"]) .eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+}
+
+/* Never semi-transparent Arabic: transparency exposes the overlapping
+   outlines where letters join and produces dark seams inside words. */
+:where(html[dir="rtl"]) [class*="opacity-"] { opacity: 1 !important; }
+
+.eyebrow {
+  font-family: var(--font-num);
+  font-size: 0.66rem;
+  color: var(--ink-mute);
+}
+
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+
+.display {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-track);
+  line-height: 1.05;
+  text-wrap: balance;
+}
+:where(html[dir="rtl"]) .display { letter-spacing: 0; line-height: 1.3; }
+
+/* Focus ring as a brand asset, not an afterthought. Two-tone so it reads
+   over any ground this project uses. SC 1.4.11 floor is 3:1. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* reduce is not none: stripping motion destroys the spatial
+     relationship a transition exists to express. Cross-fade instead. */
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-property: opacity !important;
+    transition-duration: 120ms !important;
+  }
+}
+
+.field {
+  background: var(--raised);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-md);
+  padding-block: 0.55rem;
+  padding-inline: 0.7rem;
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+/* ==================================================================== *
+ * PACKAGE CARD — the statement
+ *
+ * Drawn as an itemised statement, not a comparison table. Ticks and
+ * crosses read as a spec sheet; ruled rows with words read as something
+ * a person would hand you across a desk. Hairlines and layered shadow
+ * do the containment, never a heavy border.
+ * ==================================================================== */
+
+.pkg {
+  display: flex;
+  flex-direction: column;
+  background: var(--raised);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--ink) 8%, transparent),
+    0 1px 1px color-mix(in oklab, var(--ink) 4%, transparent),
+    0 18px 40px -28px color-mix(in oklab, var(--ink) 40%, transparent);
+  transition: transform 420ms cubic-bezier(.2,.6,.2,1), box-shadow 420ms cubic-bezier(.2,.6,.2,1);
+}
+@media (hover: hover) {
+  .pkg:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--accent) 26%, transparent),
+      0 2px 3px color-mix(in oklab, var(--ink) 5%, transparent),
+      0 34px 60px -32px color-mix(in oklab, var(--ink) 52%, transparent);
+  }
+  .pkg:hover .pkg-img { transform: scale(1.035); }
+}
+
+.pkg-media { position: relative; aspect-ratio: 3 / 2; overflow: hidden; background: var(--sunken); }
+.pkg-img { object-fit: cover; transition: transform 900ms cubic-bezier(.2,.6,.2,1); }
+.pkg-media-veil {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, color-mix(in oklab, var(--ink) 22%, transparent) 0%, transparent 34%, transparent 68%, color-mix(in oklab, var(--ink) 16%, transparent) 100%);
+}
+.pkg-nights, .pkg-prov {
+  position: absolute; top: 0.85rem;
+  font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 0.3rem 0.55rem; border-radius: var(--radius-sm);
+  backdrop-filter: blur(10px);
+}
+.pkg-nights { inset-inline-start: 0.85rem; background: color-mix(in oklab, var(--raised) 78%, transparent); color: var(--ink); }
+.pkg-prov { inset-inline-end: 0.85rem; background: color-mix(in oklab, var(--excluded) 88%, transparent); color: var(--raised); }
+html[dir="rtl"] .pkg-nights, html[dir="rtl"] .pkg-prov { letter-spacing: 0; text-transform: none; }
+
+.pkg-body { padding: 1.45rem 1.4rem 1.25rem; display: flex; flex-direction: column; flex: 1; }
+
+.pkg-route {
+  margin: 0; font-family: var(--font-num);
+  font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-mute);
+}
+html[dir="rtl"] .pkg-route { letter-spacing: 0; text-transform: none; font-family: var(--font-ar); }
+.pkg-arrow { color: var(--accent); padding-inline: 0.15rem; }
+
+.pkg-name { margin: 0.5rem 0 0; font-size: clamp(1.6rem, 2.4vw, 2rem); }
+.pkg-diff { margin: 0.55rem 0 0; font-size: 0.9rem; line-height: 1.45; color: var(--accent-ink); }
+
+.pkg-price {
+  display: flex; align-items: baseline; gap: 0.45rem; flex-wrap: wrap;
+  margin-top: 1.2rem; padding-top: 1.1rem;
+  border-top: 1px solid var(--rule);
+}
+.pkg-cur { font-size: 0.74rem; letter-spacing: 0.1em; color: var(--ink-mute); }
+.pkg-fig { font-size: clamp(1.8rem, 3vw, 2.35rem); font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
+.pkg-per { font-size: 0.82rem; color: var(--ink-soft); }
+.pkg-day { margin-inline-start: auto; font-size: 0.72rem; color: var(--ink-mute); }
+.pkg-assume { margin: 0.4rem 0 0; font-size: 0.7rem; color: var(--ink-mute); }
+
+.pkg-ledger { margin: 1.05rem 0 0; padding: 0; }
+.pkg-row {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+  padding: 0.44rem 0; border-bottom: 1px solid var(--rule-soft);
+  font-size: 0.83rem;
+}
+.pkg-row:first-child { border-top: 1px solid var(--rule-soft); }
+.pkg-row dt { color: var(--ink); margin: 0; }
+.pkg-row dd { margin: 0; color: var(--ink-mute); font-variant-numeric: tabular-nums; }
+.pkg-row.is-out dt { color: var(--ink-mute); }
+.pkg-row.is-out dd { color: var(--excluded); }
+
+.pkg-notfor { margin: 1rem 0 0; font-size: 0.79rem; line-height: 1.5; color: var(--ink-soft); }
+.pkg-notfor-k {
+  font-family: var(--font-num); font-size: 0.62rem; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--ink-mute); margin-inline-end: 0.35rem;
+}
+html[dir="rtl"] .pkg-notfor-k { letter-spacing: 0; text-transform: none; font-family: var(--font-ar); }
+
+.pkg-foot {
+  margin-top: auto; padding-top: 1.15rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.pkg-cta {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.85rem; text-decoration: none;
+  color: var(--ink); padding: 0.62rem 0;
+  border-bottom: 1px solid var(--accent);
+  transition: gap 300ms cubic-bezier(.2,.6,.2,1), color 300ms;
+}
+.pkg-cta::after { content: "→"; color: var(--accent); font-size: 0.9em; }
+html[dir="rtl"] .pkg-cta::after { content: "←"; }
+.pkg-cta:hover { gap: 0.85rem; color: var(--accent-ink); }
+.pkg-dep { font-size: 0.7rem; color: var(--ink-mute); }
+
+/* ==================================================================== *
+ * LANDING PAGE
+ * Large typographic contrast, hairline structure, generous air, slow
+ * easing. Premium here comes from restraint and proportion, not decoration.
+ * ==================================================================== */
+
+.reveal { opacity: 0; transform: translate3d(0, 22px, 0); transition: opacity 900ms cubic-bezier(.2,.6,.2,1), transform 900ms cubic-bezier(.2,.6,.2,1); }
+.reveal.is-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } }
+
+.site-head {
+  position: sticky; top: 0; z-index: 40;
+  display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+  padding: 0.9rem clamp(1.1rem, 4vw, 3rem);
+  background: color-mix(in oklab, var(--ground) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid var(--rule-soft);
+}
+.brand { display: flex; align-items: baseline; gap: 0.5rem; text-decoration: none; color: var(--ink); }
+.brand-mark { font-size: 1.3rem; letter-spacing: -0.02em; }
+.brand-ar { font-family: var(--font-ar); font-size: 0.9rem; color: var(--ink-mute); }
+.site-nav { display: flex; gap: 1.6rem; }
+.site-nav a { text-decoration: none; color: var(--ink-soft); font-size: 0.88rem; }
+.site-nav a:hover { color: var(--accent-ink); }
+.head-right { display: flex; align-items: center; gap: 1rem; }
+.head-cta {
+  text-decoration: none; font-size: 0.82rem; color: var(--ink);
+  padding: 0.5rem 0.95rem; border: 1px solid var(--rule); border-radius: var(--radius-md);
+}
+.head-cta:hover { border-color: var(--accent); color: var(--accent-ink); }
+@media (max-width: 820px) { .site-nav { display: none; } }
+
+/* Hero */
+.hero { position: relative; height: min(96svh, 900px); overflow: hidden; display: flex; align-items: flex-end; }
+.hero-media { position: absolute; inset: -8% 0 0; will-change: transform; }
+.hero-scrim {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to top, color-mix(in oklab, #0b0f14 88%, transparent) 0%, color-mix(in oklab, #0b0f14 42%, transparent) 42%, transparent 78%),
+    linear-gradient(to bottom, color-mix(in oklab, #0b0f14 46%, transparent) 0%, transparent 34%);
+}
+.hero-inner { position: relative; padding: 0 clamp(1.1rem, 5vw, 4.5rem) clamp(3.2rem, 8vh, 6rem); width: 100%; max-width: min(94vw, 1180px); }
+.hero-eyebrow {
+  margin: 0 0 1.1rem; font-family: var(--font-num); font-size: 0.64rem;
+  letter-spacing: 0.24em; text-transform: uppercase; color: #d8c3ae;
+}
+html[dir="rtl"] .hero-eyebrow { letter-spacing: 0; text-transform: none; font-family: var(--font-ar); }
+.hero-h1 { margin: 0; color: #fff; font-size: clamp(2.3rem, 5.6vw, 4.6rem); line-height: 1.03; max-width: 15ch; }
+html[dir="rtl"] .hero-h1 { line-height: 1.24; }
+.hero-sub { margin: 1.4rem 0 0; color: rgba(255,255,255,.8); font-size: clamp(0.98rem, 1.3vw, 1.12rem); line-height: 1.6; max-width: 46ch; }
+.hero-scroll {
+  position: absolute; bottom: 2rem; inset-inline-end: clamp(1.1rem, 5vw, 4.5rem);
+  display: flex; align-items: center; gap: 0.7rem;
+  font-family: var(--font-num); font-size: 0.6rem; letter-spacing: 0.22em;
+  text-transform: uppercase; color: rgba(255,255,255,.66);
+}
+.hero-scroll i { display: block; width: 1px; height: 42px; background: linear-gradient(to bottom, rgba(255,255,255,.66), transparent); }
+html[dir="rtl"] .hero-scroll { letter-spacing: 0; text-transform: none; font-family: var(--font-ar); }
+
+/* Bands */
+.band { padding: clamp(4rem, 11vh, 8rem) clamp(1.1rem, 5vw, 4.5rem); max-width: 1320px; margin-inline: auto; }
+.band-head { max-width: 56ch; margin-bottom: clamp(2rem, 4vh, 3.2rem); }
+.band-title { margin: 0.7rem 0 0; font-size: clamp(1.9rem, 4vw, 3rem); }
+.band-note { margin: 0.9rem 0 0; color: var(--ink-soft); font-size: 1rem; line-height: 1.6; }
+
+.search-band { padding-top: clamp(2.6rem, 6vh, 4rem); padding-bottom: clamp(2.6rem, 6vh, 4rem); border-bottom: 1px solid var(--rule-soft); }
+.cbuilder { display: flex; flex-wrap: wrap; align-items: end; gap: 1.1rem 1.5rem; margin-top: 1.2rem; }
+.cbuilder label { display: flex; flex-direction: column; gap: 0.45rem; }
+.cbuilder label > span {
+  font-family: var(--font-num); font-size: 0.6rem; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--ink-mute);
+}
+html[dir="rtl"] .cbuilder label > span { letter-spacing: 0; text-transform: none; font-family: var(--font-ar); }
+.cbuilder-note { margin: 1.1rem 0 0; font-size: 0.84rem; color: var(--ink-mute); }
+.field { min-width: 8.5rem; }
+
+.btn-primary {
+  display: inline-block; border: 0; cursor: pointer; text-decoration: none;
+  background: var(--accent); color: var(--on-accent);
+  padding: 0.78rem 1.5rem; font: inherit; font-size: 0.92rem;
+  border-radius: var(--radius-md);
+  transition: transform 300ms cubic-bezier(.2,.6,.2,1), filter 300ms;
+}
+.btn-primary:hover { transform: translateY(-1px); filter: brightness(1.06); }
+
+.pkg-grid { display: grid; gap: clamp(1.2rem, 2.2vw, 2rem); grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+
+/* Pricing thesis */
+.pricing-band { border-top: 1px solid var(--rule-soft); }
+.pricing-title { margin: 0.7rem 0 0; font-size: clamp(2rem, 4.6vw, 3.4rem); max-width: 18ch; }
+.pricing-body { margin: 1.3rem 0 0; max-width: 62ch; font-size: clamp(1rem, 1.3vw, 1.14rem); line-height: 1.65; color: var(--ink-soft); }
+.pricing-grid { display: grid; gap: clamp(1.6rem, 3vw, 3rem); grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); margin-top: clamp(2.6rem, 6vh, 4.5rem); }
+.pricing-item { border-top: 1px solid var(--ink); padding-top: 1.1rem; }
+.pricing-n { display: block; font-size: 0.68rem; letter-spacing: 0.18em; color: var(--accent); margin-bottom: 0.9rem; }
+.pricing-item h3 { margin: 0; font-size: 1.12rem; font-weight: 600; }
+.pricing-item p { margin: 0.6rem 0 0; font-size: 0.92rem; line-height: 1.6; color: var(--ink-soft); }
+
+/* Human */
+.human-band { border-top: 1px solid var(--rule-soft); }
+.human-grid { display: grid; gap: clamp(2rem, 5vw, 4.5rem); grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); align-items: center; }
+.human-title { margin: 0.7rem 0 0; font-size: clamp(1.9rem, 4vw, 3rem); }
+.human-body { margin: 1.1rem 0 1.9rem; color: var(--ink-soft); line-height: 1.65; max-width: 46ch; }
+.human-card { margin: 0; display: flex; gap: 1.3rem; align-items: center; background: var(--raised); padding: 1.2rem; border-radius: var(--radius-lg); box-shadow: 0 0 0 1px color-mix(in oklab, var(--ink) 8%, transparent), 0 20px 44px -30px color-mix(in oklab, var(--ink) 46%, transparent); }
+.human-portrait { position: relative; width: 96px; height: 120px; flex: none; border-radius: var(--radius-md); overflow: hidden; }
+.human-card figcaption { display: flex; flex-direction: column; gap: 0.3rem; }
+.human-card strong { font-size: 1.05rem; }
+.human-card span { font-size: 0.86rem; color: var(--ink-soft); }
+.human-meta { font-size: 0.76rem !important; color: var(--ink-mute) !important; line-height: 1.5; }
+
+.site-foot {
+  border-top: 1px solid var(--rule); padding: clamp(2.4rem, 6vh, 4rem) clamp(1.1rem, 5vw, 4.5rem);
+  display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap; align-items: flex-start;
+  max-width: 1320px; margin-inline: auto;
+}
+.site-foot p { margin: 0.7rem 0 0; font-size: 0.8rem; color: var(--ink-mute); max-width: 44ch; }
+.foot-imagery { font-size: 0.74rem !important; }
+
+/* ==================================================================== *
+ * STORY — pinned chapters, emotion before inventory
+ * ==================================================================== */
+
+.story { position: relative; }
+.story-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; background: #07090c; }
+
+.story-frame { position: absolute; inset: 0; margin: 0; transition: opacity 700ms cubic-bezier(.4,0,.2,1); }
+.story-media { position: absolute; inset: 0; will-change: transform; transition: transform 120ms linear; }
+.story-veil {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to top, rgba(6,8,11,.90) 0%, rgba(6,8,11,.42) 40%, rgba(6,8,11,.06) 74%),
+    linear-gradient(to bottom, rgba(6,8,11,.44) 0%, transparent 30%);
+}
+.story-copy {
+  position: absolute; inset-inline-start: 0; bottom: clamp(4.5rem, 13vh, 9rem);
+  padding-inline: clamp(1.2rem, 6vw, 6rem);
+  max-width: min(92vw, 1000px);
+  transition: transform 700ms cubic-bezier(.2,.6,.2,1);
+}
+.story-eyebrow {
+  margin: 0 0 1rem; font-family: var(--font-num); font-size: 0.62rem;
+  letter-spacing: 0.26em; text-transform: uppercase; color: rgba(255,255,255,.62);
+}
+html[dir="rtl"] .story-eyebrow { letter-spacing: 0; text-transform: none; font-family: var(--font-ar); }
+.story-line {
+  margin: 0; color: #fff; font-size: clamp(1.7rem, 4.2vw, 3.5rem);
+  line-height: 1.14; max-width: 20ch; font-weight: 500;
+}
+html[dir="rtl"] .story-line { line-height: 1.4; }
+.story-body { margin: 1.1rem 0 0; color: rgba(255,255,255,.74); max-width: 46ch; line-height: 1.6; }
+
+.story-ticks {
+  position: absolute; inset-inline-end: clamp(1rem, 3vw, 2.4rem); top: 50%;
+  transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.6rem;
+}
+.story-ticks i {
+  display: block; width: 1px; height: 26px; background: rgba(255,255,255,.22);
+  transition: background 500ms, height 500ms;
+}
+.story-ticks i.is-on { background: rgba(255,255,255,.85); height: 40px; }
+
+/* The turn: the page changes register from feeling to promise. */
+.turn-band { text-align: center; max-width: 62ch; }
+.turn-title { margin: 0.9rem auto 0; font-size: clamp(1.8rem, 4.4vw, 3.2rem); line-height: 1.14; }
+.turn-body { margin: 1.4rem auto 0; color: var(--ink-soft); font-size: clamp(0.98rem, 1.25vw, 1.1rem); line-height: 1.7; }
+.turn-band .eyebrow { display: block; }

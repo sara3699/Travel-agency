@@ -1,0 +1,1102 @@
+@import "tailwindcss";
+@import "../vendor/scrollcraft/scrollcraft.css";
+
+/* ------------------------------------------------------------------ *
+ * FOUND-07. Delete the framework palette so a generic utility cannot
+ * compile. `bg-blue-500` is a build error, not a temptation.
+ * Master doc Part 5, refusal list item 55.
+ * ------------------------------------------------------------------ */
+@theme {
+  --color-*: initial;
+  --radius-*: initial;
+  --font-*: initial;
+}
+
+/* ==================================================================== *
+ * THREE COASTS — the flight
+ * ------------------------------------------------------------------
+ * Built 2026-08-23 with the scrollcraft skill, worldflight mode.
+ * Warm golden light on a near-black ground: the world is the only bright
+ * thing, and the interface stays out of its way.
+ *
+ * Nothing here is carried over from the earlier ledger / majlis / atlas
+ * directions. Those are archived under Archive/Old Versions/.
+ * ==================================================================== */
+
+:root {
+  /* --- the six colour roles ------------------------------------------ */
+  --sc-canvas:     #0B0906;   /* warm near-black. Never #000: no air in it */
+  --sc-surface:    #17110A;
+  --sc-ink:        #F6ECDC;   /* warm bone, not white */
+  --sc-ink-soft:   #AC9C86;   /* tinted from the ink hue, never flat grey */
+  --sc-accent:     #E9B04A;   /* brass. Owns the chrome and the CTA, nothing else */
+  --sc-accent-ink: #1A1206;
+
+  --sc-hairline:        color-mix(in oklab, var(--sc-ink) 14%, transparent);
+  --sc-hairline-strong: color-mix(in oklab, var(--sc-ink) 26%, transparent);
+
+  /* --- two families. Readex carries Arabic and Latin from one design, so
+         the Latin inherits the Arabic's metrics rather than the reverse.
+         Master doc: Arabic is the design lead. ----------------------- */
+  --sc-font-display: var(--font-readex), system-ui, sans-serif;
+  --sc-font-text:    var(--font-readex), system-ui, sans-serif;
+  --sc-font-mono:    var(--font-plex-mono), ui-monospace, monospace;
+
+  --sc-shadow-color: 30 45% 2%;
+}
+
+/* Refusal list item 52 forbids global smooth scrolling, and the engine
+   stylesheet turns it on. Off here. The waypoint rail asks for smooth
+   behaviour per call instead, which is a scoped choice the reader made by
+   clicking rather than one imposed on every anchor on the page. */
+html { scroll-behavior: auto; }
+
+body { overscroll-behavior-y: none; }
+
+/* Arabic needs its own metrics: the ink runs deeper, the baseline letterform
+   is shorter, and reusing the Latin scale clips descenders. Typography only.
+   No layout in here, ever. Refusal list items 31 to 38. */
+[dir="rtl"] {
+  --sc-leading-none: 1.18;
+  --sc-leading-tight: 1.34;
+  --sc-leading-body: 1.9;
+  --sc-track-tight: 0;
+  --sc-track-snug: 0;
+  --sc-track-normal: 0;
+  --sc-track-wide: 0;
+}
+
+/* ------------------------------------------------------------------ *
+ * CHROME
+ * The nav is a map, because a world you cannot skip around in is a
+ * video. It sits above the copy layer and outlives every leg.
+ * ------------------------------------------------------------------ */
+.chrome {
+  position: fixed;
+  inset: 0;
+  z-index: var(--sc-z-chrome);
+  pointer-events: none;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+.chrome > * { pointer-events: auto; }
+/* The bottom row is a spacer so the top block does not stretch. It must not
+   swallow clicks meant for the copy layer underneath. */
+.chrome__rest { pointer-events: none; }
+
+/* Bar and rail share one gradient. Two separate ones leave a bright seam
+   between them the moment the film behind is pale. */
+.chrome__top {
+  padding-block: clamp(0.9rem, 2.2vw, 1.6rem) 0.9rem;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--sc-canvas) 92%, transparent) 0%,
+    color-mix(in oklab, var(--sc-canvas) 86%, transparent) 62%,
+    color-mix(in oklab, var(--sc-canvas) 60%, transparent) 88%,
+    transparent 100%
+  );
+}
+
+.chrome__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sc-4);
+  padding-inline: var(--sc-gutter);
+  padding-block-end: clamp(0.7rem, 1.6vw, 1.1rem);
+}
+
+/* The wordmark is deliberately provisional. The agency name is an open
+   decision and nothing downstream may invent one. */
+.wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--sc-2);
+  text-decoration: none;
+  color: var(--sc-ink);
+}
+.wordmark__name {
+  font-family: var(--sc-font-display);
+  font-size: var(--sc-t-lg);
+  font-weight: 600;
+  letter-spacing: var(--sc-track-snug);
+  line-height: 1;
+}
+.wordmark__tag {
+  font-family: var(--sc-font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--sc-ink-soft);
+  border: 1px dashed var(--sc-hairline-strong);
+  border-radius: var(--sc-r-sm);
+  padding: 0.15em 0.45em;
+  white-space: nowrap;
+}
+/* No caps, no tracking on Arabic. Refusal list item 38. */
+[dir="rtl"] .wordmark__tag { text-transform: none; letter-spacing: 0; }
+
+.chrome__right { display: flex; align-items: center; gap: var(--sc-3); }
+
+/* ------------------------------------------------------------------ *
+ * THE PARTY DIAL — the signature move
+ * One control, airborne for the whole flight, that lays the table on
+ * landing. It is the only interactive thing in the air.
+ * ------------------------------------------------------------------ */
+.dial {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--sc-hairline-strong);
+  border-radius: var(--sc-r-pill);
+  background: color-mix(in oklab, var(--sc-canvas) 62%, transparent);
+  backdrop-filter: blur(10px) saturate(120%);
+  overflow: hidden;
+}
+.dial__label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-inline: var(--sc-4) var(--sc-3);
+  padding-block: 0.34rem;
+  border-inline-end: 1px solid var(--sc-hairline);
+}
+.dial__label span {
+  font-family: var(--sc-font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--sc-ink-soft);
+  line-height: 1.3;
+}
+[dir="rtl"] .dial__label span {
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--sc-font-text);
+  font-size: 0.68rem;
+}
+.dial__count {
+  font-family: var(--sc-font-mono);
+  font-size: var(--sc-t-base);
+  font-weight: 500;
+  color: var(--sc-accent);
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+.dial__btn {
+  inline-size: 2.4rem;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--sc-ink);
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: background var(--sc-d-fast) var(--sc-ease-out),
+              color var(--sc-d-fast) var(--sc-ease-out);
+}
+.dial__btn:hover:not(:disabled) { background: color-mix(in oklab, var(--sc-accent) 20%, transparent); }
+.dial__btn:disabled { color: var(--sc-ink-soft); opacity: 0.4; cursor: default; }
+.dial__btn + .dial__btn { border-inline-start: 1px solid var(--sc-hairline); }
+
+/* ------------------------------------------------------------------ *
+ * THE ROUTE RAIL — the map the grammar requires
+ *
+ * Horizontal, directly under the bar, at every size. It began as a
+ * vertical rail at the inline-start edge and that was wrong: the copy
+ * layer anchors to the same edge, so mid-flight the rail ran straight
+ * through the table. A strip across the top cannot collide with
+ * bottom-anchored copy at any viewport height.
+ *
+ * Each tick is as wide as its leg's share of the scroll track, so the
+ * rail reports the real shape of the flight: the last leg is twice the
+ * others because it genuinely owns twice the scroll.
+ * ------------------------------------------------------------------ */
+.rail {
+  display: flex;
+  align-items: stretch;
+  gap: var(--sc-2);
+  margin: 0;
+  padding: 0 var(--sc-gutter);
+  list-style: none;
+}
+.rail__leg {
+  display: grid;
+  gap: 0.45rem;
+  align-content: start;
+  background: none;
+  border: 0;
+  padding: 0.35rem 0 0;
+  cursor: pointer;
+  color: var(--sc-ink-soft);
+  text-align: start;
+  transition: color var(--sc-d-base) var(--sc-ease-out);
+}
+.rail__leg:hover { color: var(--sc-ink); }
+.rail__tick {
+  inline-size: 100%;
+  block-size: 2px;
+  background: currentColor;
+  opacity: 0.32;
+  border-radius: 2px;
+  transition: opacity var(--sc-d-base) var(--sc-ease-out);
+}
+.rail__name {
+  font-family: var(--sc-font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.75;
+  transition: opacity var(--sc-d-base) var(--sc-ease-out);
+}
+[dir="rtl"] .rail__name {
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--sc-font-text);
+  font-size: 0.74rem;
+}
+
+.rail__leg[aria-current="true"] { color: var(--sc-accent); }
+.rail__leg[aria-current="true"] .rail__tick { opacity: 1; }
+.rail__leg[aria-current="true"] .rail__name { opacity: 1; }
+
+@media (max-width: 860px) {
+  /* Six labels do not fit across a phone. The ticks still carry position,
+     and each button keeps its accessible name. */
+  .rail__name { display: none; }
+  .rail { gap: 0.35rem; }
+}
+
+/* ------------------------------------------------------------------ *
+ * COPY
+ * ------------------------------------------------------------------ */
+.copy__kicker {
+  font-family: var(--sc-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sc-accent);
+  margin: 0 0 var(--sc-4);
+}
+[dir="rtl"] .copy__kicker {
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--sc-font-text);
+  font-size: 0.85rem;
+}
+
+.copy__h1 {
+  font-family: var(--sc-font-display);
+  font-size: var(--sc-t-4xl);
+  font-weight: 600;
+  line-height: var(--sc-leading-none);
+  letter-spacing: var(--sc-track-tight);
+  text-wrap: balance;
+  margin: 0;
+  max-inline-size: 16ch;
+}
+.copy__h2 {
+  font-family: var(--sc-font-display);
+  font-size: var(--sc-t-2xl);
+  font-weight: 600;
+  line-height: var(--sc-leading-tight);
+  letter-spacing: var(--sc-track-snug);
+  text-wrap: balance;
+  margin: 0;
+  max-inline-size: 20ch;
+}
+.copy__body {
+  font-size: var(--sc-t-lg);
+  line-height: var(--sc-leading-body);
+  color: var(--sc-ink);
+  text-wrap: pretty;
+  max-inline-size: 42ch;
+  margin: var(--sc-4) 0 0;
+}
+
+/* Light text on dark needs one step more weight, a touch more leading and a
+   touch more tracking, or it reads thin. Taste floor, Typography. */
+.copy__h1, .copy__h2 { text-shadow: 0 1px 24px color-mix(in oklab, var(--sc-canvas) 55%, transparent); }
+
+@media (max-width: 700px) {
+  /* --sc-t-4xl floors at 3.4rem, which is a DESKTOP floor: at 390px it wraps
+     a hero to six lines. Step it down a rung. */
+  .copy__h1 { font-size: var(--sc-t-2xl); max-inline-size: none; }
+  .copy__body { font-size: var(--sc-t-base); max-inline-size: none; }
+}
+
+/* ------------------------------------------------------------------ *
+ * THE TABLE — the landing, and the payoff for the dial
+ * ------------------------------------------------------------------ */
+.table-copy {
+  position: absolute;
+  inset-inline: var(--sc-gutter);
+  inset-block-end: clamp(1.25rem, 4vh, 3rem);
+  display: grid;
+  gap: clamp(0.75rem, 2vh, 1.4rem);
+  max-inline-size: var(--sc-maxw);
+  margin-inline: auto;
+}
+
+.laid {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sc-3);
+  flex-wrap: wrap;
+}
+.laid__line {
+  font-family: var(--sc-font-display);
+  font-size: var(--sc-t-xl);
+  font-weight: 600;
+  letter-spacing: var(--sc-track-snug);
+  margin: 0;
+}
+/* The place settings. One glass per traveller, laid by the dial. These are
+   markup on the generated table, not baked into the film, which is the whole
+   reason the number can be live. */
+.settings { display: flex; gap: 0.45rem; align-items: center; }
+.settings__glass {
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+  border-radius: 50%;
+  /* Brass rim, dark tea inside, seen from above: the camera in the last frame
+     is pointing straight down, and a side-view glass would contradict it. */
+  border: 1.5px solid var(--sc-accent);
+  background:
+    radial-gradient(circle at 38% 34%,
+      color-mix(in oklab, var(--sc-accent) 34%, transparent) 0 22%,
+      transparent 23%),
+    color-mix(in oklab, #3A1D06 78%, transparent);
+  box-shadow: 0 1px 3px hsl(var(--sc-shadow-color) / 0.55);
+  animation: glass-set var(--sc-d-slow) var(--sc-ease-out) backwards;
+}
+@keyframes glass-set {
+  from { opacity: 0; transform: scale(0.5); }
+  to   { opacity: 1; transform: none; }
+}
+
+.trips {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sc-3);
+}
+@media (max-width: 860px) { .trips { grid-template-columns: 1fr; gap: var(--sc-2); } }
+
+/* A card laid on wood, not a card floating on a page. Warm, low, and the
+   shadow has offset and blur rather than being a coloured halo. */
+.trip {
+  display: grid;
+  gap: 0.35rem;
+  padding: clamp(0.7rem, 1.6vw, 1rem);
+  text-decoration: none;
+  color: var(--sc-ink);
+  background: color-mix(in oklab, var(--sc-canvas) 74%, transparent);
+  backdrop-filter: blur(14px) saturate(115%);
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-sm);
+  box-shadow: var(--sc-e2);
+  transition: transform var(--sc-d-base) var(--sc-ease-out),
+              border-color var(--sc-d-base) var(--sc-ease-out);
+}
+.trip:hover { transform: translateY(-3px); border-color: var(--sc-hairline-strong); }
+
+.trip__where {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sc-3);
+}
+.trip__dest {
+  font-family: var(--sc-font-display);
+  font-size: var(--sc-t-lg);
+  font-weight: 600;
+  line-height: 1.2;
+}
+.trip__meta {
+  font-family: var(--sc-font-mono);
+  font-size: 0.68rem;
+  color: var(--sc-ink-soft);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+[dir="rtl"] .trip__meta { font-family: var(--sc-font-text); letter-spacing: 0; font-size: 0.8rem; }
+
+.trip__total {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sc-2);
+  flex-wrap: wrap;
+}
+.trip__figure {
+  font-family: var(--sc-font-mono);
+  font-size: var(--sc-t-lg);
+  font-weight: 500;
+  color: var(--sc-accent);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+.trip__for {
+  font-size: 0.75rem;
+  color: var(--sc-ink-soft);
+}
+.trip__excl {
+  font-size: 0.75rem;
+  color: var(--sc-ink-soft);
+  line-height: 1.5;
+  margin: 0;
+  text-wrap: pretty;
+}
+.trip__excl b { color: var(--sc-ink); font-weight: 500; }
+
+/* Provenance rides next to the number, never in a footer disclaimer: the
+   growth model here is screenshots, and a footer does not travel. */
+.trip__prov {
+  justify-self: start;
+  font-family: var(--sc-font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sc-ink-soft);
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-sm);
+  padding: 0.1em 0.4em;
+}
+[dir="rtl"] .trip__prov { text-transform: none; letter-spacing: 0; font-family: var(--sc-font-text); font-size: 0.7rem; }
+
+.table-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sc-4);
+  flex-wrap: wrap;
+}
+.note {
+  font-size: 0.78rem;
+  color: var(--sc-ink-soft);
+  margin: 0;
+  max-inline-size: 46ch;
+  text-wrap: pretty;
+}
+
+/* The CTA is an object on the table, and its verb comes from the provenance
+   enum. Nothing here says "Book". */
+.ask {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sc-2);
+  padding: 0.7rem 1.3rem;
+  border-radius: var(--sc-r-pill);
+  background: var(--sc-accent);
+  color: var(--sc-accent-ink);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: var(--sc-e2);
+  transition: transform var(--sc-d-fast) var(--sc-ease-out),
+              filter var(--sc-d-fast) var(--sc-ease-out);
+}
+.ask:hover { transform: translateY(-2px); filter: brightness(1.06); }
+
+/* ------------------------------------------------------------------ *
+ * LOCALE SWITCHER — autonyms, never flags. No flag represents Arabic.
+ * ------------------------------------------------------------------ */
+.locales { display: flex; gap: 0.15rem; align-items: center; }
+.locales a {
+  font-family: var(--sc-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--sc-ink-soft);
+  text-decoration: none;
+  padding: 0.34rem 0.5rem;
+  border-radius: var(--sc-r-sm);
+  transition: color var(--sc-d-fast) var(--sc-ease-out),
+              background var(--sc-d-fast) var(--sc-ease-out);
+}
+.locales a:hover { color: var(--sc-ink); background: color-mix(in oklab, var(--sc-ink) 8%, transparent); }
+.locales a[aria-current="true"] { color: var(--sc-ink); }
+.locales [aria-hidden] { color: var(--sc-hairline-strong); }
+
+/* ------------------------------------------------------------------ *
+ * FOCUS. Never outline: none. Refusal list item 54.
+ * ------------------------------------------------------------------ */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--sc-accent);
+  outline-offset: 3px;
+  border-radius: var(--sc-r-sm);
+}
+
+.skip {
+  position: absolute;
+  inset-block-start: -100vh;
+  inset-inline-start: var(--sc-gutter);
+  z-index: 200;
+  padding: 0.7rem 1.1rem;
+  background: var(--sc-accent);
+  color: var(--sc-accent-ink);
+  border-radius: var(--sc-r-sm);
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip:focus { inset-block-start: var(--sc-4); }
+
+.visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ *
+ * REDUCED MOTION
+ * Fewer and gentler, never zero, and never `animation: none !important`
+ * (refusal list item 53). The engine already declines to fetch a single
+ * clip here: the posters cross-dissolve through the same seams, at the
+ * same scroll positions, and the whole story still reads.
+ * ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .settings__glass { animation-duration: 1ms; }
+  .trip:hover, .ask:hover { transform: none; }
+}
+
+/* ------------------------------------------------------------------ *
+ * ENQUIRE — the handoff stub the flight's CTA lands on.
+ * Ordinary document flow. It is not part of the world.
+ * ------------------------------------------------------------------ */
+.enquire {
+  max-inline-size: 44rem;
+  margin-inline: auto;
+  padding: var(--sc-section) var(--sc-gutter);
+  display: grid;
+  gap: var(--sc-5);
+}
+.enquire__back {
+  justify-self: start;
+  font-family: var(--sc-font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sc-ink-soft);
+  text-decoration: none;
+}
+.enquire__back:hover { color: var(--sc-ink); }
+[dir="rtl"] .enquire__back {
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--sc-font-text);
+  font-size: 0.85rem;
+}
+
+.enquire__carry {
+  display: grid;
+  gap: var(--sc-4);
+  margin: 0;
+  padding: var(--sc-5);
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-sm);
+  background: var(--sc-surface);
+}
+.enquire__carry > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sc-4);
+}
+.enquire__carry dt { color: var(--sc-ink-soft); font-size: 0.85rem; }
+.enquire__carry dd {
+  margin: 0;
+  font-family: var(--sc-font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--sc-accent);
+}
+[dir="rtl"] .enquire__carry dd { font-family: var(--sc-font-text); }
+
+.enquire__stub {
+  font-size: 0.9rem;
+  color: var(--sc-ink-soft);
+  line-height: var(--sc-leading-body);
+  text-wrap: pretty;
+  margin: 0;
+  padding-inline-start: var(--sc-4);
+  border-inline-start: 2px solid var(--sc-accent);
+}
+
+/* ------------------------------------------------------------------ *
+ * THE SCRIM
+ * Measured, not guessed. The first shoot graded the hero kicker at
+ * 2.43:1 against the opening frame, because the lower third of that
+ * frame is bright dust haze rather than the shadow the composition
+ * implied. The stock band tops out around 58% at a density tuned for
+ * darker footage.
+ *
+ * This is a lower-third gradient, not a full-frame overlay: above 70%
+ * of the frame it is completely transparent, so the photograph keeps
+ * its own contrast everywhere the copy is not.
+ * ------------------------------------------------------------------ */
+.sc-world__scrim.sc-scrim--band {
+  background: linear-gradient(
+    to top,
+    color-mix(in oklab, var(--sc-canvas) 95%, transparent) 0%,
+    color-mix(in oklab, var(--sc-canvas) 88%, transparent) 18%,
+    color-mix(in oklab, var(--sc-canvas) 62%, transparent) 38%,
+    color-mix(in oklab, var(--sc-canvas) 26%, transparent) 56%,
+    transparent 72%
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * LOCAL PLATES
+ * The band alone could not carry every block: the hero kicker measured
+ * 3.34:1 (small text, so it needs 4.5:1) and the landing block measured
+ * 1.07:1 on a phone, where it reaches far higher up the frame than the
+ * band ever goes.
+ *
+ * Pushing the band up would have solved both and turned it into a
+ * full-frame overlay, which flattens the whole photograph to fix four
+ * lines of type. A plate sized to each block puts the density only
+ * where the text is and gives the rest of the frame its contrast back.
+ *
+ * The ellipse is centred rather than corner-weighted so one rule serves
+ * lead and trail anchoring, and Arabic and English, without a second.
+ * ------------------------------------------------------------------ */
+/* NOT position: relative. The engine already positions .sc-copy absolutely
+   inside the fixed copy layer, and overriding it drops every block into normal
+   flow at the top of the frame, over the brightest part of the sky. Measured:
+   it took the hero kicker from 3.34:1 to 1.29:1. An absolutely positioned
+   element is already a containing block for its own ::before. */
+.sc-copy { isolation: isolate; }
+.sc-copy::before,
+.table-copy::before {
+  content: "";
+  position: absolute;
+  inset-block: -3.25rem -2rem;
+  inset-inline: -2.75rem;
+  z-index: -1;
+  pointer-events: none;
+  /* A lower-third, feathered only at its edges. A radial was tried first and
+     measured no better than the band alone at 3.34:1, because the kicker sits
+     at the TOP of the block where a centred ellipse has already faded out. The
+     density has to be flat across the text and fall off past it. */
+  background: linear-gradient(
+    to top,
+    color-mix(in oklab, var(--sc-canvas) 88%, transparent) 0%,
+    color-mix(in oklab, var(--sc-canvas) 85%, transparent) 66%,
+    color-mix(in oklab, var(--sc-canvas) 52%, transparent) 88%,
+    transparent 100%
+  );
+}
+.table-copy { position: absolute; isolation: isolate; }
+
+@media (max-width: 860px) {
+  /* Below this the corner anchors both become full-width bands, so the
+     plate does too, and the landing block owns most of the screen. */
+  .sc-copy::before,
+  .table-copy::before {
+    inset-inline: calc(var(--sc-gutter) * -1);
+    background: linear-gradient(
+      to top,
+      color-mix(in oklab, var(--sc-canvas) 92%, transparent) 0%,
+      color-mix(in oklab, var(--sc-canvas) 86%, transparent) 55%,
+      color-mix(in oklab, var(--sc-canvas) 62%, transparent) 82%,
+      transparent 100%
+    );
+  }
+}
+
+/* ==================================================================== *
+ * DOCUMENT SCREENS
+ * The enquiry form, the status page, the account area, the queue and
+ * the admin surface. Ordinary document flow, same tokens as the flight,
+ * no world behind them. They are tools, and they read like tools.
+ * ==================================================================== */
+
+.site-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sc-4);
+  flex-wrap: wrap;
+  padding: var(--sc-4) var(--sc-gutter);
+  border-block-end: 1px solid var(--sc-hairline);
+}
+.site-head__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--sc-4);
+  flex-wrap: wrap;
+}
+.site-head__nav a,
+.linklike {
+  color: var(--sc-ink-soft);
+  text-decoration: none;
+  font-size: 0.9rem;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.site-head__nav a:hover,
+.linklike:hover { color: var(--sc-ink); }
+
+.sheet {
+  max-inline-size: 46rem;
+  margin-inline: auto;
+  padding: clamp(2rem, 6vw, 4.5rem) var(--sc-gutter) var(--sc-section);
+  display: grid;
+  gap: var(--sc-6);
+}
+.sheet--narrow { max-inline-size: 32rem; }
+.sheet--wide { max-inline-size: 68rem; }
+
+/* More space above a heading than below it: the gap belongs to the boundary
+   between blocks, not to the heading-and-body pair. */
+.sheet__head { display: grid; gap: var(--sc-3); }
+.sheet__kicker {
+  font-family: var(--sc-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sc-accent);
+  margin: 0;
+}
+[dir="rtl"] .sheet__kicker {
+  text-transform: none; letter-spacing: 0;
+  font-family: var(--sc-font-text); font-size: 0.85rem;
+}
+.sheet__title {
+  font-family: var(--sc-font-display);
+  font-size: var(--sc-t-2xl);
+  font-weight: 600;
+  line-height: var(--sc-leading-tight);
+  letter-spacing: var(--sc-track-snug);
+  text-wrap: balance;
+  margin: 0;
+}
+.sheet__ref {
+  font-family: var(--sc-font-mono);
+  font-size: var(--sc-t-xl);
+  color: var(--sc-accent);
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+.sheet__lede {
+  font-size: var(--sc-t-lg);
+  color: var(--sc-ink-soft);
+  max-inline-size: var(--sc-measure);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------------------ forms -- */
+.form { display: grid; gap: var(--sc-5); max-inline-size: 34rem; }
+.sheet--wide .form { max-inline-size: 30rem; }
+
+.field { display: grid; gap: 0.4rem; margin: 0; }
+.field label { font-size: 0.9rem; color: var(--sc-ink); }
+.field__req { color: var(--sc-accent); margin-inline-start: 0.25em; }
+.field__hint { font-size: 0.8rem; color: var(--sc-ink-soft); }
+
+.field input,
+.field textarea,
+.field select,
+.q__status select,
+.q__note-form textarea {
+  inline-size: 100%;
+  padding: 0.65rem 0.8rem;
+  background: var(--sc-surface);
+  color: var(--sc-ink);
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-sm);
+  font-family: inherit;
+  font-size: 1rem;
+  /* 16px minimum on the real control: anything smaller makes iOS Safari zoom
+     the whole page on focus, and the visitor has to pinch back out. */
+}
+.field input:focus-visible,
+.field textarea:focus-visible,
+.field select:focus-visible {
+  outline: 2px solid var(--sc-accent);
+  outline-offset: 2px;
+  border-color: transparent;
+}
+.field textarea { resize: vertical; }
+
+.fieldset {
+  display: grid;
+  gap: var(--sc-4);
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-sm);
+  padding: var(--sc-4);
+  margin: 0;
+}
+.fieldset legend {
+  font-size: 0.8rem;
+  color: var(--sc-ink-soft);
+  padding-inline: var(--sc-2);
+}
+
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sc-4); }
+
+/* Off-screen rather than display:none or type=hidden, both of which anything
+   worth stopping already skips. */
+.honeypot {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.btn {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sc-2);
+  padding: 0.7rem 1.3rem;
+  border: 1px solid transparent;
+  border-radius: var(--sc-r-pill);
+  background: var(--sc-accent);
+  color: var(--sc-accent-ink);
+  font-weight: 600;
+  font-family: inherit;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: filter var(--sc-d-fast) var(--sc-ease-out),
+              transform var(--sc-d-fast) var(--sc-ease-out);
+}
+.btn:hover:not(:disabled) { filter: brightness(1.07); transform: translateY(-1px); }
+.btn:disabled { opacity: 0.55; cursor: progress; transform: none; }
+.btn--quiet {
+  background: none;
+  color: var(--sc-ink);
+  border-color: var(--sc-hairline-strong);
+  font-weight: 500;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+}
+.btn--quiet:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--sc-ink) 8%, transparent);
+  filter: none;
+}
+
+.form-error {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--sc-r-sm);
+  background: color-mix(in oklab, #B4442A 22%, var(--sc-surface));
+  border: 1px solid color-mix(in oklab, #E9704F 45%, transparent);
+  color: #FFD9CB;
+  font-size: 0.9rem;
+}
+
+/* ------------------------------------------------------- sent state -- */
+.sent {
+  display: grid;
+  gap: var(--sc-4);
+  justify-items: start;
+  padding: var(--sc-6);
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-md);
+  background: var(--sc-surface);
+}
+.sent__kicker {
+  margin: 0;
+  font-family: var(--sc-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sc-accent);
+}
+[dir="rtl"] .sent__kicker {
+  text-transform: none; letter-spacing: 0;
+  font-family: var(--sc-font-text); font-size: 0.85rem;
+}
+.sent__ref {
+  margin: 0;
+  font-family: var(--sc-font-mono);
+  font-size: var(--sc-t-xl);
+  color: var(--sc-ink);
+  letter-spacing: 0.05em;
+}
+
+/* ------------------------------------------------------------ facts -- */
+.facts, .times__grid, .q__facts {
+  display: grid;
+  gap: var(--sc-4);
+  margin: 0;
+}
+.facts { grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
+.facts > div, .times__grid > div, .q__facts > div { display: grid; gap: 0.25rem; }
+.facts dt, .times__grid dt, .q__facts dt {
+  font-size: 0.78rem;
+  color: var(--sc-ink-soft);
+}
+.facts dd, .times__grid dd, .q__facts dd { margin: 0; color: var(--sc-ink); }
+.facts dd a, .q__facts dd a { color: var(--sc-accent); }
+
+.note--rule {
+  padding-inline-start: var(--sc-4);
+  border-inline-start: 2px solid var(--sc-accent);
+}
+
+/* ------------------------------------------------------------- pill -- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--sc-r-pill);
+  border: 1px solid var(--sc-hairline-strong);
+  font-size: 0.78rem;
+  color: var(--sc-ink);
+  white-space: nowrap;
+}
+/* Never colour alone: the word is always present, and the tone only
+   reinforces it. */
+.pill::before {
+  content: "";
+  inline-size: 0.45rem;
+  block-size: 0.45rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+.pill[data-status="new"]       { color: var(--sc-accent); }
+.pill[data-status="assigned"]  { color: #8FB8D8; }
+.pill[data-status="responded"] { color: #9FD1A8; }
+.pill[data-status="quoted"]    { color: #D9C27A; }
+.pill[data-status="won"]       { color: #86D69A; }
+.pill[data-status="lost"]      { color: #C99A92; }
+.pill[data-status="archived"]  { color: var(--sc-ink-soft); }
+
+/* ------------------------------------------------------------- rows -- */
+.rows { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sc-3); }
+.row-card {
+  display: flex;
+  align-items: center;
+  gap: var(--sc-4);
+  flex-wrap: wrap;
+  padding: var(--sc-4);
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-sm);
+  background: var(--sc-surface);
+}
+.row-card__ref {
+  font-family: var(--sc-font-mono);
+  color: var(--sc-ink);
+  letter-spacing: 0.04em;
+}
+.row-card__meta { font-size: 0.82rem; color: var(--sc-ink-soft); }
+.row-card__acts { margin-inline-start: auto; display: flex; gap: var(--sc-2); flex-wrap: wrap; }
+
+.empty { display: grid; gap: var(--sc-3); justify-items: start; }
+.empty__line { font-size: var(--sc-t-lg); margin: 0; }
+
+/* ------------------------------------------------------------ queue -- */
+.times {
+  display: grid;
+  gap: var(--sc-3);
+  padding: var(--sc-5);
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-md);
+  background: var(--sc-surface);
+}
+.times__title { margin: 0; font-size: var(--sc-t-lg); font-weight: 600; }
+.times__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.times__grid dd { font-family: var(--sc-font-mono); color: var(--sc-accent); font-size: var(--sc-t-lg); }
+
+.queue { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sc-5); }
+.q {
+  display: grid;
+  gap: var(--sc-4);
+  padding: var(--sc-5);
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-md);
+  background: var(--sc-surface);
+}
+.q__head { display: flex; align-items: center; gap: var(--sc-3); flex-wrap: wrap; }
+.q__ref { font-family: var(--sc-font-mono); color: var(--sc-ink); letter-spacing: 0.04em; }
+.q__age, .q__when { font-size: 0.8rem; color: var(--sc-ink-soft); }
+.q__when { margin-inline-start: auto; }
+.q__facts { grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); }
+.q__msg {
+  margin: 0;
+  padding: var(--sc-3) var(--sc-4);
+  border-radius: var(--sc-r-sm);
+  background: color-mix(in oklab, var(--sc-canvas) 60%, transparent);
+  color: var(--sc-ink);
+  font-size: 0.92rem;
+  line-height: var(--sc-leading-body);
+  text-wrap: pretty;
+}
+.q__acts { display: flex; align-items: center; gap: var(--sc-3); flex-wrap: wrap; }
+.q__status { display: flex; align-items: center; gap: var(--sc-2); }
+.q__status select { inline-size: auto; padding: 0.4rem 0.6rem; font-size: 0.85rem; }
+.q__mine {
+  font-size: 0.8rem;
+  color: var(--sc-accent);
+  border: 1px solid var(--sc-hairline-strong);
+  border-radius: var(--sc-r-pill);
+  padding: 0.2rem 0.6rem;
+}
+
+.q__notes summary { cursor: pointer; font-size: 0.88rem; color: var(--sc-ink-soft); }
+.q__notes summary:hover { color: var(--sc-ink); }
+.notes { list-style: none; margin: var(--sc-3) 0; padding: 0; display: grid; gap: var(--sc-3); }
+.notes li {
+  display: grid;
+  gap: 0.2rem;
+  padding-inline-start: var(--sc-3);
+  border-inline-start: 2px solid var(--sc-hairline-strong);
+}
+.notes__who { font-size: 0.78rem; color: var(--sc-ink); }
+.notes__when { font-size: 0.72rem; color: var(--sc-ink-soft); }
+.notes li p { margin: 0; font-size: 0.9rem; }
+.q__note-form { display: grid; gap: var(--sc-2); justify-items: start; }
+.q__note-form textarea { inline-size: 100%; }
+
+/* ------------------------------------------------------------ panel -- */
+.panel {
+  display: grid;
+  gap: var(--sc-4);
+  padding: var(--sc-5);
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-md);
+  background: var(--sc-surface);
+}
+.panel__title { margin: 0; font-size: var(--sc-t-lg); font-weight: 600; }
+
+@media (max-width: 620px) {
+  .row { grid-template-columns: 1fr; }
+  .times__grid { grid-template-columns: 1fr 1fr; }
+  .q__when { margin-inline-start: 0; }
+  .row-card__acts { margin-inline-start: 0; }
+}
+
+/* Chrome links on the flight. Same weight as the locale switcher: neither is
+   the point of the page, and a loud account link over a film reads as a
+   product trying to enrol you before it has shown you anything. */
+.chrome__links { display: flex; align-items: center; gap: var(--sc-3); }
+.chrome__links a {
+  font-family: var(--sc-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--sc-ink-soft);
+  text-decoration: none;
+  padding: 0.34rem 0.5rem;
+  border-radius: var(--sc-r-sm);
+  white-space: nowrap;
+}
+.chrome__links a:hover {
+  color: var(--sc-ink);
+  background: color-mix(in oklab, var(--sc-ink) 8%, transparent);
+}
+[dir="rtl"] .chrome__links a {
+  font-family: var(--sc-font-text);
+  letter-spacing: 0;
+  font-size: 0.8rem;
+}

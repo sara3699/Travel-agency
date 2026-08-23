@@ -108,17 +108,29 @@ visibly labelled placeholder that reads as a specimen, not as a claim.
 
 These block specific work and are not decided.
 
-French is unresolved, and it is the largest of the three. North Africa was
-included in the audience, but French is the second language of commerce in
-Tunisia, Morocco and Algeria, so Arabic and English parity does not serve that
-market. Three ways out: drop North Africa from the launch audience, add French as
-a third locale, or treat North Africa as Arabic-only. This must be settled before
-any routing or internationalisation work, because it decides whether the locale
-layer is bilingual or multilingual, and that decision reaches every route.
+Two of the questions listed here on 2026-08-22 were answered on 2026-08-23 and
+have moved into `PRODUCT.md`. They are summarised below so this section is not
+read as still open.
 
-The supplier and inventory model is unknown. Whether packages come from a real
-operator, a bedbank API, or invented demo data changes how much of the listing
-can be real, and whether prices can honestly be shown as all-in.
+French is settled at the architecture level and open at the content level.
+Internationalisation is library-backed and locale-count agnostic, French is a
+planned third locale alongside Arabic and English, and locale routing sits under
+`app/[lang]` with `dir` in server-rendered HTML. Adding a locale is therefore
+content work rather than a rewrite, and nothing here is irreversible. What is
+still undecided is how many locales carry full content at launch, which matters
+because 14.2 prices one package at 18 to 31 hours across two languages.
+
+The supplier model is settled: a specimen catalogue, labelled as such in the
+schema rather than in copy. Packages are invented under an invented house brand.
+The enforcement mechanism, the provenance enum and the specimen-mode CI gate, is
+in 14.1, and it is a rule rather than a preference. The four differentiators that
+survive on specimen data are the trip receipt, priced exclusions, the cancellation
+ladder and the difference engine.
+
+The agency name is open, and deliberately so. It is recorded as unset in
+`PRODUCT.md` so that nothing downstream invents one. Club Med was proposed and
+rejected: it is a trading company, so the name is not available, and its product,
+all-inclusive stays at its own resorts, is not this product.
 
 Umrah and Hajj are out of scope until someone decides otherwise. Both are
 regulated products. Umrah providers must be licensed by the Saudi Ministry of
