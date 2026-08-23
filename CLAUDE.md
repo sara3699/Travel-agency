@@ -31,6 +31,34 @@ safely is in this file or reachable from this folder.
 - **The ephemeral gate.** A real ongoing workstream gets its own file in `.memory/projects/`. A one-off that belongs to an existing project gets appended to that project's work log, and a one-off with no parent gets a dated line there. Never create files like "reply to X" or "notes before Tuesday call".
 - **Absolute dates always.** Convert before saving. Never "yesterday" or "next week".
 
+## The brief gate
+
+Before any major request, get these five answers on the table. Fill in what the workspace
+already tells you, show her what you filled in, and ask only about what is genuinely missing.
+Asking her things her own memory vault already knows is a failure of this rule, not an
+application of it.
+
+A request is major when it produces something that leaves the chat (a document, a page, a
+deck, a carousel, a script, an email, code that ships), when it touches a client, or when
+getting it wrong costs more than a few minutes. A one-line question is not major. Neither is
+the next step of a brief she already approved.
+
+1. **Outcome, in business terms.** Not "design a page". "Convince Waseem to pay for a page."
+   What has to change for whom once this lands.
+2. **What I cannot see.** The client by name (then read their file in `.memory/people/`), the
+   constraints, the audience, and above all what already failed. If round one was wrong, say
+   what was wrong with it rather than describing the whole thing again.
+3. **What good looks like.** Give a reference. Adjectives do not carry taste. Best case is a
+   path to something that already exists here, a past carousel or the brand charter, because
+   a file she already approved settles an argument that words cannot.
+4. **Where it goes.** Which folder, which channel, which language, what shape, what length.
+   A 6-slide carousel and a 2-page PDF are not the same brief, and neither is French and English.
+5. **Where I stop.** The default is a draft, then her review, per Draft first, then approval.
+   Say which slice of the work that draft covers, so she is not handed a finished deck when
+   she wanted the outline.
+
+When an output comes back wrong, one of the five was missing. Find out which one before rewriting.
+
 ## Scope
 
 Design and build of the travel agency web app: product decisions, code, copy, and

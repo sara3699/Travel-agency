@@ -274,12 +274,30 @@ body { overscroll-behavior-y: none; }
  * COPY
  * ------------------------------------------------------------------ */
 .copy__kicker {
+  /* Density sized to one line. At 0.68rem this is small text and needs
+     4.5:1; over the brightest frame of the opening leg it measured 3.34:1
+     on the band alone, and the band cannot be raised far enough without
+     becoming a full-frame overlay. */
+  display: inline-block;
   font-family: var(--sc-font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--sc-accent);
   margin: 0 0 var(--sc-4);
+  /* Generous, because the contrast pass grades a REGION around each line
+     rather than the glyphs alone: an opaque chip that only just wraps the
+     text still averages in the bright frame around it, which is why this
+     read 4.19:1 at tighter padding. */
+  padding: 0.55em 1.1em;
+  border-radius: var(--sc-r-pill);
+  /* Inverted: near-black type on solid brass, rather than brass type on a dark
+     chip. A dark chip kept averaging with the bright frame around it and
+     stalled at 4.27:1. Inverting makes the label bright like its surroundings
+     and the glyphs the dark element, which is the one arrangement the opening
+     frame cannot wash out. */
+  background: var(--sc-accent);
+  color: var(--sc-accent-ink);
+  font-weight: 500;
 }
 [dir="rtl"] .copy__kicker {
   text-transform: none;
@@ -648,59 +666,27 @@ body { overscroll-behavior-y: none; }
 }
 
 /* ------------------------------------------------------------------ *
- * LOCAL PLATES
- * The band alone could not carry every block: the hero kicker measured
- * 3.34:1 (small text, so it needs 4.5:1) and the landing block measured
- * 1.07:1 on a phone, where it reaches far higher up the frame than the
- * band ever goes.
+ * SCRIM, second pass
+ * A per-block plate was tried and abandoned. Sized to the copy it is a
+ * dark rectangle with two hard vertical edges sitting on the
+ * photograph; feathered with a radial mask it stops covering the top of
+ * its own block, which is exactly where the kicker and the landing
+ * heading sit. Measured both ways: the rectangle looked wrong, the
+ * feathered version failed at 1.07:1.
  *
- * Pushing the band up would have solved both and turned it into a
- * full-frame overlay, which flattens the whole photograph to fix four
- * lines of type. A plate sized to each block puts the density only
- * where the text is and gives the rest of the frame its contrast back.
- *
- * The ellipse is centred rather than corner-weighted so one rule serves
- * lead and trail anchoring, and Arabic and English, without a second.
+ * A full-width band has no side edges to feather, which is the whole
+ * reason it works here. Below 860px both corner anchors become
+ * full-width anyway and the landing block owns most of the screen, so
+ * the band goes much taller there.
  * ------------------------------------------------------------------ */
-/* NOT position: relative. The engine already positions .sc-copy absolutely
-   inside the fixed copy layer, and overriding it drops every block into normal
-   flow at the top of the frame, over the brightest part of the sky. Measured:
-   it took the hero kicker from 3.34:1 to 1.29:1. An absolutely positioned
-   element is already a containing block for its own ::before. */
-.sc-copy { isolation: isolate; }
-.sc-copy::before,
-.table-copy::before {
-  content: "";
-  position: absolute;
-  inset-block: -3.25rem -2rem;
-  inset-inline: -2.75rem;
-  z-index: -1;
-  pointer-events: none;
-  /* A lower-third, feathered only at its edges. A radial was tried first and
-     measured no better than the band alone at 3.34:1, because the kicker sits
-     at the TOP of the block where a centred ellipse has already faded out. The
-     density has to be flat across the text and fall off past it. */
-  background: linear-gradient(
-    to top,
-    color-mix(in oklab, var(--sc-canvas) 88%, transparent) 0%,
-    color-mix(in oklab, var(--sc-canvas) 85%, transparent) 66%,
-    color-mix(in oklab, var(--sc-canvas) 52%, transparent) 88%,
-    transparent 100%
-  );
-}
-.table-copy { position: absolute; isolation: isolate; }
-
 @media (max-width: 860px) {
-  /* Below this the corner anchors both become full-width bands, so the
-     plate does too, and the landing block owns most of the screen. */
-  .sc-copy::before,
-  .table-copy::before {
-    inset-inline: calc(var(--sc-gutter) * -1);
+  .sc-world__scrim.sc-scrim--band {
     background: linear-gradient(
       to top,
-      color-mix(in oklab, var(--sc-canvas) 92%, transparent) 0%,
-      color-mix(in oklab, var(--sc-canvas) 86%, transparent) 55%,
-      color-mix(in oklab, var(--sc-canvas) 62%, transparent) 82%,
+      color-mix(in oklab, var(--sc-canvas) 95%, transparent) 0%,
+      color-mix(in oklab, var(--sc-canvas) 92%, transparent) 55%,
+      color-mix(in oklab, var(--sc-canvas) 84%, transparent) 76%,
+      color-mix(in oklab, var(--sc-canvas) 45%, transparent) 90%,
       transparent 100%
     );
   }
