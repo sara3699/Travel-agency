@@ -314,7 +314,10 @@ body { overscroll-behavior-y: none; }
   letter-spacing: var(--sc-track-tight);
   text-wrap: balance;
   margin: 0;
-  max-inline-size: 16ch;
+  /* 22ch rather than 16ch: at 16ch the hero wrapped to three lines and the
+     block reached halfway up the frame, which forced a scrim tall enough to
+     crush the photograph. Two lines is a shorter block and a lighter band. */
+  max-inline-size: 22ch;
 }
 .copy__h2 {
   font-family: var(--sc-font-display);
@@ -655,13 +658,18 @@ body { overscroll-behavior-y: none; }
  * its own contrast everywhere the copy is not.
  * ------------------------------------------------------------------ */
 .sc-world__scrim.sc-scrim--band {
+  /* Retuned 2026-08-27 for the second world. The first one was sepia and
+     low-key, so a light band carried the copy. This one is snow, white cloud
+     and turquoise water: bone type over the brightest frames measured 1.65:1
+     against a 4.5:1 bar, which is a genuine legibility failure and not a
+     harness artefact. A brighter film needs a heavier lower-third. */
   background: linear-gradient(
     to top,
     color-mix(in oklab, var(--sc-canvas) 95%, transparent) 0%,
-    color-mix(in oklab, var(--sc-canvas) 88%, transparent) 18%,
-    color-mix(in oklab, var(--sc-canvas) 62%, transparent) 38%,
-    color-mix(in oklab, var(--sc-canvas) 26%, transparent) 56%,
-    transparent 72%
+    color-mix(in oklab, var(--sc-canvas) 93%, transparent) 28%,
+    color-mix(in oklab, var(--sc-canvas) 75%, transparent) 46%,
+    color-mix(in oklab, var(--sc-canvas) 30%, transparent) 62%,
+    transparent 76%
   );
 }
 
@@ -683,10 +691,10 @@ body { overscroll-behavior-y: none; }
   .sc-world__scrim.sc-scrim--band {
     background: linear-gradient(
       to top,
-      color-mix(in oklab, var(--sc-canvas) 95%, transparent) 0%,
-      color-mix(in oklab, var(--sc-canvas) 92%, transparent) 55%,
-      color-mix(in oklab, var(--sc-canvas) 84%, transparent) 76%,
-      color-mix(in oklab, var(--sc-canvas) 45%, transparent) 90%,
+      color-mix(in oklab, var(--sc-canvas) 97%, transparent) 0%,
+      color-mix(in oklab, var(--sc-canvas) 95%, transparent) 58%,
+      color-mix(in oklab, var(--sc-canvas) 90%, transparent) 78%,
+      color-mix(in oklab, var(--sc-canvas) 58%, transparent) 92%,
       transparent 100%
     );
   }
@@ -1086,3 +1094,8 @@ body { overscroll-behavior-y: none; }
   letter-spacing: 0;
   font-size: 0.8rem;
 }
+
+/* The copy sits lower than the engine default. The band is dense in the bottom
+   quarter and gone by 74%, so a block anchored higher would push its top line
+   into clear frame and fail there while the rest of it passed. */
+.sc-copy--lead, .sc-copy--trail { bottom: clamp(2rem, 7vh, 4.5rem); }

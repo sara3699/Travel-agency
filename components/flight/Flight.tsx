@@ -187,7 +187,7 @@ export function Flight({
                 srcSet={`/flight/p-leg${l.id}-m.webp 800w, /flight/p-leg${l.id}.webp 1600w`}
                 sizes="100vw"
                 width={1600}
-                height={889}
+                height={900}
                 alt=""
                 /* The first poster is the LCP element. Never lazy. */
                 loading={i === 0 ? 'eager' : 'lazy'}
