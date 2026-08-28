@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { majorToMinor } from '@/lib/money-input';
+import { majorToMinor, minorToMajor } from '@/lib/money-input';
 import { money, formatMoney, scale, divide, type CurrencyCode } from '@/lib/money';
 import { savePackageAction, type FormState } from '@/lib/actions/forms';
 import { Field, Select, Submit, FormError } from '@/components/ui/Form';
@@ -30,15 +30,45 @@ export function PackageEditor({ pkg, locale }: { pkg: EditablePackage; locale: s
   const t = useTranslations();
   const [state, save] = useActionState<FormState, FormData>(savePackageAction, { ok: null });
 
-  // Price and length are independent columns, and that surprises people: an
-  // agency sells a six night trip for what it negotiated, not for six sevenths
-  // of the seven night one. Both figures are therefore recomputed as either
-  // field is typed, so the consequence of shortening a trip is visible at the
-  // moment of shortening it rather than discovered later on the live page.
+  const currency = pkg.priceCurrency as CurrencyCode;
+
   const [priceText, setPriceText] = useState(pkg.priceMajor);
   const [nightsText, setNightsText] = useState(String(pkg.nights));
 
-  const currency = pkg.priceCurrency as CurrencyCode;
+  /**
+   * The rate the price is re-derived from when the length changes. Operator's
+   * decision, 2026-08-28: the price follows the nights.
+   *
+   * It is an anchor rather than a running per-night figure, and that matters.
+   * Re-deriving from the CURRENT price each time compounds the rounding, so
+   * seven to six and back to seven would not return the price it started at.
+   * Anchored, the arithmetic at the original length is exact, and the anchor
+   * re-bases only when a price is typed by hand.
+   */
+  const [anchor, setAnchor] = useState({
+    minor: majorToMinor(pkg.priceMajor, currency) ?? 0,
+    nights: pkg.nights,
+  });
+
+  function onNights(next: string) {
+    setNightsText(next);
+    const n = Number(next);
+    if (!Number.isInteger(n) || n < 1 || anchor.nights < 1) return;
+    // Integer arithmetic, so the rounding happens once, here, and never
+    // through a per-night float that would drift on every keystroke.
+    const derived = Math.round((anchor.minor * n) / anchor.nights);
+    setPriceText(minorToMajor(derived, currency));
+  }
+
+  function onPrice(next: string) {
+    setPriceText(next);
+    const m = majorToMinor(next, currency);
+    const n = Number(nightsText);
+    // A hand-typed price becomes the new truth, so the next length change
+    // scales from what was just written rather than from what was saved.
+    if (m !== null && Number.isInteger(n) && n > 0) setAnchor({ minor: m, nights: n });
+  }
+
   const minor = majorToMinor(priceText, currency);
   const nightsNum = Number(nightsText);
   const nightsOk = Number.isInteger(nightsNum) && nightsNum > 0;
@@ -46,9 +76,7 @@ export function PackageEditor({ pkg, locale }: { pkg: EditablePackage; locale: s
   const partyTotal =
     minor === null ? null : formatMoney(scale(money(minor, currency), pkg.partyAdults), locale);
   const perNight =
-    minor === null || !nightsOk
-      ? null
-      : formatMoney(divide(money(minor, currency), nightsNum), locale);
+    minor === null || !nightsOk ? null : formatMoney(divide(money(minor, currency), nightsNum), locale);
 
   const lengthChanged = nightsOk && nightsNum !== pkg.nights;
 
@@ -73,34 +101,28 @@ export function PackageEditor({ pkg, locale }: { pkg: EditablePackage; locale: s
         </p>
       )}
 
-      <div
-        onInput={(e) => {
-          const el = e.target as HTMLInputElement;
-          if (el.name === 'price') setPriceText(el.value);
-          if (el.name === 'nights') setNightsText(el.value);
-        }}
-      >
-        <Field
-          name="price"
-          label={t('cat.price', { currency: pkg.priceCurrency })}
-          defaultValue={pkg.priceMajor}
-          inputMode="numeric"
-          required
-          hint={t('cat.priceHint')}
-        />
+      <Field
+        name="nights"
+        label={t('cat.nights')}
+        type="number"
+        value={nightsText}
+        onChange={onNights}
+        min={1}
+        max={30}
+        required
+        hint={t('cat.nightsHint')}
+      />
 
-        <Field
-          name="nights"
-          label={t('cat.nights')}
-          type="number"
-          defaultValue={pkg.nights}
-          min={1}
-          max={30}
-          required
-        />
-      </div>
+      <Field
+        name="price"
+        label={t('cat.price', { currency: pkg.priceCurrency })}
+        value={priceText}
+        onChange={onPrice}
+        inputMode="numeric"
+        required
+        hint={t('cat.priceHint')}
+      />
 
-      {/* One block, both consequences, updated as either field moves. */}
       <div className="pkged__sums" aria-live="polite">
         {partyTotal && <p>{t('cat.partyTotal', { amount: partyTotal, n: pkg.partyAdults })}</p>}
         {perNight && <p>{t('cat.perNightSum', { amount: perNight, nights: nightsNum })}</p>}

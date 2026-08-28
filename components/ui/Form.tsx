@@ -20,6 +20,8 @@ export function Field({
   min,
   max,
   maxLength,
+  value,
+  onChange,
 }: {
   name: string;
   label: string;
@@ -32,6 +34,12 @@ export function Field({
   min?: number;
   max?: number;
   maxLength?: number;
+  /* Controlled mode, used only where one field has to move another: the
+     catalogue editor rewrites the price when the length changes. Passing
+     `value` without `onChange` would make the input read-only, so the pair
+     travels together and `defaultValue` is ignored while it is present. */
+  value?: string;
+  onChange?: (next: string) => void;
 }) {
   const hintId = hint ? `${name}-hint` : undefined;
   return (
@@ -49,7 +57,9 @@ export function Field({
         name={name}
         type={type}
         required={required}
-        defaultValue={defaultValue}
+        {...(value !== undefined
+          ? { value, onChange: (e) => onChange?.(e.target.value) }
+          : { defaultValue })}
         autoComplete={autoComplete}
         inputMode={inputMode}
         min={min}

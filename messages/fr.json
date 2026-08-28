@@ -506,6 +506,7 @@
     "totalCol": "Total du groupe",
     "partyTotal": "Affiché aux voyageurs : {amount} pour {n}.",
     "perNightSum": "Soit {amount} par personne et par nuit, sur {nights} nuits.",
-    "lengthNote": "Modifier la durée ne modifie pas le prix. C'est le prix auquel vous vendez le séjour : c'est le tarif par nuit qui bouge. Si un séjour plus court doit coûter moins cher, modifiez aussi le prix."
+    "lengthNote": "Le prix a suivi la durée, réparti également sur les nuits. Les coûts réels ne le sont pas : le vol coûte la même chose que le séjour dure six nuits ou sept, donc un séjour plus court fait généralement économiser moins que cela. Vérifiez le chiffre avant d'enregistrer.",
+    "nightsHint": "Modifier ce champ recalcule le prix ci-dessous. Écrivez par-dessus si le nouveau chiffre ne convient pas."
   }
 }
