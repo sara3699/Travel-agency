@@ -467,7 +467,7 @@
     "lede": "Twelve trips. Change a price, a length or a departure date without anyone writing SQL.",
     "trip": "Trip",
     "status": "Status",
-    "priceCol": "Total price",
+    "priceCol": "Per person",
     "nights": "Nights",
     "departure": "Next departure",
     "edit": "Edit",
@@ -481,8 +481,8 @@
     "scopeNote": "This screen changes the price, the length, the departure date, and whether a trip is visible. The wording, the priced exclusions and the cancellation ladder are still set in a migration.",
     "editLede": "Departing {city}, {tier} star.",
     "viewLive": "See this trip the way a traveller does",
-    "price": "Total price in {currency}",
-    "priceHint": "The whole price for the party, not per person.",
+    "price": "Price per person in {currency}",
+    "priceHint": "All in, for one person, at the party size this trip is sold at. The site multiplies it up and shows the party total.",
     "departureHint": "A date in the past is refused. That is the mistake this screen exists to stop.",
     "save": "Save",
     "saved": "Saved. The site is updated.",
@@ -502,6 +502,8 @@
     "r_missingAr": "The Arabic is missing.",
     "r_missingEn": "The English is missing.",
     "r_noLedger": "Nothing is listed as included or excluded.",
-    "r_noLadder": "It has no cancellation ladder."
+    "r_noLadder": "It has no cancellation ladder.",
+    "totalCol": "Total for the party",
+    "partyTotal": "Shown to travellers as {amount} for {n}."
   }
 }

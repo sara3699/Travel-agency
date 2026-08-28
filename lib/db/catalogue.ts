@@ -1,6 +1,7 @@
 import { createClient } from '../supabase/server';
 import { requireAdmin } from '../auth/session';
-import { exponentOf, type CurrencyCode } from '../money';
+import { type CurrencyCode } from '../money';
+import { majorToMinor, minorToMajor } from '../money-input';
 
 /**
  * The catalogue's write side. Slice one: the four fields that go stale.
@@ -28,10 +29,11 @@ export interface CatalogueRow {
   provenance: string;
   departureIata: string;
   hotelTier: number;
+  partyAdults: number;
 }
 
 const SELECT =
-  'id, slug, status, nights, price_minor, price_currency, next_departure, provenance, departure_iata, hotel_tier';
+  'id, slug, status, nights, price_minor, price_currency, next_departure, provenance, departure_iata, hotel_tier, party_adults';
 
 type Row = {
   id: string;
@@ -44,6 +46,7 @@ type Row = {
   provenance: string;
   departure_iata: string;
   hotel_tier: number;
+  party_adults: number;
 };
 
 const toRow = (r: Row): CatalogueRow => ({
@@ -57,6 +60,7 @@ const toRow = (r: Row): CatalogueRow => ({
   provenance: r.provenance,
   departureIata: r.departure_iata,
   hotelTier: r.hotel_tier,
+  partyAdults: r.party_adults,
 });
 
 /** Everything, drafts and archived included. Staff can already SELECT those. */
@@ -79,32 +83,14 @@ export async function getCatalogueRow(slug: string): Promise<CatalogueRow | null
 
 /* ------------------------------------------------------------------ money */
 
+export { majorToMinor, minorToMajor };
+
 /**
- * "5120.50" -> 512050, without going through a float.
- *
- * parseFloat('1.15') * 100 is 114.99999999999999, and Math.round hides that
- * until the day it does not. Money is integers here for exactly this reason, so
- * the parser has to stay in integers too. The exponent is per currency: three
- * decimals for KWD and BHD, which is why this is not a hardcoded 100.
+ * `price_minor` is ALL-IN, PER PERSON, for the party the trip is sold at. The
+ * schema says so on the column and the interface must not paraphrase it into
+ * something friendlier: the first version of this screen called it the total
+ * price, which would have had every price on the site entered at double.
  */
-export function majorToMinor(input: string, currency: CurrencyCode): number | null {
-  const cleaned = input.trim().replace(/[\s,]/g, '');
-  if (!/^\d+(\.\d+)?$/.test(cleaned)) return null;
-
-  const exp = exponentOf(currency);
-  const [whole, frac = ''] = cleaned.split('.');
-  if (frac.length > exp) return null; // more precision than the currency has
-  const padded = (frac + '0'.repeat(exp)).slice(0, exp);
-  const minor = Number(whole + padded);
-  return Number.isSafeInteger(minor) ? minor : null;
-}
-
-export function minorToMajor(minor: number, currency: CurrencyCode): string {
-  const exp = exponentOf(currency);
-  if (exp === 0) return String(minor);
-  const s = String(Math.abs(minor)).padStart(exp + 1, '0');
-  return `${minor < 0 ? '-' : ''}${s.slice(0, -exp)}.${s.slice(-exp)}`;
-}
 
 /* ----------------------------------------------------------------- update */
 

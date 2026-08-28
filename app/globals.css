@@ -2220,3 +2220,15 @@ html[dir="rtl"] .card1200__dest { line-height: 1.25; }
 }
 
 [dir='rtl'] .cat th { letter-spacing: 0; text-transform: none; }
+
+.cat__total { white-space: nowrap; }
+.cat__party {
+  margin-inline-start: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--sc-ink-mute, var(--sc-ink));
+}
+.pkged__total {
+  margin-block: -0.4rem 0;
+  font-size: 0.85rem;
+  color: var(--sc-ink-soft, var(--sc-ink));
+}

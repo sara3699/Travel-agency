@@ -57,6 +57,7 @@ export default async function EditPackage({
             priceCurrency: pkg.priceCurrency,
             nextDeparture: pkg.nextDeparture ?? '',
             departureIata: pkg.departureIata,
+            partyAdults: pkg.partyAdults,
           }}
         />
 

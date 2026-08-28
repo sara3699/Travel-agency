@@ -467,7 +467,7 @@
     "lede": "Douze séjours. Modifiez un prix, une durée ou une date de départ sans que personne écrive de SQL.",
     "trip": "Séjour",
     "status": "Statut",
-    "priceCol": "Prix total",
+    "priceCol": "Par personne",
     "nights": "Nuits",
     "departure": "Prochain départ",
     "edit": "Modifier",
@@ -481,8 +481,8 @@
     "scopeNote": "Cet écran modifie le prix, la durée, la date de départ et la visibilité du séjour. Les textes, les exclusions chiffrées et le barème d'annulation se règlent encore dans une migration.",
     "editLede": "Départ de {city}, hôtel {tier} étoiles.",
     "viewLive": "Voir ce séjour comme le voit un voyageur",
-    "price": "Prix total en {currency}",
-    "priceHint": "Le prix entier pour le groupe, pas par personne.",
+    "price": "Prix par personne en {currency}",
+    "priceHint": "Tout compris, pour une personne, à la taille de groupe à laquelle ce séjour est vendu. Le site le multiplie et affiche le total du groupe.",
     "departureHint": "Une date passée est refusée. C'est l'erreur que cet écran existe pour empêcher.",
     "save": "Enregistrer",
     "saved": "Enregistré. Le site est à jour.",
@@ -502,6 +502,8 @@
     "r_missingAr": "L'arabe manque.",
     "r_missingEn": "L'anglais manque.",
     "r_noLedger": "Rien n'est indiqué comme inclus ou exclu.",
-    "r_noLadder": "Il n'a pas de barème d'annulation."
+    "r_noLadder": "Il n'a pas de barème d'annulation.",
+    "totalCol": "Total du groupe",
+    "partyTotal": "Affiché aux voyageurs : {amount} pour {n}."
   }
 }

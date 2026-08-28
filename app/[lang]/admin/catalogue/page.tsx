@@ -3,6 +3,7 @@ import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { type Locale } from '@/i18n/routing';
 import { getCurrentUser, isAdmin } from '@/lib/auth/session';
 import { listCatalogue, minorToMajor } from '@/lib/db/catalogue';
+import { money, formatMoney, scale, type CurrencyCode } from '@/lib/money';
 import { SiteHeader } from '@/components/SiteHeader';
 import { SiteFooter } from '@/components/SiteFooter';
 
@@ -72,6 +73,9 @@ export default async function CataloguePage({ params }: { params: Promise<{ lang
                 {t('cat.priceCol')}
               </th>
               <th scope="col" className="cat__num">
+                {t('cat.totalCol')}
+              </th>
+              <th scope="col" className="cat__num">
                 {t('cat.nights')}
               </th>
               <th scope="col">{t('cat.departure')}</th>
@@ -97,6 +101,15 @@ export default async function CataloguePage({ params }: { params: Promise<{ lang
                   </td>
                   <td className="cat__num">
                     {minorToMajor(r.priceMinor, r.priceCurrency)} {r.priceCurrency}
+                  </td>
+                  {/* Both figures, because the column the database stores and the
+                      number a traveller quotes back at you are not the same one. */}
+                  <td className="cat__num cat__total">
+                    {formatMoney(
+                      scale(money(r.priceMinor, r.priceCurrency as CurrencyCode), r.partyAdults),
+                      locale,
+                    )}
+                    <span className="cat__party">{'\u00d7'}{r.partyAdults}</span>
                   </td>
                   <td className="cat__num">{r.nights}</td>
                   <td>
