@@ -2129,3 +2129,94 @@ html[dir="rtl"] .card1200__dest { line-height: 1.25; }
 .legal__log time { flex: none; color: var(--sc-ink-mute, var(--sc-ink)); font-variant-numeric: tabular-nums; }
 
 [dir='rtl'] .legal__updated { letter-spacing: 0; }
+
+/* ------------------------------------------------------------------ *
+ * CATALOGUE ADMIN
+ * The screen that lets a price and a date be changed without a
+ * migration. Internal, so it borrows the document styles rather than
+ * earning its own vocabulary.
+ * ------------------------------------------------------------------ */
+.admin__jump { margin-block: 0 var(--sc-5); }
+
+.cat__alert {
+  margin-block: 0 var(--sc-4);
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--sc-hairline-strong, var(--sc-hairline));
+  border-radius: var(--sc-r-md, 8px);
+  font-size: 0.9rem;
+  color: var(--sc-ink);
+}
+/* A departure that has already gone is the one state on this screen that is
+   actively wrong rather than merely worth knowing, so it is the only thing
+   that gets the accent. */
+.cat__alert--bad {
+  border-color: var(--sc-accent);
+  background: color-mix(in oklab, var(--sc-accent) 12%, transparent);
+}
+
+.cat {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.cat th,
+.cat td {
+  padding: 0.7rem 0.8rem;
+  border-block-end: 1px solid var(--sc-hairline);
+  text-align: start;
+  vertical-align: baseline;
+}
+.cat th {
+  font-family: var(--sc-font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sc-ink-mute, var(--sc-ink));
+  font-weight: 400;
+}
+/* Figures line up per column so a wrong price is visible as a shape, which is
+   how anyone actually scans a price list. */
+.cat__num { text-align: end; font-family: var(--sc-font-mono); font-variant-numeric: tabular-nums; }
+.cat__slug { display: block; }
+.cat__iata {
+  font-family: var(--sc-font-mono);
+  font-size: 0.72rem;
+  color: var(--sc-ink-mute, var(--sc-ink));
+}
+.cat__row--past td { color: var(--sc-ink-mute, var(--sc-ink)); }
+.cat__past {
+  display: inline-block;
+  margin-inline-start: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--sc-accent);
+}
+.cat__status { font-size: 0.82rem; }
+.cat__status--draft { color: var(--sc-ink-mute, var(--sc-ink)); }
+.cat__status--archived { color: var(--sc-ink-mute, var(--sc-ink)); text-decoration: line-through; }
+
+@media (max-width: 700px) {
+  .cat, .cat thead, .cat tbody, .cat tr, .cat td { display: block; }
+  .cat thead { display: none; }
+  .cat tr { border-block-end: 1px solid var(--sc-hairline); padding-block: 0.6rem; }
+  .cat td { border: 0; padding: 0.2rem 0; }
+  .cat__num { text-align: start; }
+}
+
+/* ---- the editor ---- */
+.pkged__blockers {
+  margin: 0 0 var(--sc-4);
+  padding: 0.8rem 1rem;
+  padding-inline-start: 2rem;
+  border: 1px solid var(--sc-accent);
+  border-radius: var(--sc-r-md, 8px);
+  font-size: 0.9rem;
+  display: grid;
+  gap: 0.35rem;
+}
+.pkged__saved {
+  margin: 0 0 var(--sc-4);
+  font-size: 0.9rem;
+  color: var(--sc-accent);
+}
+
+[dir='rtl'] .cat th { letter-spacing: 0; text-transform: none; }
