@@ -23,6 +23,9 @@ CLAUDE.md
 # Installed and built fresh on Vercel
 node_modules/
 .next/
+# Second build target, used so a verification build does not fight a running
+# dev server for `.next`. Uploading it would ship ~45MB of stale build output.
+.next-verify/
 tsconfig.tsbuildinfo
 
 # OS / editor
