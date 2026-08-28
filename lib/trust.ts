@@ -79,7 +79,7 @@ const EN: TrustContent = {
   },
   changelog: {
     heading: 'Privacy notice changelog',
-    body: 'Policy documents change quietly on most sites. Every change to ours is dated here.',
+    body: 'Policy documents change quietly on most sites. Every change to ours is dated here, and the notice itself is a page you can read rather than a file you have to download.',
     entries: [
       { date: '2026-08-23', what: 'First version published alongside accounts and enquiries.' },
       { date: '2026-08-28', what: 'Added where enquiry data is held, after the database region was settled.' },

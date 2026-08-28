@@ -580,9 +580,17 @@ body { overscroll-behavior-y: none; }
  * same scroll positions, and the whole story still reads.
  * ------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
-  .settings__glass { animation-duration: 1ms; }
-  .trip:hover, .ask:hover { transform: none; }
+  :root:not([data-motion='full']) .settings__glass { animation-duration: 1ms; }
+  :root:not([data-motion='full']) .trip:hover,
+  :root:not([data-motion='full']) .ask:hover { transform: none; }
 }
+
+/* The footer control, which has to win in both directions: someone whose device
+   says reduce can ask for the full thing, so 'full' is a real state and not
+   just the absence of 'reduce'. */
+:root[data-motion='reduce'] .settings__glass { animation-duration: 1ms; }
+:root[data-motion='reduce'] .trip:hover,
+:root[data-motion='reduce'] .ask:hover { transform: none; }
 
 /* ------------------------------------------------------------------ *
  * ENQUIRE — the handoff stub the flight's CTA lands on.
@@ -2016,3 +2024,108 @@ html[dir="rtl"] .card1200__dest { line-height: 1.25; }
 .card1200__for { font-size: 24px; color: #c6b49a; }
 .card1200__unit { display: flex; flex-direction: column; gap: 6px; text-align: end; font-size: 26px; color: #c6b49a; }
 .card1200__allin { font-size: 22px; color: #8f7d66; }
+
+
+/* ------------------------------------------------------------------ *
+ * SITE FOOTER
+ * Small on purpose. "Mega-footer" is item 10 on the generic-competitor
+ * list, so this carries the specimen sentence, four links, the motion
+ * control and one maker line, and nothing else.
+ * ------------------------------------------------------------------ */
+.site-foot {
+  display: grid;
+  gap: var(--sc-4);
+  padding: var(--sc-6) var(--sc-gutter);
+  border-block-start: 1px solid var(--sc-hairline);
+  color: var(--sc-ink-soft);
+  font-size: 0.9rem;
+}
+
+/* The load-bearing sentence: the chips say the fare is illustrative, this
+   says the agency is. Given the weight of body text rather than the grey of
+   small print, because grey small print is how the category hides things. */
+.site-foot__specimen {
+  color: var(--sc-ink);
+  max-inline-size: var(--sc-measure);
+  margin: 0;
+}
+
+.site-foot__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sc-4);
+}
+.site-foot__nav a {
+  color: var(--sc-ink-soft);
+  text-decoration: none;
+  border-block-end: 1px solid var(--sc-hairline);
+  padding-block-end: 0.1rem;
+}
+.site-foot__nav a:hover,
+.site-foot__nav a:focus-visible { color: var(--sc-ink); }
+
+.site-foot__imagery,
+.site-foot__maker {
+  margin: 0;
+  color: var(--sc-ink-mute);
+  font-size: 0.82rem;
+}
+.site-foot__maker a { color: var(--sc-ink-soft); }
+
+/* ---- the motion control ---- */
+.motion {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sc-3);
+}
+.motion__legend {
+  padding: 0;
+  font-family: var(--sc-font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sc-ink-mute);
+}
+.motion__opts { display: flex; flex-wrap: wrap; gap: var(--sc-3); }
+.motion__opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  /* 24px is the WCAG 2.2 target-size floor, and a radio in a footer is
+     exactly the control that gets shipped at 12. */
+  min-block-size: 24px;
+}
+.motion__opt input { inline-size: 16px; block-size: 16px; accent-color: var(--sc-accent); }
+
+/* Arabic sets no letter-spacing and no uppercase: neither means anything in a
+   script with no case, and tracking breaks the joins. */
+[dir='rtl'] .motion__legend { letter-spacing: 0; text-transform: none; }
+
+/* ------------------------------------------------------------------ *
+ * LEGAL DOCUMENTS
+ * Same measure and rhythm as the trust page, because a privacy notice
+ * that looks like a different site is a privacy notice nobody believes
+ * came from this one.
+ * ------------------------------------------------------------------ */
+.legal { max-inline-size: 74ch; }
+.legal__updated {
+  margin-block-start: 0.8rem;
+  font-family: var(--sc-font-mono);
+  font-size: 0.78rem;
+  color: var(--sc-ink-mute, var(--sc-ink));
+  font-variant-numeric: tabular-nums;
+}
+.legal__block { margin-block-end: 2.6rem; }
+.legal__block h2 { margin: 0 0 0.7rem; font-size: 1.22rem; font-weight: 500; }
+.legal__block p { margin: 0 0 0.8rem; line-height: 1.7; color: var(--sc-ink-soft, var(--sc-ink)); }
+.legal__changes { border-block-start: 1px solid var(--sc-hairline); padding-block-start: 1.6rem; }
+.legal__log { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 0.6rem; }
+.legal__log li { display: flex; gap: 0.9rem; font-size: 0.88rem; }
+.legal__log time { flex: none; color: var(--sc-ink-mute, var(--sc-ink)); font-variant-numeric: tabular-nums; }
+
+[dir='rtl'] .legal__updated { letter-spacing: 0; }

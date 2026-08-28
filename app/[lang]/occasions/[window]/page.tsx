@@ -4,6 +4,7 @@ import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { locales, type Locale } from '@/i18n/routing';
 import { getPublishedPackages } from '@/lib/db/packages';
 import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { TripRow } from '@/components/destinations/TripRow';
 import { WINDOWS, findWindow, windowDates, tripsFor } from '@/lib/occasions';
@@ -112,6 +113,7 @@ export default async function OccasionPage({
           </>
         )}
       </main>
+      <SiteFooter locale={locale} />
     </>
   );
 }

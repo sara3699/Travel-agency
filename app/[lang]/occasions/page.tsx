@@ -3,6 +3,7 @@ import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { locales, type Locale } from '@/i18n/routing';
 import { getPublishedPackages } from '@/lib/db/packages';
 import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { WINDOWS, windowDates, tripsFor } from '@/lib/occasions';
 import { occasionCopy } from '@/lib/occasions.content';
@@ -65,6 +66,7 @@ export default async function OccasionsIndex({ params }: { params: Promise<{ lan
           })}
         </div>
       </main>
+      <SiteFooter locale={locale} />
     </>
   );
 }

@@ -117,7 +117,9 @@
   },
   "foot": {
     "rights": "Site spécimen. Forfaits et prix inventés, aucune réservation.",
-    "imagery": "Photographies générées pour cette démonstration."
+    "imagery": "Photographies générées pour cette démonstration.",
+    "navLabel": "Confiance et mentions légales",
+    "builtBy": "Réalisé par"
   },
   "story": {
     "c1e": "Avant l'aéroport",
@@ -446,5 +448,17 @@
   "trust": {
     "title": "Confiance et vérification",
     "lede": "Tout sur cette page est soit vérifiable, soit clairement signalé comme pas encore réel."
+  },
+  "legal": {
+    "updated": "Dernière mise à jour",
+    "changesHeading": "Modifications de cet avis",
+    "changesBody": "Sur la plupart des sites, les documents de politique changent sans bruit. Chaque modification de celui-ci est datée ici.",
+    "privacyShort": "Confidentialité"
+  },
+  "motion": {
+    "legend": "Animations",
+    "system": "Selon mon appareil",
+    "reduce": "Réduites",
+    "full": "Complètes"
   }
 }

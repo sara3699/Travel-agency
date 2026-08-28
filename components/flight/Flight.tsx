@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { formatMoney, scale, type Money } from '@/lib/money';
+import { prefersReducedMotion } from '@/lib/motion';
 
 /* ====================================================================== *
  * THREE COASTS
@@ -155,7 +156,7 @@ export function Flight({
     const before = LEGS.slice(0, index).reduce((a, l) => a + l.w, 0);
     window.scrollTo({
       top: before * window.innerHeight,
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
     });
   }, []);
 

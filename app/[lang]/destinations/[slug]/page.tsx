@@ -7,6 +7,7 @@ import { formatMoney, scale } from '@/lib/money';
 import { ctaKindFor, needsProvenanceChip } from '@/lib/provenance';
 import type { Metadata } from 'next';
 import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 import { alternates, canonicalFor, SITE } from '@/lib/seo';
 import { TripPricer } from '@/components/destinations/TripPricer';
 
@@ -254,6 +255,7 @@ export default async function PackagePage({
           </section>
         )}
       </main>
+      <SiteFooter locale={locale} />
     </>
   );
 }

@@ -1,6 +1,7 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { locales, type Locale } from '@/i18n/routing';
 import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -36,6 +37,7 @@ export default async function About({ params }: { params: Promise<{ lang: string
           {t('nav.destinations')}
         </a>
       </main>
+      <SiteFooter locale={locale} />
     </>
   );
 }

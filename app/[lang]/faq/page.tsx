@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { locales, type Locale } from '@/i18n/routing';
 import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 import { FaqBrowser } from '@/components/faq/FaqBrowser';
 import { faqFor } from '@/lib/faq';
 
@@ -71,6 +72,7 @@ export default async function FaqPage({ params }: { params: Promise<{ lang: stri
           <a className="btn" href={`/${locale}/enquire`}>{t('faq.ask')}</a>
         </aside>
       </main>
+      <SiteFooter locale={locale} />
 
       <script
         type="application/ld+json"

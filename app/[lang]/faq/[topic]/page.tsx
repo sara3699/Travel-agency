@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { locales, type Locale } from '@/i18n/routing';
 import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { faqFor } from '@/lib/faq';
 
@@ -86,6 +87,7 @@ export default async function FaqTopicPage({
           <a className="btn" href={`/${locale}/enquire`}>{t('faq.ask')}</a>
         </aside>
       </main>
+      <SiteFooter locale={locale} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
     </>
   );

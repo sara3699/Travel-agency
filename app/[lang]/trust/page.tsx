@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { locales, type Locale } from '@/i18n/routing';
 import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { trustContent } from '@/lib/trust';
 
@@ -115,6 +116,7 @@ export default async function TrustPage({ params }: { params: Promise<{ lang: st
           <p>{c.absent.body}</p>
         </section>
       </main>
+      <SiteFooter locale={locale} />
     </>
   );
 }

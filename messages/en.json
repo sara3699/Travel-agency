@@ -117,7 +117,9 @@
   },
   "foot": {
     "rights": "Specimen site. Invented packages, invented prices, no bookings taken.",
-    "imagery": "Photography generated for this demonstration."
+    "imagery": "Photography generated for this demonstration.",
+    "navLabel": "Trust and legal",
+    "builtBy": "Built by"
   },
   "story": {
     "c1e": "Before the airport",
@@ -446,5 +448,17 @@
   "trust": {
     "title": "Trust and verify",
     "lede": "Everything on this page is either something you can check, or something clearly marked as not yet real."
+  },
+  "legal": {
+    "updated": "Last updated",
+    "changesHeading": "Changes to this notice",
+    "changesBody": "Policy documents change quietly on most sites. Every change to this one is dated here.",
+    "privacyShort": "Privacy"
+  },
+  "motion": {
+    "legend": "Motion",
+    "system": "Match my device",
+    "reduce": "Reduce",
+    "full": "Full"
   }
 }
