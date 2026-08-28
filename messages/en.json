@@ -61,7 +61,11 @@
     "alcohol_free_property": "Alcohol-free property",
     "family_section": "Family section",
     "verifiedBy": "verified {date} by {who}",
-    "unverified": "not checked"
+    "unverified": "not checked",
+    "state_green": "Yes",
+    "state_amber": "Partly",
+    "state_red": "No",
+    "state_na": "Not checked"
   },
   "direction": {
     "label": "Visual direction",
@@ -348,7 +352,8 @@
     "tierStars": "{n} star",
     "notRequired": "Not required",
     "estimated": "about {amount}",
-    "source": "Source: {src}"
+    "source": "Source: {src}",
+    "beforeYouDecide": "Before you decide"
   },
   "about": {
     "title": "About us",

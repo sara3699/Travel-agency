@@ -61,7 +61,11 @@
     "alcohol_free_property": "فندق بلا كحول",
     "family_section": "قسم عائلي",
     "verifiedBy": "تحقق منها {who} في {date}",
-    "unverified": "لم يتم التحقق"
+    "unverified": "لم يتم التحقق",
+    "state_green": "نعم",
+    "state_amber": "جزئيًا",
+    "state_red": "لا",
+    "state_na": "لم يُتحقق"
   },
   "direction": {
     "label": "الاتجاه البصري",
@@ -348,7 +352,8 @@
     "tierStars": "{n} نجوم",
     "notRequired": "غير مطلوبة",
     "estimated": "حوالي {amount}",
-    "source": "المصدر: {src}"
+    "source": "المصدر: {src}",
+    "beforeYouDecide": "قبل أن تقرر"
   },
   "about": {
     "title": "من نحن",

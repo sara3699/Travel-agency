@@ -1331,12 +1331,32 @@ body { overscroll-behavior-y: none; }
   padding: 0.55rem 0.8rem;
   border-radius: var(--sc-r-sm);
   background: var(--sc-surface);
-  border-inline-start: 3px solid var(--sc-hairline-strong);
+  border: 1px solid var(--sc-hairline);
 }
-.facetlist li[data-state="green"] { border-inline-start-color: #86D69A; }
-.facetlist li[data-state="amber"] { border-inline-start-color: #D9C27A; }
-.facetlist li[data-state="red"]   { border-inline-start-color: #C99A92; }
-.facetlist__v { font-size: 0.76rem; color: var(--sc-ink-soft); }
+/* The answer is a word with a dot beside it, the same pattern as .pill. The
+   thick coloured side border this replaced was both the standard AI-interface
+   tell and, worse, the only place the yes/no answer lived. */
+.facetlist__state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  margin-inline-start: auto;
+  white-space: nowrap;
+}
+.facetlist__state::before {
+  content: "";
+  inline-size: 0.45rem;
+  block-size: 0.45rem;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+.facetlist li[data-state="green"] .facetlist__state { color: #86D69A; }
+.facetlist li[data-state="amber"] .facetlist__state { color: #D9C27A; }
+.facetlist li[data-state="red"]   .facetlist__state { color: #C99A92; }
+.facetlist li[data-state="na"]    .facetlist__state { color: var(--sc-ink-soft); }
+.facetlist__v { font-size: 0.76rem; color: var(--sc-ink-soft); flex-basis: 100%; }
 
 .ladder { border-collapse: collapse; inline-size: 100%; max-inline-size: 32rem; }
 .ladder th, .ladder td {
@@ -1357,7 +1377,7 @@ body { overscroll-behavior-y: none; }
   padding: var(--sc-5);
   border-radius: var(--sc-r-md);
   background: var(--sc-surface);
-  border-inline-start: 3px solid var(--sc-accent);
+  border: 1px solid var(--sc-hairline);
 }
 .pkg__notfor p { margin: 0; text-wrap: pretty; }
 

@@ -160,6 +160,11 @@ export default async function PackagePage({
             {pkg.facets.map((f) => (
               <li key={f.key} data-state={f.state}>
                 <span className="facetlist__k">{t(`facets.${f.key}`)}</span>
+                {/* The answer in words. It was previously carried only by the
+                    colour of a border, which meant "alcohol-free property: no"
+                    and "yes" were the same row to anyone who could not tell the
+                    two colours apart. */}
+                <span className="facetlist__state">{t(`facets.state_${f.state}`)}</span>
                 <span className="facetlist__v">
                   {f.verifiedBy && f.verifiedAt
                     ? t('facets.verifiedBy', { date: f.verifiedAt, who: f.verifiedBy })
@@ -188,7 +193,8 @@ export default async function PackagePage({
         )}
 
         {pkg.notFor[locale] && (
-          <section className="pkg__block pkg__notfor" aria-label={t('pkg.notFor')}>
+          <section className="pkg__block pkg__notfor">
+            <h2 className="pkg__h2">{t('pkg.beforeYouDecide')}</h2>
             <p>{pkg.notFor[locale]}</p>
           </section>
         )}
