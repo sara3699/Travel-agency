@@ -3,7 +3,7 @@
 import { useActionState, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { majorToMinor } from '@/lib/money-input';
-import { money, formatMoney, scale, type CurrencyCode } from '@/lib/money';
+import { money, formatMoney, scale, divide, type CurrencyCode } from '@/lib/money';
 import { savePackageAction, type FormState } from '@/lib/actions/forms';
 import { Field, Select, Submit, FormError } from '@/components/ui/Form';
 
@@ -30,16 +30,27 @@ export function PackageEditor({ pkg, locale }: { pkg: EditablePackage; locale: s
   const t = useTranslations();
   const [state, save] = useActionState<FormState, FormData>(savePackageAction, { ok: null });
 
-  // The field holds the PER PERSON price, which is the one thing about this
-  // screen that can be misread into doubling every price on the site. So the
-  // party total is computed as it is typed and shown underneath, in the same
-  // words the traveller sees it in.
+  // Price and length are independent columns, and that surprises people: an
+  // agency sells a six night trip for what it negotiated, not for six sevenths
+  // of the seven night one. Both figures are therefore recomputed as either
+  // field is typed, so the consequence of shortening a trip is visible at the
+  // moment of shortening it rather than discovered later on the live page.
   const [priceText, setPriceText] = useState(pkg.priceMajor);
-  const minor = majorToMinor(priceText, pkg.priceCurrency as CurrencyCode);
+  const [nightsText, setNightsText] = useState(String(pkg.nights));
+
+  const currency = pkg.priceCurrency as CurrencyCode;
+  const minor = majorToMinor(priceText, currency);
+  const nightsNum = Number(nightsText);
+  const nightsOk = Number.isInteger(nightsNum) && nightsNum > 0;
+
   const partyTotal =
-    minor === null
+    minor === null ? null : formatMoney(scale(money(minor, currency), pkg.partyAdults), locale);
+  const perNight =
+    minor === null || !nightsOk
       ? null
-      : formatMoney(scale(money(minor, pkg.priceCurrency as CurrencyCode), pkg.partyAdults), locale);
+      : formatMoney(divide(money(minor, currency), nightsNum), locale);
+
+  const lengthChanged = nightsOk && nightsNum !== pkg.nights;
 
   return (
     <form action={save} className="form pkged" noValidate>
@@ -62,10 +73,13 @@ export function PackageEditor({ pkg, locale }: { pkg: EditablePackage; locale: s
         </p>
       )}
 
-      <div onInput={(e) => {
-        const el = e.target as HTMLInputElement;
-        if (el.name === 'price') setPriceText(el.value);
-      }}>
+      <div
+        onInput={(e) => {
+          const el = e.target as HTMLInputElement;
+          if (el.name === 'price') setPriceText(el.value);
+          if (el.name === 'nights') setNightsText(el.value);
+        }}
+      >
         <Field
           name="price"
           label={t('cat.price', { currency: pkg.priceCurrency })}
@@ -74,22 +88,24 @@ export function PackageEditor({ pkg, locale }: { pkg: EditablePackage; locale: s
           required
           hint={t('cat.priceHint')}
         />
-      </div>
-      {partyTotal && (
-        <p className="pkged__total" aria-live="polite">
-          {t('cat.partyTotal', { amount: partyTotal, n: pkg.partyAdults })}
-        </p>
-      )}
 
-      <Field
-        name="nights"
-        label={t('cat.nights')}
-        type="number"
-        defaultValue={pkg.nights}
-        min={1}
-        max={30}
-        required
-      />
+        <Field
+          name="nights"
+          label={t('cat.nights')}
+          type="number"
+          defaultValue={pkg.nights}
+          min={1}
+          max={30}
+          required
+        />
+      </div>
+
+      {/* One block, both consequences, updated as either field moves. */}
+      <div className="pkged__sums" aria-live="polite">
+        {partyTotal && <p>{t('cat.partyTotal', { amount: partyTotal, n: pkg.partyAdults })}</p>}
+        {perNight && <p>{t('cat.perNightSum', { amount: perNight, nights: nightsNum })}</p>}
+        {lengthChanged && <p className="pkged__warn">{t('cat.lengthNote')}</p>}
+      </div>
 
       {/* A real date input, so the calendar is the operating system's and the
           value that reaches the server is always ISO regardless of whether the

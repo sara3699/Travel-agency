@@ -504,6 +504,8 @@
     "r_noLedger": "Nothing is listed as included or excluded.",
     "r_noLadder": "It has no cancellation ladder.",
     "totalCol": "Total for the party",
-    "partyTotal": "Shown to travellers as {amount} for {n}."
+    "partyTotal": "Shown to travellers as {amount} for {n}.",
+    "perNightSum": "That is {amount} per person, per night, over {nights} nights.",
+    "lengthNote": "Changing the length does not change the price. This is what you sell the trip for, so the per night figure moves instead. If a shorter trip should cost less, change the price too."
   }
 }

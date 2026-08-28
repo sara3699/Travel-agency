@@ -504,6 +504,8 @@
     "r_noLedger": "Rien n'est indiqué comme inclus ou exclu.",
     "r_noLadder": "Il n'a pas de barème d'annulation.",
     "totalCol": "Total du groupe",
-    "partyTotal": "Affiché aux voyageurs : {amount} pour {n}."
+    "partyTotal": "Affiché aux voyageurs : {amount} pour {n}.",
+    "perNightSum": "Soit {amount} par personne et par nuit, sur {nights} nuits.",
+    "lengthNote": "Modifier la durée ne modifie pas le prix. C'est le prix auquel vous vendez le séjour : c'est le tarif par nuit qui bouge. Si un séjour plus court doit coûter moins cher, modifiez aussi le prix."
   }
 }

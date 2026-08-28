@@ -2232,3 +2232,20 @@ html[dir="rtl"] .card1200__dest { line-height: 1.25; }
   font-size: 0.85rem;
   color: var(--sc-ink-soft, var(--sc-ink));
 }
+
+.pkged__sums {
+  margin-block: -0.4rem var(--sc-4);
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--sc-ink-soft, var(--sc-ink));
+}
+.pkged__sums p { margin: 0; }
+/* Shown only while the length differs from what is saved, so it reads as a
+   consequence of the edit rather than as permanent chrome. */
+.pkged__warn {
+  margin-block-start: 0.3rem !important;
+  padding: 0.6rem 0.8rem;
+  border-inline-start: 2px solid var(--sc-accent);
+  color: var(--sc-ink);
+}
