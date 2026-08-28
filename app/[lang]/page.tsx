@@ -5,6 +5,7 @@ import { ctaKindFor, needsProvenanceChip } from '@/lib/provenance';
 import { money, type Money } from '@/lib/money';
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { FlightAccountLinks } from '@/components/FlightAccountLinks';
+import { FlightSignIn } from '@/components/FlightSignIn';
 import { Flight, type TripView, type FlightCopy } from '@/components/flight/Flight';
 
 export function generateStaticParams() {
@@ -95,6 +96,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       askHref={`/${locale}/enquire`}
       localeSwitcher={<LocaleSwitcher current={locale} />}
       accountSlot={<FlightAccountLinks locale={locale} />}
+      signInSlot={<FlightSignIn locale={locale} />}
     />
   );
 }

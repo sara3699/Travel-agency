@@ -88,6 +88,7 @@ export function Flight({
   askHref,
   localeSwitcher,
   accountSlot,
+  signInSlot,
 }: {
   copy: FlightCopy;
   trips: TripView[];
@@ -97,9 +98,10 @@ export function Flight({
    *  a slot rather than positioned separately: two fixed elements competing for
    *  the same corner is how a chrome bar drifts out of alignment. */
   localeSwitcher: React.ReactNode;
-  /** Sign-in, or the account and staff links when there is a session. Server
-   *  rendered for the same reason the locale links are. */
+  /** Destinations, About, and the staff links when the session has them. */
   accountSlot: React.ReactNode;
+  /** The account control, kept apart so it can sit at the very end of the bar. */
+  signInSlot: React.ReactNode;
 }) {
   const [party, setParty] = useState(2);
   const [leg, setLeg] = useState(0);
@@ -267,7 +269,7 @@ export function Flight({
                   <a
                     className="trip"
                     key={t.slug}
-                    href={`${askHref}?trip=${t.slug}&party=${party}`}
+                    href={`/${locale}/destinations/${t.slug}?travellers=${party}`}
                   >
                     <span className="trip__where">
                       <span className="trip__dest">{t.dest}</span>
@@ -294,7 +296,7 @@ export function Flight({
 
             <div className="table-foot">
               <p className="note">{copy.sharingNote}</p>
-              <a className="ask" href={`${askHref}?party=${party}`}>
+              <a className="ask" href={`/${locale}/destinations?travellers=${party}`}>
                 {copy.askAll}
               </a>
             </div>
@@ -347,6 +349,8 @@ export function Flight({
                 +
               </button>
             </div>
+
+            {signInSlot}
           </div>
         </div>
 

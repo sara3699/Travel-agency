@@ -24,14 +24,19 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
       </a>
 
       <nav className="site-head__nav" aria-label={t('nav.menu')}>
-        {isStaff(user) && (
-          <a href={`/${locale}/staff`}>{t('nav.queue')}</a>
-        )}
-        {isAdmin(user) && (
-          <a href={`/${locale}/admin`}>{t('nav.adminArea')}</a>
-        )}
+        <a href={`/${locale}/destinations`}>{t('nav.destinations')}</a>
+        <a href={`/${locale}/about`}>{t('nav.aboutUs')}</a>
+        {isStaff(user) && <a href={`/${locale}/staff`}>{t('nav.queue')}</a>}
+        {isAdmin(user) && <a href={`/${locale}/admin`}>{t('nav.adminArea')}</a>}
+
+        <LocaleSwitcher current={locale} />
+
+        {/* Account controls sit at the far end, which is where every travel
+            site puts them and where the operator asked for them on 2026-08-27.
+            "Right" here means the end of the inline axis, so it is the left in
+            Arabic without a second rule. */}
         {user ? (
-          <>
+          <span className="site-head__account">
             <a href={`/${locale}/account`}>{t('auth.account')}</a>
             <form action={signOutAction}>
               <input type="hidden" name="locale" value={locale} />
@@ -39,11 +44,12 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
                 {t('auth.signOut')}
               </button>
             </form>
-          </>
+          </span>
         ) : (
-          <a href={`/${locale}/account/sign-in`}>{t('auth.signIn')}</a>
+          <a className="btn btn--quiet" href={`/${locale}/account/sign-in`}>
+            {t('auth.signIn')}
+          </a>
         )}
-        <LocaleSwitcher current={locale} />
       </nav>
     </header>
   );

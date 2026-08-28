@@ -15,11 +15,10 @@ export async function FlightAccountLinks({ locale }: { locale: Locale }) {
 
   return (
     <nav className="chrome__links" aria-label={t('nav.menu')}>
+      <a href={`/${locale}/destinations`}>{t('nav.destinations')}</a>
+      <a href={`/${locale}/about`}>{t('nav.aboutUs')}</a>
       {isStaff(user) && <a href={`/${locale}/staff`}>{t('nav.queue')}</a>}
       {isAdmin(user) && <a href={`/${locale}/admin`}>{t('nav.adminArea')}</a>}
-      <a href={user ? `/${locale}/account` : `/${locale}/account/sign-in`}>
-        {user ? t('auth.account') : t('auth.signIn')}
-      </a>
     </nav>
   );
 }
