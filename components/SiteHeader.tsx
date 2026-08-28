@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { getCurrentUser, isStaff, isAdmin } from '@/lib/auth/session';
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
@@ -25,16 +26,24 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
 
       <nav className="site-head__nav" aria-label={t('nav.menu')}>
         <a href={`/${locale}/destinations`}>{t('nav.destinations')}</a>
+        <a href={`/${locale}/occasions`}>{t('nav.occasions')}</a>
+        <a href={`/${locale}/faq`}>{t('nav.faq')}</a>
         <a href={`/${locale}/about`}>{t('nav.aboutUs')}</a>
+        <a href={`/${locale}/trust`}>{t('nav.trust')}</a>
         {isStaff(user) && <a href={`/${locale}/staff`}>{t('nav.queue')}</a>}
         {isAdmin(user) && <a href={`/${locale}/admin`}>{t('nav.adminArea')}</a>}
+      </nav>
 
-        <LocaleSwitcher current={locale} />
+      {/* Utilities sit together at the end of the row rather than mixed in
+          with the navigation, which is what made the bar wrap into two
+          scattered lines in Arabic. `margin-inline-start: auto` puts them at
+          the end of the inline axis, so it is the right in English and the
+          left in Arabic from one declaration. */}
+      <div className="site-head__utils">
+        <Suspense fallback={null}>
+          <LocaleSwitcher current={locale} />
+        </Suspense>
 
-        {/* Account controls sit at the far end, which is where every travel
-            site puts them and where the operator asked for them on 2026-08-27.
-            "Right" here means the end of the inline axis, so it is the left in
-            Arabic without a second rule. */}
         {user ? (
           <span className="site-head__account">
             <a href={`/${locale}/account`}>{t('auth.account')}</a>
@@ -50,7 +59,8 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
             {t('auth.signIn')}
           </a>
         )}
-      </nav>
+      </div>
+
     </header>
   );
 }

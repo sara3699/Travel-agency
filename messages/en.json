@@ -16,7 +16,10 @@
     "adminArea": "Admin",
     "destinations": "Destinations",
     "aboutUs": "About us",
-    "trips": "Trips"
+    "trips": "Trips",
+    "faq": "Questions",
+    "occasions": "Occasions",
+    "trust": "Trust"
   },
   "home": {
     "eyebrow": "Departing from",
@@ -53,7 +56,8 @@
     "transfers": "Transfers",
     "breakfast": "Breakfast",
     "bags": "Bags",
-    "visa": "Visa"
+    "visa": "Visa",
+    "car": "Car hire"
   },
   "facets": {
     "halal_food_nearby": "Halal food nearby",
@@ -152,12 +156,14 @@
     "skip": "Skip to the trips",
     "routeLabel": "Route",
     "prov": "Illustrative fare",
-    "w1": "Caucasus",
-    "w2": "Kazbegi",
-    "w3": "Baku",
-    "w4": "Crossing",
-    "w5": "Samarkand",
-    "w6": "The table"
+    "w1": "Georgia",
+    "w2": "Kazakhstan",
+    "w3": "Azerbaijan",
+    "w4": "Türkiye",
+    "w5": "Uzbekistan",
+    "w6": "Morocco",
+    "seePrice": "See the price",
+    "priceMoved": "Prices live on each trip's own page, where you can set your party and length and watch the figure move."
   },
   "auth": {
     "missingFields": "Fill in both fields.",
@@ -323,7 +329,15 @@
     "view": "See this trip",
     "totalFor": "Total for {n}",
     "nightsFrom": "{n} nights from {city}",
-    "departs": "Departs {date}"
+    "departs": "Departs {date}",
+    "perNight": "{amount} per night",
+    "allIn": "All fees included",
+    "plusExcl": "Plus {amount} not included",
+    "filters": "Narrow it down",
+    "crumbHome": "Home",
+    "crumbDest": "Destinations",
+    "to": "Going to",
+    "anywhere": "Anywhere"
   },
   "pkg": {
     "back": "All destinations",
@@ -368,5 +382,69 @@
     "p4": "This site was designed in Arabic and the English follows from it, rather than the other way round. The type, the layout and the direction were all built that way from the start.",
     "h5": "A note on this catalogue",
     "p5": "These packages are specimen data, and every card says so. They are invented under an invented house brand to show how the interface works. There are no reviews, no ratings and no licence numbers on this site, because on an invented catalogue those would be fabricated records rather than a weaker design."
+  },
+  "pricer": {
+    "heading": "Price it for your party",
+    "travellers": "Travellers",
+    "fewer": "One fewer traveller",
+    "more": "One more traveller",
+    "nights": "Nights",
+    "nightsSet": "as sold",
+    "shorter": "One night fewer",
+    "longer": "One night more",
+    "total": "Total for {n}",
+    "each": "{amount} each",
+    "perNight": "{amount} per night",
+    "excl": "Plus {amount} not included, for {n}",
+    "noExcl": "Nothing left out at this price.",
+    "asSold": "This is the trip as we sell it. The figure is the whole price for {n}.",
+    "estimate": "Estimate. You have changed the length from {sold} nights to {chosen}, so a person confirms the real figure before anything is committed.",
+    "reset": "Back to {n} nights",
+    "ask": "Ask about this trip"
+  },
+  "faq": {
+    "title": "Questions and answers",
+    "lead": "The things people ask before they ask us. If your question is not here, ask it and we will answer it and then add it.",
+    "search": "Search the answers",
+    "searchHint": "Type a word — price, visa, halal, cancel",
+    "noResults": "Nothing matched that. Ask us directly and we will answer.",
+    "results": "{n} answers",
+    "allTopics": "All topics",
+    "seeAll": "See all {n} in {topic}",
+    "stillHelp": "Still need an answer?",
+    "stillBody": "Ask the question in your own words. A person reads it, not a bot, and the trip you were looking at comes with the message.",
+    "ask": "Ask a question",
+    "nav": "Questions"
+  },
+  "cal": {
+    "dates": "Departure dates",
+    "any": "Any dates",
+    "prev": "Previous month",
+    "next": "Next month",
+    "exact": "Exact dates",
+    "day": "day",
+    "days": "days",
+    "clear": "Clear dates",
+    "done": "Done",
+    "legend": "Dots mark days a trip actually leaves",
+    "hasTrip": "a trip leaves this day"
+  },
+  "occ": {
+    "title": "What are you travelling for?",
+    "lede": "A dozen trips does not need a wall of filters. It needs the reason you are going.",
+    "crumb": "Occasions",
+    "openNow": "Open now",
+    "opens": "Opens",
+    "dates": "Dates",
+    "moon": "The first day depends on the moon sighting, so this can shift by a day.",
+    "nTrips": "{n, plural, =0 {No trips yet} one {# trip} other {# trips}}",
+    "advice": "Worth knowing",
+    "none": "Nothing in this window yet. Tell us what you had in mind and we will price it.",
+    "ask": "Ask us instead",
+    "all": "See every trip"
+  },
+  "trust": {
+    "title": "Trust and verify",
+    "lede": "Everything on this page is either something you can check, or something clearly marked as not yet real."
   }
 }

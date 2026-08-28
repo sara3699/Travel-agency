@@ -58,7 +58,7 @@ console.log(`✓ ${files.length} files: logical properties only.`);
 const TYPO_OK = new Set([
   'font', 'font-family', 'font-size', 'font-weight', 'font-feature-settings',
   'font-variation-settings', 'line-height', 'letter-spacing', 'word-spacing',
-  'text-transform', 'opacity', 'text-wrap', 'font-style', 'content',
+  'text-transform', 'opacity', 'text-wrap', 'font-style', 'content', 'color',
 ]);
 
 let dirFailures = 0;

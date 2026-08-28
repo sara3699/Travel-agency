@@ -3,6 +3,7 @@ import { locales, type Locale } from '@/i18n/routing';
 import { getPublishedPackages } from '@/lib/db/packages';
 import { ctaKindFor, needsProvenanceChip } from '@/lib/provenance';
 import { money, type Money } from '@/lib/money';
+import { Suspense } from 'react';
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { FlightAccountLinks } from '@/components/FlightAccountLinks';
 import { FlightSignIn } from '@/components/FlightSignIn';
@@ -86,6 +87,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     skip: t('flight.skip'),
     routeLabel: t('flight.routeLabel'),
     waypoints: [1, 2, 3, 4, 5, 6].map((i) => t(`flight.w${i}`)),
+    seePrice: t('flight.seePrice'),
+    priceMoved: t('flight.priceMoved'),
   };
 
   return (
@@ -94,7 +97,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
       trips={trips}
       locale={locale}
       askHref={`/${locale}/enquire`}
-      localeSwitcher={<LocaleSwitcher current={locale} />}
+      localeSwitcher={<Suspense fallback={null}><LocaleSwitcher current={locale} /></Suspense>}
       accountSlot={<FlightAccountLinks locale={locale} />}
       signInSlot={<FlightSignIn locale={locale} />}
     />

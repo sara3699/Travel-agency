@@ -57,6 +57,8 @@ export interface FlightCopy {
   skip: string;
   routeLabel: string;
   waypoints: string[];
+  seePrice: string;
+  priceMoved: string;
 }
 
 /** weight = viewport-heights this leg owns. weight / clip-seconds is held at
@@ -263,8 +265,6 @@ export function Flight({
 
             <div className="trips">
               {trips.map((t) => {
-                const total = scale(t.pricePerPerson, party);
-                const excl = t.excludedPerPerson ? scale(t.excludedPerPerson, party) : null;
                 return (
                   <a
                     className="trip"
@@ -277,17 +277,12 @@ export function Flight({
                         {fill(copy.nights, { n: nf.format(t.nights) })} · {t.from}
                       </span>
                     </span>
-                    <span className="trip__total">
-                      {/* The party total IS the price. Refusal list item 11:
-                          never a per-person figure without it. */}
-                      <span className="trip__figure">{fmt(total)}</span>
-                      <span className="trip__for">{fill(copy.forParty, { n: nf.format(party) })}</span>
-                    </span>
-                    <p className="trip__excl">
-                      {excl && excl.amountMinor > 0
-                        ? fill(copy.plusExcluded, { amount: fmt(excl), names: t.excludedNames })
-                        : copy.nothingExcluded}
-                    </p>
+                    {/* No figure here. The operator asked on 2026-08-27 for
+                        prices to live on their own page, where the party and
+                        the length can be set and the number responds. Showing
+                        a total here would either duplicate that or contradict
+                        it once the length is changed. */}
+                    <span className="trip__see">{copy.seePrice}</span>
                     <span className="trip__prov">{t.provenanceLabel}</span>
                   </a>
                 );
@@ -295,7 +290,7 @@ export function Flight({
             </div>
 
             <div className="table-foot">
-              <p className="note">{copy.sharingNote}</p>
+              <p className="note">{copy.priceMoved}</p>
               <a className="ask" href={`/${locale}/destinations?travellers=${party}`}>
                 {copy.askAll}
               </a>

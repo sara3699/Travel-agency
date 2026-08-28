@@ -8,7 +8,8 @@
     "start": "next start",
     "lint:logical": "node scripts/lint-logical-properties.mjs",
     "types:db": "supabase gen types typescript --project-id pjyyphsleahyyuvzxyjs > lib/database.types.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "cards": "node scripts/build-share-cards.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
@@ -27,6 +28,7 @@
     "@types/react-dom": "^19.0.0",
     "@types/three": "^0.170.0",
     "playwright-core": "^1.62.1",
+    "puppeteer-core": "^25.9.0",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0"
   }

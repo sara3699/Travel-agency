@@ -168,4 +168,4 @@ export const packages: TravelPackage[] = [
   },
 ];
 
-export const ledgerOrder = ['flights', 'hotel', 'transfers', 'breakfast', 'bags', 'visa'] as const;
+export const ledgerOrder = ['flights', 'hotel', 'transfers', 'breakfast', 'bags', 'visa', 'car'] as const;
