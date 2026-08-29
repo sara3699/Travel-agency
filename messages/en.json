@@ -1,7 +1,8 @@
 {
   "brand": {
-    "name": "Mars",
-    "tagline": "Packages, priced honestly."
+    "name": "Anees",
+    "tagline": "Packages, priced honestly.",
+    "meaning": "the good company"
   },
   "nav": {
     "packages": "Packages",

@@ -49,6 +49,8 @@ export interface FlightCopy {
   fewer: string;
   more: string;
   partyLive: string;
+  brandName: string;
+  brandMeaning: string;
   sharingNote: string;
   nights: string; // {n}
   forParty: string; // {n}
@@ -309,8 +311,8 @@ export function Flight({
         <div className="chrome__top">
         <div className="chrome__bar">
           <a className="wordmark" href={`/${locale}`}>
-            <span className="wordmark__name">Mars</span>
-            <span className="wordmark__tag">{copy.partyLive}</span>
+            <span className="wordmark__name">{copy.brandName}</span>
+            <span className="wordmark__tag">{copy.brandMeaning}</span>
           </a>
 
           <div className="chrome__right">

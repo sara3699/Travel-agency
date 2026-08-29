@@ -50,7 +50,7 @@ export default async function CardPage({
 
       <div className="card1200__inner">
         <div className="card1200__top">
-          <span className="card1200__mark">Mars</span>
+          <span className="card1200__mark">{t('brand.name')}</span>
           {needsProvenanceChip(pkg.provenance) && (
             <span className="card1200__spec">{t('flight.prov')}</span>
           )}

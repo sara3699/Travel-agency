@@ -78,6 +78,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     fewer: t('flight.fewer'),
     more: t('flight.more'),
     partyLive: t('flight.partyLive'),
+    brandName: t('brand.name'),
+    brandMeaning: t('brand.meaning'),
     sharingNote: t('flight.sharingNote'),
     nights: t.raw('flight.nights') as string,
     forParty: t.raw('flight.forParty') as string,

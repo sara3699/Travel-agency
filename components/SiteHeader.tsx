@@ -20,8 +20,8 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
   return (
     <header className="site-head">
       <a className="wordmark" href={`/${locale}`}>
-        <span className="wordmark__name">Mars</span>
-        <span className="wordmark__tag">{t('flight.partyLive')}</span>
+        <span className="wordmark__name">{t('brand.name')}</span>
+        <span className="wordmark__tag">{t('brand.meaning')}</span>
       </a>
 
       <nav className="site-head__nav" aria-label={t('nav.menu')}>

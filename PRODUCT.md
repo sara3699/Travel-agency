@@ -140,11 +140,7 @@ aspiration; see the section below.
 
 Explicitly undecided:
 
-- The agency name. Raised on 2026-08-23 and deferred. Record it as unset rather
-  than inventing one. "Club Med" was proposed and rejected: it is a trading
-  company, so using it would be impersonation and trademark infringement, and its
-  product, all-inclusive stays at its own resorts, is not this product. A future
-  session must not resurrect it.
+- ~~The agency name.~~ **SETTLED 2026-08-28: أنيس, Anees.**
 - How many locales ship content at launch. The architecture must support Arabic,
   English and French without a rewrite. Which of them carry full content on day
   one was not settled.
@@ -164,7 +160,19 @@ All outbound text runs through the `no-ai-voice` skill before it enters the
 codebase. That covers landing copy, package descriptions, interface strings,
 confirmations and error messages.
 
-No agency name, logo, wordmark or identity asset exists yet.
+The agency is called **أنيس / Anees**, settled 2026-08-28. From `uns`, the ease
+felt in good company: an `anees` is the companion who puts you at ease rather than
+merely the one travelling alongside you. It was chosen to sit on the product's real
+differentiator, which is that a person answers you rather than a checkout.
+
+The name is never translated. Arabic pages render أنيس, every other locale renders
+Anees, and no locale gets a translated equivalent. It is one name in two scripts.
+
+"Club Med" was proposed and rejected before this: it is a trading company, so using
+it would be impersonation and trademark infringement, and its product, all-inclusive
+stays at its own resorts, is not this product. A future session must not resurrect it.
+
+No logo or identity asset exists yet beyond the typographic wordmark.
 
 ## Evidence on Hand
 

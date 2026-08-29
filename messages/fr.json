@@ -1,7 +1,8 @@
 {
   "brand": {
-    "name": "Mars",
-    "tagline": "Des forfaits au prix honnête."
+    "name": "Anees",
+    "tagline": "Des forfaits au prix honnête.",
+    "meaning": "la bonne compagnie"
   },
   "nav": {
     "packages": "Forfaits",

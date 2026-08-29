@@ -45,7 +45,7 @@ export async function generateMetadata({
   setRequestLocale(locale);
   const t = await getTranslations();
   return {
-    title: `Mars (${t('flight.partyLive')})`,
+    title: t('brand.name'),
     description: t('flight.heroBody'),
     alternates: {
       languages: Object.fromEntries(locales.map((l) => [l, `/${l}`])),
