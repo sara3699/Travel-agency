@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { createClient } from '../supabase/server';
+import { weakPasswordKey } from './password-errors';
 
 export interface AuthResult {
   ok: boolean;
@@ -36,7 +37,7 @@ export async function signUp(formData: FormData): Promise<AuthResult> {
     },
   });
 
-  if (error) return { ok: false, errorKey: mapAuthError(error.message) };
+  if (error) return { ok: false, errorKey: mapAuthError(error) };
 
   revalidatePath('/', 'layout');
   return { ok: true };
@@ -51,7 +52,7 @@ export async function signIn(formData: FormData): Promise<AuthResult> {
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-  if (error) return { ok: false, errorKey: mapAuthError(error.message) };
+  if (error) return { ok: false, errorKey: mapAuthError(error) };
 
   revalidatePath('/', 'layout');
   return { ok: true };
@@ -70,8 +71,11 @@ export async function signOut(): Promise<AuthResult> {
  * does not distinguish a wrong password from an unknown address -- keep that
  * property rather than helpfully explaining which it was.
  */
-function mapAuthError(message: string): string {
-  const m = message.toLowerCase();
+function mapAuthError(error: { message: string; code?: string }): string {
+  const weak = weakPasswordKey(error);
+  if (weak) return weak;
+
+  const m = error.message.toLowerCase();
   if (m.includes('already registered') || m.includes('already been registered'))
     return 'auth.emailTaken';
   if (m.includes('invalid login credentials')) return 'auth.invalidCredentials';

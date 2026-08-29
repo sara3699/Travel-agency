@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { createAdminClient } from '../supabase/admin';
 import { createClient } from '../supabase/server';
 import { requireAdmin } from '../auth/session';
+import { weakPasswordKey } from '../auth/password-errors';
 
 /**
  * Staff administration. This is one of the only three jobs that legitimately
@@ -56,7 +57,14 @@ export async function createEmployee(formData: FormData) {
     user_metadata: { display_name: displayName || null },
   });
 
-  if (error || !data.user) return { ok: false, errorKey: 'admin.createFailed' };
+  // A password the project refuses is an answer, not a failure. Without this
+  // the staff form says only "The account was not created", and whoever is
+  // typing has no idea the password was the problem.
+  if (error) {
+    const weak = weakPasswordKey(error);
+    return { ok: false, errorKey: weak ?? 'admin.createFailed' };
+  }
+  if (!data.user) return { ok: false, errorKey: 'admin.createFailed' };
 
   // The signup trigger already granted 'customer'. Add the staff row alongside
   // it; the login hook resolves the strongest role.

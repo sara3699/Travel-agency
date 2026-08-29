@@ -189,7 +189,10 @@
     "signInLede": "An account is only for keeping your enquiries in one place. You can send one without it.",
     "signUpLede": "You do not need an account to enquire. It just keeps your enquiries together afterwards.",
     "working": "Working...",
-    "account": "Account"
+    "account": "Account",
+    "passwordLeaked": "That password has appeared in a known data breach, so it is one attackers try first. It is not about how it looks: pick a different one and it will be accepted.",
+    "passwordCharacters": "That password needs a wider mix. Add a number, or a capital letter, or a symbol.",
+    "passwordWeak": "That password is too easy to guess. Try a longer one, or add a number or a symbol."
   },
   "enquiry": {
     "nameRequired": "We need a name to reply to.",

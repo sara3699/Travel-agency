@@ -189,7 +189,10 @@
     "signInLede": "Le compte sert seulement à regrouper vos demandes. Vous pouvez en envoyer une sans.",
     "signUpLede": "Aucun compte n'est nécessaire pour demander. Il regroupe simplement vos demandes ensuite.",
     "working": "En cours...",
-    "account": "Compte"
+    "account": "Compte",
+    "passwordLeaked": "Ce mot de passe est apparu dans une fuite de données connue : c'est donc l'un des premiers que les attaquants essaient. Ce n'est pas une question d'apparence, choisissez-en un autre et il sera accepté.",
+    "passwordCharacters": "Ce mot de passe demande plus de variété. Ajoutez un chiffre, une majuscule ou un symbole.",
+    "passwordWeak": "Ce mot de passe est trop facile à deviner. Allongez-le, ou ajoutez un chiffre ou un symbole."
   },
   "enquiry": {
     "nameRequired": "Il nous faut un nom pour répondre.",
