@@ -6,9 +6,13 @@
 # Dependencies
 node_modules/
 
-# Build output
-dist/
-build/
+# Build output. Anchored with a leading slash so they match only at the repo
+# root: an unanchored `build/` matches ANY directory of that name at any depth,
+# which silently swallowed the whole app/[lang]/build/ route on 2026-08-28. It
+# worked locally and would have 404'd in production, because the files were
+# never in a commit.
+/dist/
+/build/
 .next/
 # A second build target, so a verification build does not fight a running dev
 # server for `.next`. Two processes sharing it produce mismatched chunks that
