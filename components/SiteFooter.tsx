@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { MotionToggle } from '@/components/MotionToggle';
+import { BUILD_SHELL } from '@/lib/build';
 import type { Locale } from '@/i18n/routing';
 
 /**
@@ -38,8 +39,12 @@ export async function SiteFooter({ locale }: { locale: Locale }) {
 
       {/* One line, which is the whole practitioner-audience budget in the
           traveller's path. Master doc 14.4: the second audience is served on
-          its own routes, never by decorating the commercial ones. */}
+          its own routes, never by decorating the commercial ones. So the link
+          into /build and the maker credit share a single line rather than
+          taking one each. */}
       <p className="site-foot__maker">
+        <a href={`/${locale}/build`}>{BUILD_SHELL[locale].title}</a>
+        {' · '}
         {t('foot.builtBy')}{' '}
         <a href="https://instagram.com/sara_dhaouadi_official" rel="me noopener">
           sara_dhaouadi_official

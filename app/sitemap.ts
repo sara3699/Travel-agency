@@ -4,6 +4,7 @@ import { getPublishedPackages } from '@/lib/db/packages';
 import { faqFor } from '@/lib/faq';
 import { WINDOWS } from '@/lib/occasions';
 import { LEGAL_DOCS } from '@/lib/legal';
+import { PIECES } from '@/lib/build';
 import { SITE } from '@/lib/seo';
 
 export const revalidate = 3600;
@@ -28,11 +29,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Paths after the locale segment. Everything here is public and indexable.
   const staticPaths = ['', '/destinations', '/occasions', '/faq', '/trust', '/about', '/enquire'];
   const legalPaths = LEGAL_DOCS.map((d) => `/legal/${d}`);
+  const buildPaths = ['/build', ...PIECES.map((b) => `/build/${b.id}`)];
   const faqPaths = faqFor('en').map((c) => `/faq/${c.id}`);
   const occasionPaths = WINDOWS.map((w) => `/occasions/${w.id}`);
   const packagePaths = packages.map((p) => `/destinations/${p.slug}`);
 
-  const all = [...staticPaths, ...legalPaths, ...faqPaths, ...occasionPaths, ...packagePaths];
+  const all = [...staticPaths, ...legalPaths, ...buildPaths, ...faqPaths, ...occasionPaths, ...packagePaths];
 
   const priorityFor = (path: string) => {
     if (path === '') return 1;

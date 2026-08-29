@@ -108,7 +108,13 @@ export function Flight({
   /** The account control, kept apart so it can sit at the very end of the bar. */
   signInSlot: React.ReactNode;
 }) {
-  const [party, setParty] = useState(2);
+  /* Was an adjustable dial in the top bar. Removed from the landing page on
+     2026-08-28 at the operator's request. The party size still drives the laid
+     table, the figures on the rail and the links into the listing, so it stays
+     as the assumption the catalogue is priced at; it is simply no longer
+     adjustable here. Travellers change it on the package page, where the
+     pricer recomputes and says so. */
+  const party = 2;
   const [leg, setLeg] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -318,35 +324,6 @@ export function Flight({
           <div className="chrome__right">
             {accountSlot}
             {localeSwitcher}
-
-            {/* THE SIGNATURE MOVE. One control, airborne the whole way down,
-                that lays the table on landing. */}
-            <div className="dial">
-              <button
-                type="button"
-                className="dial__btn"
-                onClick={() => setParty((n) => Math.max(1, n - 1))}
-                disabled={party <= 1}
-                aria-label={copy.fewer}
-              >
-                &minus;
-              </button>
-              <span className="dial__label">
-                <span>{copy.travelling}</span>
-                <span className="dial__count" aria-live="polite">
-                  {nf.format(party)}
-                </span>
-              </span>
-              <button
-                type="button"
-                className="dial__btn"
-                onClick={() => setParty((n) => Math.min(8, n + 1))}
-                disabled={party >= 8}
-                aria-label={copy.more}
-              >
-                +
-              </button>
-            </div>
 
             {signInSlot}
           </div>

@@ -2249,3 +2249,121 @@ html[dir="rtl"] .card1200__dest { line-height: 1.25; }
   border-inline-start: 2px solid var(--sc-accent);
   color: var(--sc-ink);
 }
+
+/* ------------------------------------------------------------------ *
+ * /BUILD — the practitioner layer
+ * Master doc 14.4. Reading matter, so it is set for reading: one
+ * column, generous measure, no cards.
+ * ------------------------------------------------------------------ */
+.build { max-inline-size: 46rem; }
+.build__note {
+  margin-block: 0 var(--sc-6);
+  padding: 0.9rem 1.1rem;
+  border-inline-start: 2px solid var(--sc-accent);
+  font-size: 0.9rem;
+  color: var(--sc-ink-soft, var(--sc-ink));
+}
+.build__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sc-6); }
+.build__list a { text-decoration: none; color: inherit; display: block; }
+.build__list h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: var(--sc-leading-tight, 1.2);
+}
+.build__list a:hover h2 { color: var(--sc-accent); }
+.build__list p { margin: 0; color: var(--sc-ink-soft, var(--sc-ink)); line-height: 1.65; }
+.build__meta {
+  margin-block-start: 0.7rem !important;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  font-family: var(--sc-font-mono);
+  font-size: 0.72rem;
+  color: var(--sc-ink-mute, var(--sc-ink)) !important;
+}
+
+/* ---- an essay ---- */
+.essay { max-inline-size: 42rem; }
+.essay__sub {
+  margin-block-end: var(--sc-5);
+  padding: 0.7rem 0.9rem;
+  border: 1px dashed var(--sc-hairline-strong, var(--sc-hairline));
+  border-radius: var(--sc-r-md, 8px);
+  font-size: 0.85rem;
+  color: var(--sc-ink-mute, var(--sc-ink));
+}
+.essay__date {
+  font-family: var(--sc-font-mono);
+  font-size: 0.75rem;
+  color: var(--sc-ink-mute, var(--sc-ink));
+}
+.essay__body p { line-height: 1.75; margin-block: 0 1.15rem; }
+.essay__h {
+  margin-block: 2.6rem 0.9rem;
+  font-size: 1.32rem;
+  font-weight: 500;
+  line-height: var(--sc-leading-tight, 1.25);
+}
+.essay__note {
+  padding: 0.8rem 1rem;
+  border-inline-start: 2px solid var(--sc-hairline-strong, var(--sc-hairline));
+  font-size: 0.88rem;
+  color: var(--sc-ink-mute, var(--sc-ink));
+}
+.essay__list { margin-block: 0 1.15rem; padding-inline-start: 1.2rem; }
+.essay__list li { line-height: 1.7; margin-block-end: 0.6rem; }
+
+/* Code is always left-to-right, in every locale. */
+.essay__code { margin: 0 0 1.4rem; }
+.essay__code pre {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-md, 8px);
+  background: var(--sc-bg-raised, transparent);
+  font-family: var(--sc-font-mono);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  text-align: start;
+}
+.essay__code figcaption {
+  margin-block-start: 0.45rem;
+  font-size: 0.76rem;
+  color: var(--sc-ink-mute, var(--sc-ink));
+}
+
+/* The demonstration. The sample keeps its own direction, so the wrong example
+   stays wrong on screen instead of being silently reordered by the paragraph
+   around it. */
+.essay__sample {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.9rem;
+  margin-block: 0 0.8rem !important;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-md, 8px);
+}
+.essay__sample-label {
+  font-family: var(--sc-font-mono);
+  font-size: 0.7rem;
+  color: var(--sc-ink-mute, var(--sc-ink));
+  flex: none;
+}
+.essay__sample-text { font-size: 1.35rem; margin-inline-start: auto; }
+
+.essay__other {
+  margin-block-start: var(--sc-6);
+  padding-block-start: var(--sc-4);
+  border-block-start: 1px solid var(--sc-hairline);
+  font-family: var(--sc-font-mono);
+  font-size: 0.75rem;
+}
+.essay__other a { margin-inline-start: 0.6rem; }
+
+[dir='rtl'] .build__meta,
+[dir='rtl'] .essay__date,
+[dir='rtl'] .essay__other { letter-spacing: 0; }
