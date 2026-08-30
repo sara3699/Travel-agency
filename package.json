@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint:logical": "node scripts/lint-logical-properties.mjs",
-    "types:db": "supabase gen types typescript --project-id pjyyphsleahyyuvzxyjs > lib/database.types.ts.tmp && mv lib/database.types.ts.tmp lib/database.types.ts || (rm -f lib/database.types.ts.tmp; echo 'supabase CLI not installed'; exit 1)",
+    "types:db": "npx supabase gen types typescript --project-id pjyyphsleahyyuvzxyjs > lib/database.types.ts.tmp && mv lib/database.types.ts.tmp lib/database.types.ts || (rm -f lib/database.types.ts.tmp; echo 'types:db failed. Run: npx supabase login'; exit 1)",
     "typecheck": "tsc --noEmit",
     "cards": "node scripts/build-share-cards.mjs"
   },
@@ -29,6 +29,7 @@
     "@types/three": "^0.170.0",
     "playwright-core": "^1.62.1",
     "puppeteer-core": "^25.9.0",
+    "supabase": "^2.116.0",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0"
   }
