@@ -23,7 +23,7 @@ export type Block =
   /** Mounts a live component. The point of this layer is evidence that reads
    *  the running system rather than a description of it, so a piece can embed
    *  something that computes rather than something that was typed. */
-  | { kind: 'live'; id: 'tokens' | 'motion' | 'a11y' };
+  | { kind: 'live'; id: 'tokens' | 'motion' | 'a11y' | 'perf' };
 
 export interface Piece {
   id: string;
@@ -322,7 +322,39 @@ const accessibility: Piece = {
   },
 };
 
-export const PIECES: Piece[] = [designSystem, motionContract, accessibility, arabicShareCards];
+const performanceBudget: Piece = {
+  id: 'performance',
+  written: ['en'],
+  date: '2026-08-30',
+  title: { en: 'A budget, and the field data that does not exist' },
+  dek: {
+    en: 'The budget is real and enforced by nothing. The measurements below are real and are one load on one device. Saying which is which is most of the work.',
+  },
+  body: {
+    en: [
+      { kind: 'p', text: 'Performance is a differentiator in this category because almost nobody is fast. Under half of mobile origins pass Core Web Vitals, and being genuinely quick on a photography-led site is rare enough to read as a brand attribute rather than an engineering one.' },
+      { kind: 'p', text: 'The regional picture inverts the usual assumption. Gulf bandwidth is world-leading, so bytes are not the binding constraint in Riyadh or Dubai. Latency, round trips and main-thread work are. Over-correcting is its own mistake: Egypt\'s networks are weaker, roughly a third of Gulf traffic is desktop, and object count predicts bandwidth sensitivity even on a fast connection.' },
+
+      { kind: 'live', id: 'perf' },
+
+      { kind: 'h', text: 'Why the right-hand column is not a p75' },
+      { kind: 'p', text: 'Every threshold in the middle column is defined at the 75th percentile of real visits. The right-hand column is one load, on your device, on your network, from a machine that is probably serving this from localhost. Those are different kinds of number and putting them in the same table is only honest if the difference is stated where someone reading quickly will see it.' },
+      { kind: 'p', text: 'A lab measurement tells you whether something is plausibly within budget. Only field data tells you whether it is, for the people who actually arrive, on the devices they actually hold, on the third bar of signal in a car park.' },
+      { kind: 'note', text: 'There is no field data for this site and none is invented here. PRODUCT.md lists traffic and field performance data among the things that do not exist, alongside contracted inventory and customer reviews, and the rule for all of them is the same: absent rather than filled in.' },
+
+      { kind: 'h', text: 'The architectural risk, which is not a UI decision' },
+      { kind: 'p', text: 'The largest performance constraint on this project is geography and it cannot be optimised away in a component. Vercel has a Dubai region. The database provider has no Middle East region at all, and the round trip from Dubai to Frankfurt runs about four times the trip to Mumbai.' },
+      { kind: 'p', text: 'Four sequential queries against a Frankfurt Postgres spends a large fraction of an LCP budget before a single byte ships. That has two consequences that are already built in: queries avoid sequential round trips, and the destination and package pages are statically generated rather than rendered per request. It also has a legal consequence, which is why the privacy notice names where enquiries are held instead of leaving it to be discovered.' },
+
+      { kind: 'h', text: 'What is missing, and it is the enforcement' },
+      { kind: 'p', text: 'The budget says to enforce these in CI, on the grounds that a budget nobody fails is a wish. There is no CI in this repository at all: no workflow file, no check on a pull request, nothing that fails when a page gets heavier.' },
+      { kind: 'p', text: 'That is the honest status of the budget. The numbers are agreed, the architecture respects the expensive one, and nothing stops the next commit from quietly breaking any of it. Two other rules are in the same position, including the gate that is supposed to fail the build if a review or a rating ever appears on a specimen catalogue.' },
+      { kind: 'p', text: 'Naming that is more useful than a green dashboard, because it tells you what to build next rather than what to feel good about.' },
+    ],
+  },
+};
+
+export const PIECES: Piece[] = [designSystem, motionContract, performanceBudget, accessibility, arabicShareCards];
 
 export const findPiece = (id: string): Piece | undefined => PIECES.find((p) => p.id === id);
 

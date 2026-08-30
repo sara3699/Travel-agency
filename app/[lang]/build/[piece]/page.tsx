@@ -9,6 +9,7 @@ import { PIECES, findPiece, BUILD_SHELL, type Block } from '@/lib/build';
 import { TokenTable } from '@/components/build/TokenTable';
 import { MotionState } from '@/components/build/MotionState';
 import { A11yAudit } from '@/components/build/A11yAudit';
+import { PerfBudget } from '@/components/build/PerfBudget';
 import { alternates, canonicalFor } from '@/lib/seo';
 
 export function generateStaticParams() {
@@ -151,6 +152,8 @@ function BlockView({ block }: { block: Block }) {
           return <MotionState />;
         case 'a11y':
           return <A11yAudit />;
+        case 'perf':
+          return <PerfBudget />;
       }
     case 'sample':
       // The whole point of the essay. A right-to-left run dropped into

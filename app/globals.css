@@ -2505,3 +2505,54 @@ html[dir="rtl"] .card1200__dest { line-height: 1.25; }
 }
 
 [dir='rtl'] .tokens__inline caption { letter-spacing: 0; text-transform: none; }
+
+/* ---- the performance budget table ---- */
+.perf { margin-block: 0 1.6rem; }
+.perf table { inline-size: 100%; border-collapse: collapse; font-size: 0.84rem; }
+.perf th,
+.perf td {
+  padding: 0.7rem 0.6rem;
+  border-block-end: 1px solid var(--sc-hairline);
+  text-align: start;
+  vertical-align: baseline;
+}
+.perf thead th {
+  font-family: var(--sc-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sc-ink-mute);
+  font-weight: 400;
+}
+.perf tbody th { font-weight: 500; inline-size: 45%; }
+.perf__note {
+  display: block;
+  margin-block-start: 0.3rem;
+  font-weight: 400;
+  font-size: 0.76rem;
+  color: var(--sc-ink-mute);
+  line-height: 1.5;
+}
+.perf__budget { color: var(--sc-ink-soft); white-space: nowrap; }
+.perf__val {
+  font-family: var(--sc-font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+/* Only a breach is coloured. A page where every row is green teaches nothing,
+   and a page where every row shouts teaches less. */
+.perf__val--over { color: var(--sc-accent); }
+.perf__val--unmeasured { color: var(--sc-ink-mute); }
+.perf__foot {
+  margin-block-start: 0.9rem;
+  font-size: 0.78rem;
+  color: var(--sc-ink-mute);
+  line-height: 1.6;
+}
+@media (max-width: 640px) {
+  .perf { overflow-x: auto; }
+  .perf table { min-inline-size: 30rem; }
+}
+
+[dir='rtl'] .perf thead th { letter-spacing: 0; text-transform: none; }
+.perf__foot--warn { border-inline-start: 2px solid var(--sc-accent); padding-inline-start: 0.7rem; }
