@@ -7,6 +7,8 @@ import { SiteFooter } from '@/components/SiteFooter';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { PIECES, findPiece, BUILD_SHELL, type Block } from '@/lib/build';
 import { TokenTable } from '@/components/build/TokenTable';
+import { MotionState } from '@/components/build/MotionState';
+import { A11yAudit } from '@/components/build/A11yAudit';
 import { alternates, canonicalFor } from '@/lib/seo';
 
 export function generateStaticParams() {
@@ -140,9 +142,16 @@ function BlockView({ block }: { block: Block }) {
         </figure>
       );
     case 'live':
-      // One id today. A switch rather than a lookup table so an unknown id is
-      // a type error at build time instead of a blank space at runtime.
-      return block.id === 'tokens' ? <TokenTable /> : null;
+      // A switch rather than a lookup table, so an unknown id is a type error
+      // at build time instead of a blank space at runtime.
+      switch (block.id) {
+        case 'tokens':
+          return <TokenTable />;
+        case 'motion':
+          return <MotionState />;
+        case 'a11y':
+          return <A11yAudit />;
+      }
     case 'sample':
       // The whole point of the essay. A right-to-left run dropped into
       // left-to-right prose gets reordered against the neutral characters

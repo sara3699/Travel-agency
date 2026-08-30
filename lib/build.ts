@@ -23,7 +23,7 @@ export type Block =
   /** Mounts a live component. The point of this layer is evidence that reads
    *  the running system rather than a description of it, so a piece can embed
    *  something that computes rather than something that was typed. */
-  | { kind: 'live'; id: 'tokens' };
+  | { kind: 'live'; id: 'tokens' | 'motion' | 'a11y' };
 
 export interface Piece {
   id: string;
@@ -206,7 +206,123 @@ const designSystem: Piece = {
   },
 };
 
-export const PIECES: Piece[] = [designSystem, arabicShareCards];
+const motionContract: Piece = {
+  id: 'motion',
+  written: ['en'],
+  date: '2026-08-30',
+  title: { en: 'What moves, and what turns it off' },
+  dek: {
+    en: 'A motion contract is only worth reading if you can check it. This one shows the live state of the three things that decide whether anything moves, and is honest about the parts the control does not reach.',
+  },
+  body: {
+    en: [
+      { kind: 'p', text: 'Roughly half of all sites declare prefers-reduced-motion and almost none expose a control for it. That strands the person whose device preference is right for them in general and wrong for the room they are in: somebody on a bus with motion sickness cannot change an operating system setting for one page.' },
+      { kind: 'p', text: 'So there is a control in the footer, and it has three states rather than two. An explicit choice has to beat the device preference in both directions, because a person whose device says reduce may want the full thing here, and a checkbox cannot express that.' },
+
+      { kind: 'live', id: 'motion' },
+
+      { kind: 'h', text: 'Reduce does not mean none' },
+      { kind: 'p', text: 'Setting animation to none strips out the spatial relationship an entrance or a transition exists to communicate, which leaves the reduced-motion reader with a worse mental model than everyone else rather than a calmer one. The rule here is that reduced motion gets the end state immediately, not a stripped-out one.' },
+      { kind: 'code', caption: 'The entrance component, which shows the destination rather than nothing', text: `useEffect(() => {
+  if (prefersReducedMotion()) return setShown(true);
+  // ...otherwise observe and animate in
+}, []);` },
+      { kind: 'p', text: 'The same reasoning applies to the jump between legs of the scroll world: it moves instantly rather than smoothly, and it still moves, so the reader keeps the sense of having travelled somewhere.' },
+
+      { kind: 'h', text: 'What the control actually reaches' },
+      { kind: 'p', text: 'This is the part most motion contracts leave out, and it is the only part worth publishing. Counted from the stylesheet on 2026-08-30: thirteen transition declarations, one animation, one set of keyframes.' },
+      { kind: 'p', text: 'The reduced branch covers three of them, written twice so it applies both through the media query and through the explicit control. Everything it covers was chosen because it is the motion a person notices: a glass panel animating in, and two hover transforms that lift a card under the pointer.' },
+      { kind: 'p', text: 'It does not cover the other transitions, and it does not need to. They are short colour and opacity changes on focus and hover, and a colour change is not vestibular motion. Naming that distinction is the difference between a contract and a list.' },
+      { kind: 'note', text: 'Smooth scrolling is off globally by a deliberate choice, not by the reduced-motion branch: `html { scroll-behavior: auto }`. Per-call behaviour is chosen at the point a reader clicks something, which is a scoped decision they made rather than one imposed on every anchor on the page.' },
+
+      { kind: 'h', text: 'What it does not reach, stated plainly' },
+      { kind: 'p', text: 'The scroll-driven world on the home page is rendered by a vendored engine loaded on demand. Whether that engine consults the preference has not been verified here, and until it has, this page will not claim it does. That is the largest piece of motion on the site and the honest status of it is unknown.' },
+      { kind: 'p', text: 'Two hooks written for this, useReducedMotion and useScrollProgress, currently have no importers. They are correct and they are dead, which is worth knowing before someone reads the codebase and assumes the coverage is wider than it is.' },
+      { kind: 'p', text: 'And the reduced-motion branch has never been tested by anyone whose device actually requests it. Every check so far has been made by setting the control by hand, which exercises the same code path and is not the same evidence.' },
+
+      { kind: 'h', text: 'Why publish the gaps' },
+      { kind: 'p', text: 'Because a motion contract that lists only what works is marketing, and because the gaps are the useful part for anyone building the same thing. The parts that hold are cheap to copy. The parts that do not are where the work is.' },
+    ],
+  },
+};
+
+const accessibility: Piece = {
+  id: 'accessibility',
+  written: ['en', 'ar'],
+  date: '2026-08-30',
+  title: {
+    en: 'Accessibility: what has been checked, and what has not',
+    ar: 'إتاحة الوصول: ما جرى فحصه وما لم يُفحص',
+  },
+  dek: {
+    en: 'A dated statement of where this site stands against WCAG 2.2 Level AA, separating what was measured from what was assumed. The checks below run in your browser, on this page, now.',
+    ar: 'بيان مؤرَّخ لموقع هذا الموقع من WCAG 2.2 المستوى AA، يفصل ما قيس عمّا افتُرض. الفحوص أدناه تعمل في متصفحك، على هذه الصفحة، الآن.',
+  },
+  body: {
+    en: [
+      { kind: 'p', text: 'The target is WCAG 2.2 Level AA. This is a statement of position rather than a claim of conformance, because a conformance claim you cannot check is worth nothing and most of them cannot be checked.' },
+
+      { kind: 'live', id: 'a11y' },
+
+      { kind: 'h', text: 'Measured' },
+      { kind: 'list', items: [
+        'Colour contrast. Every text-on-background pair in the palette is computed live and every one clears 4.5:1. The quietest tier sits at 5.08:1 and the call to action reads 9.51:1 on its own button. See the design system page, which computes them in front of you.',
+        'Direction and language. Both are server-rendered on the document, so a right-to-left page never paints left-to-right first and snaps. Layout uses logical properties throughout, enforced by a lint across 85 files, so nothing is positioned by a hardcoded left or right.',
+        'Reduced motion. Honoured, with a visible three-state control rather than only the device preference, and reduced means the end state rather than nothing.',
+        'Arabic type. No letter-spacing and no opacity on Arabic text, both of which break letterforms in a connected script.',
+      ] },
+
+      { kind: 'h', text: 'Not measured' },
+      { kind: 'p', text: 'These are the parts a statement usually implies without saying. None has been tested here.' },
+      { kind: 'list', items: [
+        'Screen readers. Nothing on this site has been through NVDA, JAWS or VoiceOver. The markup is semantic and that is an argument, not evidence.',
+        'Keyboard navigation end to end. Individual controls take focus, and no one has driven the whole enquiry flow without a pointer.',
+        'Focus visibility against the sticky elements, which is where WCAG 2.2 criterion 2.4.11 usually fails.',
+        'The scroll-driven home page, which is the least conventional thing here and therefore the most likely to be the worst.',
+        'Real assistive technology in Arabic, where support is thinner and the bugs are different.',
+      ] },
+
+      { kind: 'h', text: 'Known and unresolved' },
+      { kind: 'p', text: 'The scroll-driven world on the home page has no tested alternative path. A reader who cannot use it can reach every trip through the destinations listing, which is an ordinary document, but that route has not been verified as equivalent and should not be assumed to be.' },
+
+      { kind: 'h', text: 'If something here excludes you' },
+      { kind: 'p', text: 'Say so through the enquiry form and it will be read by a person. A specimen site cannot promise a remediation timeline honestly, and it can promise that a report will not disappear into a queue nobody empties.' },
+      { kind: 'note', text: 'Dated 2026-08-30. An accessibility statement without a date is a claim about a site that may no longer exist. When this one stops matching the site, it is wrong, and it is more useful wrong and dated than vague and undated.' },
+    ],
+    ar: [
+      { kind: 'p', text: 'الهدف هو WCAG 2.2 المستوى AA. وهذا بيان موقف لا ادعاء مطابقة، لأن ادعاء المطابقة الذي لا تستطيع التحقق منه لا قيمة له، ومعظمها لا يمكن التحقق منه.' },
+
+      { kind: 'live', id: 'a11y' },
+
+      { kind: 'h', text: 'ما جرى قياسه' },
+      { kind: 'list', items: [
+        'تباين الألوان. كل زوج من نص وخلفية في اللوحة يُحسب حيًّا، وكلها تتجاوز 4.5:1. أخفت الطبقات عند 5.08:1، ونص زر الإجراء عند 9.51:1 على زره. انظر صفحة نظام التصميم، فهي تحسبها أمامك.',
+        'الاتجاه واللغة. كلاهما يُرسَل من الخادم في وسم المستند، فلا تُرسم صفحة من اليمين إلى اليسار بالاتجاه المعاكس أولًا ثم تقفز. التخطيط يستعمل الخصائص المنطقية بالكامل، ويفرض ذلك فاحص آلي على 85 ملفًا، فلا شيء يُوضع بيمين أو يسار مثبّتين.',
+        'تقليل الحركة. مُحترَم، مع أداة تحكم ظاهرة بثلاث حالات لا بتفضيل الجهاز وحده، والتقليل يعني الوصول إلى الحالة النهائية لا إلغاءها.',
+        'الخط العربي. لا تباعد بين الحروف ولا شفافية على النص العربي، وكلاهما يكسر أشكال الحروف في خط متصل.',
+      ] },
+
+      { kind: 'h', text: 'ما لم يُقَس' },
+      { kind: 'p', text: 'هذه هي الأجزاء التي يلمّح إليها أي بيان عادةً دون أن يقولها. لم يُختبر منها شيء هنا.' },
+      { kind: 'list', items: [
+        'قارئات الشاشة. لم يمر شيء من هذا الموقع على NVDA أو JAWS أو VoiceOver. البنية الدلالية سليمة، وهذه حجة لا دليل.',
+        'التنقل بلوحة المفاتيح من أوله إلى آخره. عناصر التحكم المفردة تستقبل التركيز، ولم يقُد أحد مسار الاستفسار كاملًا دون مؤشر.',
+        'وضوح التركيز أمام العناصر الثابتة، وهو الموضع الذي يسقط فيه المعيار 2.4.11 من WCAG 2.2 عادةً.',
+        'الصفحة الرئيسية المدفوعة بالتمرير، وهي أقل ما هنا تقليدية وبالتالي أرجح ما يكون أسوأه.',
+        'تقنيات مساعدة حقيقية بالعربية، حيث الدعم أرقّ والأخطاء مختلفة.',
+      ] },
+
+      { kind: 'h', text: 'معروف ولم يُحلّ' },
+      { kind: 'p', text: 'العالم المدفوع بالتمرير في الصفحة الرئيسية ليس له مسار بديل مُختبَر. من لا يستطيع استعماله يصل إلى كل رحلة عبر صفحة الوجهات، وهي مستند عادي، لكن تكافؤ هذا المسار لم يُتحقق منه ولا ينبغي افتراضه.' },
+
+      { kind: 'h', text: 'إن كان شيء هنا يستبعدك' },
+      { kind: 'p', text: 'قل ذلك عبر نموذج الاستفسار، وسيقرأه إنسان. موقع عرض لا يستطيع أن يعد بجدول زمني للإصلاح بصدق، ويستطيع أن يعد بألّا يضيع البلاغ في طابور لا يفرغه أحد.' },
+      { kind: 'note', text: 'مؤرَّخ في 2026-08-30. بيان إتاحة بلا تاريخ هو ادعاء عن موقع قد لا يكون موجودًا الآن. وحين يكفّ هذا البيان عن مطابقة الموقع يصير خاطئًا، وهو خاطئًا ومؤرَّخًا أنفع منه غامضًا بلا تاريخ.' },
+    ],
+  },
+};
+
+export const PIECES: Piece[] = [designSystem, motionContract, accessibility, arabicShareCards];
 
 export const findPiece = (id: string): Piece | undefined => PIECES.find((p) => p.id === id);
 
