@@ -93,15 +93,28 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     priceMoved: t('flight.priceMoved'),
   };
 
+  /* Flight lays these three slots side by side in one chrome bar, so React
+     reconciles them as an array. An element written in a PROP position is
+     never key-validated where it is created, and a client component crosses
+     the boundary as an element rather than as finished output, so
+     <LocaleSwitcher> arrived in that array unkeyed and React warned about it
+     from Flight. The key is the slot's role, which is what actually identifies
+     it: stable across renders and across locales, and unchanged if the bar is
+     ever reordered, so no slot can inherit another's DOM node. Never a
+     positional index, for exactly that reason. */
   return (
     <Flight
       copy={copy}
       trips={trips}
       locale={locale}
       askHref={`/${locale}/enquire`}
-      localeSwitcher={<Suspense fallback={null}><LocaleSwitcher current={locale} /></Suspense>}
-      accountSlot={<FlightAccountLinks locale={locale} />}
-      signInSlot={<FlightSignIn locale={locale} />}
+      localeSwitcher={
+        <Suspense key="slot-locale-switcher" fallback={null}>
+          <LocaleSwitcher current={locale} />
+        </Suspense>
+      }
+      accountSlot={<FlightAccountLinks key="slot-account-links" locale={locale} />}
+      signInSlot={<FlightSignIn key="slot-sign-in" locale={locale} />}
     />
   );
 }
