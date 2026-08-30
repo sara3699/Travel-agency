@@ -24,6 +24,27 @@
  * ==================================================================== */
 
 :root {
+
+  /* ---------------------------------------------------------------- *
+   * Tokens this project uses that the vendored scrollcraft layer does
+   * not define. Found 2026-08-29 by building the design-system page:
+   * --sc-ink-mute had 44 references and no definition, so every one of
+   * them fell through `var(--sc-ink-mute, var(--sc-ink))` to full ink.
+   * The quiet third tier of the type hierarchy did not exist. Dates,
+   * captions, table headers and hints were all rendering at the same
+   * weight as body copy.
+   *
+   * A literal value rather than a color-mix, so the contrast is the
+   * number that was measured and not whatever an interpolation space
+   * produces: 5.08:1 on --sc-ink-mute, which holds AA at the small
+   * sizes this token is actually used at. For comparison, --sc-ink is
+   * 17.00:1 and --sc-ink-soft is 7.44:1 on the same ground.
+   * ---------------------------------------------------------------- */
+  --sc-ink-mute: #8C7F6C;
+
+  /* Aliases. Written as var() so they cannot drift from their source. */
+  --sc-bg:        var(--sc-canvas);
+  --sc-bg-raised: var(--sc-surface);
   /* --- the six colour roles ------------------------------------------ */
   --sc-canvas:     #0B0906;   /* warm near-black. Never #000: no air in it */
   --sc-surface:    #17110A;
@@ -2367,3 +2388,49 @@ html[dir="rtl"] .card1200__dest { line-height: 1.25; }
 [dir='rtl'] .build__meta,
 [dir='rtl'] .essay__date,
 [dir='rtl'] .essay__other { letter-spacing: 0; }
+
+/* ---- the live token table on /build/design-system ---- */
+.tokens { margin-block: 0 1.6rem; }
+.tokens__pending { color: var(--sc-ink-mute); font-size: 0.85rem; }
+.tokens table { inline-size: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.tokens th,
+.tokens td {
+  padding: 0.55rem 0.6rem;
+  border-block-end: 1px solid var(--sc-hairline);
+  text-align: start;
+  vertical-align: middle;
+}
+.tokens thead th {
+  font-family: var(--sc-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sc-ink-mute);
+  font-weight: 400;
+}
+.tokens tbody th { font-weight: 400; }
+.tokens code { font-family: var(--sc-font-mono); font-size: 0.76rem; }
+.tokens__swatch {
+  display: block;
+  inline-size: 1.6rem;
+  block-size: 1.6rem;
+  border-radius: var(--sc-r-sm, 6px);
+  border: 1px solid var(--sc-hairline-strong);
+}
+.tokens__ratio { font-family: var(--sc-font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tokens__pass { color: var(--sc-ink-mute); }
+.tokens__warn { color: var(--sc-accent); }
+.tokens__use { color: var(--sc-ink-soft); }
+/* A token with no definition is the finding, so it is drawn as one. */
+.tokens__missing { background: color-mix(in oklab, var(--sc-accent) 10%, transparent); }
+.tokens__foot {
+  margin-block-start: 0.9rem;
+  font-size: 0.78rem;
+  color: var(--sc-ink-mute);
+  line-height: 1.6;
+}
+@media (max-width: 640px) {
+  .tokens { overflow-x: auto; }
+  .tokens table { min-inline-size: 34rem; }
+}
+.tokens__pair { color: var(--sc-ink-mute); font-size: 0.72rem; }

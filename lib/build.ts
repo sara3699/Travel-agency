@@ -19,7 +19,11 @@ export type Block =
   | { kind: 'note'; text: string }
   /** A run of Arabic shown inside running text. Rendered direction-isolated. */
   | { kind: 'sample'; text: string; label: string }
-  | { kind: 'list'; items: string[] };
+  | { kind: 'list'; items: string[] }
+  /** Mounts a live component. The point of this layer is evidence that reads
+   *  the running system rather than a description of it, so a piece can embed
+   *  something that computes rather than something that was typed. */
+  | { kind: 'live'; id: 'tokens' };
 
 export interface Piece {
   id: string;
@@ -162,7 +166,47 @@ await page.screenshot({
   },
 };
 
-export const PIECES: Piece[] = [arabicShareCards];
+const designSystem: Piece = {
+  id: 'design-system',
+  written: ['en'],
+  date: '2026-08-29',
+  title: {
+    en: 'A palette that reads itself',
+  },
+  dek: {
+    en: 'The colours below are resolved from the running stylesheet and their contrast is computed in your browser. Building this page found a token with 44 references and no definition.',
+  },
+  body: {
+    en: [
+      { kind: 'p', text: 'Every design system page eventually lies. Someone types the hex values into a document, the stylesheet moves, and the document keeps saying what used to be true. The lie is comfortable because nobody checks a page whose whole job is to be checked.' },
+      { kind: 'p', text: 'So this one resolves each token against the live cascade and computes its contrast in the browser you are reading it in. It cannot claim a colour the site does not use, and a token with no definition is reported missing rather than quietly falling back.' },
+
+      { kind: 'live', id: 'tokens' },
+
+      { kind: 'h', text: 'What building it found' },
+      { kind: 'p', text: 'The table was written before the palette was checked, which turned out to be the useful order. On first render one row came back with no value: --sc-ink-mute, the quiet third tier used for dates, captions, table headers and hints, had 44 references across the stylesheet and no definition anywhere.' },
+      { kind: 'p', text: 'It had never looked broken. Every reference was written defensively as var(--sc-ink-mute, var(--sc-ink)), so all 44 fell through to full ink. Text meant to recede was rendering at the same weight as body copy, and in a few places brighter than it, because body copy on those pages is ink-soft.' },
+      { kind: 'code', caption: 'The measured difference on a legal page, before and after', text: `.legal__updated   rgb(246, 236, 220)  ->  rgb(140, 127, 108)
+.legal__log time  rgb(246, 236, 220)  ->  rgb(140, 127, 108)
+.legal__block p   rgb(172, 156, 134)  (unchanged, ink-soft)` },
+      { kind: 'p', text: 'A fallback is the right defensive habit and it is also what hid this for weeks. The fallback made every use survive, so nothing ever failed loudly enough to investigate. The hierarchy was simply flatter than the CSS said it was.' },
+
+      { kind: 'h', text: 'Choosing the value by measurement' },
+      { kind: 'p', text: 'The replacement was not picked by eye. The two tiers above it sit at 17.00:1 and 7.44:1 against the canvas, so the third had to be visibly quieter than 7.44 while still clearing 4.5:1, which is where WCAG AA puts body text. This token is used at 0.72rem to 0.85rem, so it is small text and the large-text allowance of 3:1 does not apply to it.' },
+      { kind: 'code', caption: 'Candidates, mixed from ink-soft toward the canvas', text: `85%  #948673   5.60:1   AA body
+80%  #8c7f6c   5.08:1   AA body      <- chosen
+75%  #847766   4.56:1   AA body, thin margin
+70%  #7c7060   4.11:1   large text only` },
+      { kind: 'p', text: 'It is a literal hex rather than a color-mix, so the ratio is the number that was measured rather than whatever an interpolation space produces. The hairline tokens next to it do use color-mix, because a hairline is not text and does not have to clear a threshold.' },
+
+      { kind: 'h', text: 'Why this belongs on the site rather than in a wiki' },
+      { kind: 'p', text: 'A page that computes cannot go stale, and it stays honest under change: swap a token tomorrow and this table tells you what that did to contrast before anyone has to notice on a phone in daylight. It is also the cheapest possible regression test for a class of bug that has no stack trace.' },
+      { kind: 'p', text: 'The type scale, the motion contract and the accessibility statement belong here on the same argument, and are not written yet.' },
+    ],
+  },
+};
+
+export const PIECES: Piece[] = [designSystem, arabicShareCards];
 
 export const findPiece = (id: string): Piece | undefined => PIECES.find((p) => p.id === id);
 

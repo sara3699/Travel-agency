@@ -6,6 +6,7 @@ import { SiteHeader } from '@/components/SiteHeader';
 import { SiteFooter } from '@/components/SiteFooter';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { PIECES, findPiece, BUILD_SHELL, type Block } from '@/lib/build';
+import { TokenTable } from '@/components/build/TokenTable';
 import { alternates, canonicalFor } from '@/lib/seo';
 
 export function generateStaticParams() {
@@ -138,6 +139,10 @@ function BlockView({ block }: { block: Block }) {
           {block.caption && <figcaption>{block.caption}</figcaption>}
         </figure>
       );
+    case 'live':
+      // One id today. A switch rather than a lookup table so an unknown id is
+      // a type error at build time instead of a blank space at runtime.
+      return block.id === 'tokens' ? <TokenTable /> : null;
     case 'sample':
       // The whole point of the essay. A right-to-left run dropped into
       // left-to-right prose gets reordered against the neutral characters
