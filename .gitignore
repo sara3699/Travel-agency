@@ -46,3 +46,7 @@ yarn-error.log*
 
 # TypeScript incremental build info
 tsconfig.tsbuildinfo
+
+# Supabase CLI scratch state. Machine-local, not source: it records which
+# project this checkout is linked to and is rewritten by any CLI command.
+supabase/.temp/

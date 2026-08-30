@@ -1,11 +1,3 @@
-// GENERATED FILE -- do not edit by hand.
-//
-// Regenerate after every migration. With the Supabase CLI installed:
-//   npx supabase gen types typescript --project-id pjyyphsleahyyuvzxyjs > lib/database.types.ts
-//
-// Generated 2026-08-23 from the live schema, updated the same day when
-// profiles gained its email column.
-
 export type Json =
   | string
   | number
@@ -15,15 +7,32 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.15"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
       cancellation_rules: {
-        Row: { days_before: number; id: string; package_id: string; refund_pct: number }
-        Insert: { days_before: number; id?: string; package_id: string; refund_pct: number }
-        Update: { days_before?: number; id?: string; package_id?: string; refund_pct?: number }
+        Row: {
+          days_before: number
+          id: string
+          package_id: string
+          refund_pct: number
+        }
+        Insert: {
+          days_before: number
+          id?: string
+          package_id: string
+          refund_pct: number
+        }
+        Update: {
+          days_before?: number
+          id?: string
+          package_id?: string
+          refund_pct?: number
+        }
         Relationships: [
           {
             foreignKeyName: "cancellation_rules_package_id_fkey"
@@ -156,9 +165,27 @@ export type Database = {
         ]
       }
       enquiry_notes: {
-        Row: { author_id: string | null; body: string; created_at: string; enquiry_id: string; id: string }
-        Insert: { author_id?: string | null; body: string; created_at?: string; enquiry_id: string; id?: string }
-        Update: { author_id?: string | null; body?: string; created_at?: string; enquiry_id?: string; id?: string }
+        Row: {
+          author_id: string | null
+          body: string
+          created_at: string
+          enquiry_id: string
+          id: string
+        }
+        Insert: {
+          author_id?: string | null
+          body: string
+          created_at?: string
+          enquiry_id: string
+          id?: string
+        }
+        Update: {
+          author_id?: string | null
+          body?: string
+          created_at?: string
+          enquiry_id?: string
+          id?: string
+        }
         Relationships: [
           {
             foreignKeyName: "enquiry_notes_enquiry_id_fkey"
@@ -269,7 +296,9 @@ export type Database = {
           position: number
         }
         Insert: {
-          estimate_currency?: Database["public"]["Enums"]["currency_code"] | null
+          estimate_currency?:
+            | Database["public"]["Enums"]["currency_code"]
+            | null
           estimate_minor?: number | null
           estimate_source?: string | null
           id?: string
@@ -279,7 +308,9 @@ export type Database = {
           position?: number
         }
         Update: {
-          estimate_currency?: Database["public"]["Enums"]["currency_code"] | null
+          estimate_currency?:
+            | Database["public"]["Enums"]["currency_code"]
+            | null
           estimate_minor?: number | null
           estimate_source?: string | null
           id?: string
@@ -323,7 +354,7 @@ export type Database = {
           board_basis: Database["public"]["Enums"]["board_basis"]
           created_at?: string
           departure_iata: string
-          departure_interval_days: number | null
+          departure_interval_days?: number | null
           hero_image?: string | null
           hotel_tier: number
           id?: string
@@ -439,14 +470,26 @@ export type Database = {
       }
       is_admin: { Args: never; Returns: boolean }
       is_staff: { Args: never; Returns: boolean }
-      package_incompleteness: { Args: { p_package_id: string }; Returns: string[] }
+      package_incompleteness: {
+        Args: { p_package_id: string }
+        Returns: string[]
+      }
       package_is_published: { Args: { p_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "employee" | "customer"
       board_basis: "room_only" | "breakfast" | "half_board" | "full_board"
       content_status: "draft" | "published" | "archived"
-      currency_code: "SAR" | "AED" | "KWD" | "QAR" | "BHD" | "OMR" | "EGP" | "TND" | "USD"
+      currency_code:
+        | "SAR"
+        | "AED"
+        | "KWD"
+        | "QAR"
+        | "BHD"
+        | "OMR"
+        | "EGP"
+        | "TND"
+        | "USD"
       enquiry_status:
         | "new"
         | "assigned"
@@ -470,13 +513,156 @@ export type Database = {
 }
 
 type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
 type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
-export type Tables<T extends keyof DefaultSchema["Tables"]> =
-  DefaultSchema["Tables"][T]["Row"]
-export type TablesInsert<T extends keyof DefaultSchema["Tables"]> =
-  DefaultSchema["Tables"][T]["Insert"]
-export type TablesUpdate<T extends keyof DefaultSchema["Tables"]> =
-  DefaultSchema["Tables"][T]["Update"]
-export type Enums<T extends keyof DefaultSchema["Enums"]> =
-  DefaultSchema["Enums"][T]
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      app_role: ["admin", "employee", "customer"],
+      board_basis: ["room_only", "breakfast", "half_board", "full_board"],
+      content_status: ["draft", "published", "archived"],
+      currency_code: [
+        "SAR",
+        "AED",
+        "KWD",
+        "QAR",
+        "BHD",
+        "OMR",
+        "EGP",
+        "TND",
+        "USD",
+      ],
+      enquiry_status: [
+        "new",
+        "assigned",
+        "responded",
+        "quoted",
+        "won",
+        "lost",
+        "archived",
+      ],
+      facet_state: ["green", "amber", "red", "na"],
+      provenance: [
+        "contracted",
+        "supplier_live",
+        "partner_listed",
+        "public_sample",
+        "illustrative",
+      ],
+    },
+  },
+} as const
