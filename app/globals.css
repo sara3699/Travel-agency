@@ -2434,3 +2434,5 @@ html[dir="rtl"] .card1200__dest { line-height: 1.25; }
   .tokens table { min-inline-size: 34rem; }
 }
 .tokens__pair { color: var(--sc-ink-mute); font-size: 0.72rem; }
+.cat__cadence { font-size: 0.8rem; color: var(--sc-ink-soft); white-space: nowrap; }
+.cat__ok { font-size: 0.78rem; color: var(--sc-ink-mute); }

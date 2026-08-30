@@ -303,6 +303,7 @@ export type Database = {
           board_basis: Database["public"]["Enums"]["board_basis"]
           created_at: string
           departure_iata: string
+          departure_interval_days: number | null
           hero_image: string | null
           hotel_tier: number
           id: string
@@ -322,6 +323,7 @@ export type Database = {
           board_basis: Database["public"]["Enums"]["board_basis"]
           created_at?: string
           departure_iata: string
+          departure_interval_days: number | null
           hero_image?: string | null
           hotel_tier: number
           id?: string
@@ -341,6 +343,7 @@ export type Database = {
           board_basis?: Database["public"]["Enums"]["board_basis"]
           created_at?: string
           departure_iata?: string
+          departure_interval_days?: number | null
           hero_image?: string | null
           hotel_tier?: number
           id?: string

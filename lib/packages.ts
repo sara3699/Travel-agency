@@ -32,7 +32,13 @@ export interface TravelPackage {
   country: { ar: string; en: string; fr: string };
   nights: number;
   departureCity: { ar: string; en: string; fr: string; iata: string };
+  /** The live next departure, already rolled forward. Computed in the read
+   *  layer, never stored: see lib/departures.ts. */
   nextDeparture: string;
+  /** The stored anchor, which may legitimately be in the past. */
+  departureAnchor?: string;
+  /** Days between departures, or null for a genuine one-off. */
+  departureIntervalDays?: number | null;
   /** All-in, per person, for the stated party. Never a "from" price. */
   pricePerPerson: Money;
   partyAssumption: { adults: number; sharing: number };

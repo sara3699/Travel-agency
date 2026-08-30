@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint:logical": "node scripts/lint-logical-properties.mjs",
-    "types:db": "supabase gen types typescript --project-id pjyyphsleahyyuvzxyjs > lib/database.types.ts",
+    "types:db": "supabase gen types typescript --project-id pjyyphsleahyyuvzxyjs > lib/database.types.ts.tmp && mv lib/database.types.ts.tmp lib/database.types.ts || (rm -f lib/database.types.ts.tmp; echo 'supabase CLI not installed'; exit 1)",
     "typecheck": "tsc --noEmit",
     "cards": "node scripts/build-share-cards.mjs"
   },

@@ -511,6 +511,18 @@
     "partyTotal": "Affiché aux voyageurs : {amount} pour {n}.",
     "perNightSum": "Soit {amount} par personne et par nuit, sur {nights} nuits.",
     "lengthNote": "Le prix a suivi la durée, réparti également sur les nuits. Les coûts réels ne le sont pas : le vol coûte la même chose que le séjour dure six nuits ou sept, donc un séjour plus court fait généralement économiser moins que cela. Vérifiez le chiffre avant d'enregistrer.",
-    "nightsHint": "Modifier ce champ recalcule le prix ci-dessous. Écrivez par-dessus si le nouveau chiffre ne convient pas."
+    "nightsHint": "Modifier ce champ recalcule le prix ci-dessous. Écrivez par-dessus si le nouveau chiffre ne convient pas.",
+    "anchor": "Premier départ",
+    "anchorHint": "La date réelle du premier départ. Elle peut se situer dans le passé : le prochain départ est calculé en avant à partir d'ici, donc le site n'affiche jamais une date écoulée.",
+    "cadence": "Fréquence",
+    "cadenceOnce": "Une seule fois",
+    "cadenceEvery": "Tous les {days} jours",
+    "liveOnce": "Un départ unique. C'est cette date exacte que voient les voyageurs, et il faudra la changer à la main une fois passée.",
+    "liveNext": "Les voyageurs voient {date}. Calculée en avant depuis {anchor}, elle ne se périme jamais.",
+    "cadenceInvalid": "Ce n'est pas une des fréquences proposées.",
+    "cardCol": "Carte",
+    "cardFresh": "À jour",
+    "cardStale": "Périmée",
+    "cardsStale": "Cartes de partage qui ne correspondent plus à leur séjour : {n}. Reconstruisez-les avec"
   }
 }

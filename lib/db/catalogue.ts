@@ -2,6 +2,7 @@ import { createClient } from '../supabase/server';
 import { requireAdmin } from '../auth/session';
 import { type CurrencyCode } from '../money';
 import { majorToMinor, minorToMajor } from '../money-input';
+import { nextDeparture, todayUtc, canGoStale, CADENCES } from '../departures';
 
 /**
  * The catalogue's write side. Slice one: the four fields that go stale.
@@ -25,15 +26,22 @@ export interface CatalogueRow {
   nights: number;
   priceMinor: number;
   priceCurrency: CurrencyCode;
+  /** The stored anchor. With a cadence this may legitimately be in the past. */
   nextDeparture: string | null;
+  /** Days between departures, or null for a one-off. */
+  intervalDays: number | null;
+  /** The live date a traveller sees, rolled forward from the anchor. */
+  liveDeparture: string | null;
   provenance: string;
   departureIata: string;
   hotelTier: number;
   partyAdults: number;
+  /** Used to tell whether the share card was cut from this revision. */
+  updatedAt: string;
 }
 
 const SELECT =
-  'id, slug, status, nights, price_minor, price_currency, next_departure, provenance, departure_iata, hotel_tier, party_adults';
+  'id, slug, status, nights, price_minor, price_currency, next_departure, provenance, departure_iata, hotel_tier, party_adults, departure_interval_days, updated_at';
 
 type Row = {
   id: string;
@@ -43,10 +51,12 @@ type Row = {
   price_minor: number;
   price_currency: CurrencyCode;
   next_departure: string | null;
+  departure_interval_days: number | null;
   provenance: string;
   departure_iata: string;
   hotel_tier: number;
   party_adults: number;
+  updated_at: string;
 };
 
 const toRow = (r: Row): CatalogueRow => ({
@@ -57,10 +67,13 @@ const toRow = (r: Row): CatalogueRow => ({
   priceMinor: r.price_minor,
   priceCurrency: r.price_currency,
   nextDeparture: r.next_departure,
+  intervalDays: r.departure_interval_days,
+  liveDeparture: nextDeparture(r.next_departure, r.departure_interval_days),
   provenance: r.provenance,
   departureIata: r.departure_iata,
   hotelTier: r.hotel_tier,
   partyAdults: r.party_adults,
+  updatedAt: r.updated_at,
 });
 
 /** Everything, drafts and archived included. Staff can already SELECT those. */
@@ -139,13 +152,21 @@ export async function updatePackageBasics(formData: FormData): Promise<SaveResul
   const d = new Date(`${departure}T00:00:00Z`);
   if (Number.isNaN(d.getTime())) return { ok: false, errorKey: 'cat.dateInvalid' };
 
-  // The whole reason this screen exists. A next departure in the past is the
-  // bug we just spent a migration fixing by hand, so the form refuses to
-  // recreate it. Comparing in UTC because the column is a date, not a moment:
-  // local midnight would make the answer depend on who is typing.
-  const todayUtc = new Date();
-  const today = Date.UTC(todayUtc.getUTCFullYear(), todayUtc.getUTCMonth(), todayUtc.getUTCDate());
-  if (d.getTime() < today) return { ok: false, errorKey: 'cat.datePast' };
+  const intervalRaw = String(formData.get('intervalDays') ?? '0');
+  const interval = Number(intervalRaw);
+  if (!Number.isInteger(interval) || !(CADENCES as readonly number[]).includes(interval)) {
+    return { ok: false, errorKey: 'cat.cadenceInvalid' };
+  }
+  const intervalDays = interval > 0 ? interval : null;
+
+  // A past date is only wrong for a one-off. With a cadence the stored value is
+  // an anchor, and an anchor in the past is how the roll-forward works: the
+  // trip that started running last spring should keep its real first date.
+  // Comparing in UTC because the column is a date and not a moment, so local
+  // midnight would make the answer depend on who is typing.
+  if (canGoStale(intervalDays) && d.getTime() < todayUtc()) {
+    return { ok: false, errorKey: 'cat.datePast' };
+  }
 
   const supabase = await createClient();
   const { error } = await supabase
@@ -154,6 +175,7 @@ export async function updatePackageBasics(formData: FormData): Promise<SaveResul
       price_minor: priceMinor,
       nights,
       next_departure: departure,
+      departure_interval_days: intervalDays,
       status,
     })
     .eq('slug', slug);

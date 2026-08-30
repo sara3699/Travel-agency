@@ -56,6 +56,7 @@ export default async function EditPackage({
             priceMajor: minorToMajor(pkg.priceMinor, pkg.priceCurrency),
             priceCurrency: pkg.priceCurrency,
             nextDeparture: pkg.nextDeparture ?? '',
+            intervalDays: pkg.intervalDays,
             departureIata: pkg.departureIata,
             partyAdults: pkg.partyAdults,
           }}

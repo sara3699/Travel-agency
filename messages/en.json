@@ -511,6 +511,18 @@
     "partyTotal": "Shown to travellers as {amount} for {n}.",
     "perNightSum": "That is {amount} per person, per night, over {nights} nights.",
     "lengthNote": "The price moved with the length, spread evenly across the nights. Real costs are not spread evenly: the flight is the same whether the trip is six nights or seven, so a shorter trip usually saves less than this. Check the figure before you save.",
-    "nightsHint": "Changing this recalculates the price below. Type over it if the new figure is wrong."
+    "nightsHint": "Changing this recalculates the price below. Type over it if the new figure is wrong.",
+    "anchor": "First departure",
+    "anchorHint": "The real date this trip first runs. It may sit in the past: the next departure is counted forward from here, so the site never shows a date that has gone.",
+    "cadence": "Runs",
+    "cadenceOnce": "Once only",
+    "cadenceEvery": "Every {days} days",
+    "liveOnce": "A one-off. This exact date is what travellers see, and it will need changing by hand once it passes.",
+    "liveNext": "Travellers see {date}. Counted forward from {anchor}, so it never goes out of date.",
+    "cadenceInvalid": "That is not one of the available rhythms.",
+    "cardCol": "Card",
+    "cardFresh": "Current",
+    "cardStale": "Out of date",
+    "cardsStale": "{n, plural, one {# share card no longer matches its trip. Rebuild with} other {# share cards no longer match their trips. Rebuild with}}"
   }
 }

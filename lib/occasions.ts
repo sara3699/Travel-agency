@@ -1,5 +1,6 @@
 import type { TravelPackage } from './packages';
 import type { Locale } from '@/i18n/routing';
+import { departsWithin } from './departures';
 
 /**
  * The version-one information architecture: grouping by the occasion someone is
@@ -128,11 +129,15 @@ export function tripsFor(w: OccasionWindow, all: TravelPackage[], now = new Date
   const pad = w.kind === 'lunar' ? 14 * 86400000 : 0;
   const lo = new Date(start.getTime() - pad);
   const hi = new Date(end.getTime() + pad);
-  return all.filter((p) => {
-    if (!p.nextDeparture) return false;
-    const d = new Date(p.nextDeparture + 'T00:00:00Z');
-    return d >= lo && d <= hi;
-  });
+  // Ask whether the trip DEPARTS in the window, not whether its next departure
+  // happens to fall there. Those were the same question while every package
+  // had exactly one date. They stopped being the same the moment a trip could
+  // repeat: a fortnightly departure is never more than two weeks out, so
+  // matching only the next one would empty every window further away than that
+  // and make Eid al-Adha look like it had nothing.
+  return all.filter((p) =>
+    departsWithin(p.departureAnchor ?? p.nextDeparture, p.departureIntervalDays ?? null, lo, hi),
+  );
 }
 
 export function findWindow(id: string): OccasionWindow | undefined {

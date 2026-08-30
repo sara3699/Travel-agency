@@ -108,16 +108,28 @@ export function Select({
   label,
   options,
   defaultValue,
+  value,
+  onChange,
 }: {
   name: string;
   label: string;
   options: { value: string; label: string }[];
   defaultValue?: string;
+  /* Controlled mode, same contract as Field: the pair travels together and
+     `defaultValue` is ignored while `value` is present. */
+  value?: string;
+  onChange?: (next: string) => void;
 }) {
   return (
     <p className="field">
       <label htmlFor={name}>{label}</label>
-      <select id={name} name={name} defaultValue={defaultValue}>
+      <select
+        id={name}
+        name={name}
+        {...(value !== undefined
+          ? { value, onChange: (e) => onChange?.(e.target.value) }
+          : { defaultValue })}
+      >
         {options.map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}

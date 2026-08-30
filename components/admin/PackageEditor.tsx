@@ -4,6 +4,7 @@ import { useActionState, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { majorToMinor, minorToMajor } from '@/lib/money-input';
 import { money, formatMoney, scale, divide, type CurrencyCode } from '@/lib/money';
+import { nextDeparture, CADENCES, canGoStale } from '@/lib/departures';
 import { savePackageAction, type FormState } from '@/lib/actions/forms';
 import { Field, Select, Submit, FormError } from '@/components/ui/Form';
 
@@ -14,6 +15,7 @@ export interface EditablePackage {
   priceMajor: string;
   priceCurrency: string;
   nextDeparture: string;
+  intervalDays: number | null;
   departureIata: string;
   partyAdults: number;
 }
@@ -34,6 +36,8 @@ export function PackageEditor({ pkg, locale }: { pkg: EditablePackage; locale: s
 
   const [priceText, setPriceText] = useState(pkg.priceMajor);
   const [nightsText, setNightsText] = useState(String(pkg.nights));
+  const [anchorText, setAnchorText] = useState(pkg.nextDeparture);
+  const [cadence, setCadence] = useState(String(pkg.intervalDays ?? 0));
 
   /**
    * The rate the price is re-derived from when the length changes. Operator's
@@ -79,6 +83,10 @@ export function PackageEditor({ pkg, locale }: { pkg: EditablePackage; locale: s
     minor === null || !nightsOk ? null : formatMoney(divide(money(minor, currency), nightsNum), locale);
 
   const lengthChanged = nightsOk && nightsNum !== pkg.nights;
+
+  const intervalNum = Number(cadence);
+  const oneOff = canGoStale(intervalNum);
+  const live = nextDeparture(anchorText, oneOff ? null : intervalNum);
 
   return (
     <form action={save} className="form pkged" noValidate>
@@ -134,12 +142,32 @@ export function PackageEditor({ pkg, locale }: { pkg: EditablePackage; locale: s
           person thinks in dd/mm or mm/dd. */}
       <Field
         name="nextDeparture"
-        label={t('cat.departure')}
+        label={t(oneOff ? 'cat.departure' : 'cat.anchor')}
         type="date"
-        defaultValue={pkg.nextDeparture}
+        value={anchorText}
+        onChange={setAnchorText}
         required
-        hint={t('cat.departureHint')}
+        hint={t(oneOff ? 'cat.departureHint' : 'cat.anchorHint')}
       />
+
+      <Select
+        name="intervalDays"
+        label={t('cat.cadence')}
+        value={cadence}
+        onChange={setCadence}
+        options={CADENCES.map((d) => ({
+          value: String(d),
+          label: d === 0 ? t('cat.cadenceOnce') : t('cat.cadenceEvery', { days: d }),
+        }))}
+      />
+
+      {/* The consequence of the two fields above, computed the same way the
+          site computes it. A cadence means the stored date can sit in the past
+          and the trip is still correct, which is surprising enough to show
+          rather than explain. */}
+      <p className="pkged__sums" aria-live="polite">
+        {oneOff ? t('cat.liveOnce') : t('cat.liveNext', { date: live ?? '—', anchor: anchorText })}
+      </p>
 
       <Select
         name="status"

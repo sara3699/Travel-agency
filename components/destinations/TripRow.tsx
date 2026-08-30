@@ -29,7 +29,11 @@ export async function TripRow({
 }) {
   const t = await getTranslations();
   const nf = new Intl.NumberFormat(locale, { numberingSystem: 'latn' });
-  const df = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', numberingSystem: 'latn' });
+  // A date-only value parsed as UTC midnight and formatted in local time
+  // falls back a day west of Greenwich: 2026-09-05 renders as "Sep 4" in
+  // Los Angeles. The column is a date, not a moment, so the formatter is
+  // pinned to the same zone the value was written in.
+  const df = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', numberingSystem: 'latn', timeZone: 'UTC' });
 
   const total = scale(pkg.pricePerPerson, party);
   const perNight = divide(pkg.pricePerPerson, pkg.nights);

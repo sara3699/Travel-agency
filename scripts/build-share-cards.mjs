@@ -67,7 +67,7 @@ const main = async () => {
       // scaling up would only inflate the file past WhatsApp's 600KB ceiling.
       await page.setViewport({ width: 1200, height: 630, deviceScaleFactor: 1 });
 
-      for (const slug of list) {
+      for (const { slug } of list) {
         const url = `${BASE}/${locale}/destinations/${slug}/card`;
         await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
         await page.waitForSelector('[data-card]', { timeout: 20000 });
@@ -112,7 +112,22 @@ const main = async () => {
   } finally {
     await browser.close();
   }
+  // A manifest stamped with the revision each card was cut from. The admin
+  // compares this to the live row to answer "is this card stale" exactly,
+  // rather than comparing a file's mtime against a database clock, which are
+  // two different clocks and disagree on a deploy.
+  //
+  // Written as JSON that the app imports at build time rather than reads at
+  // request time: files under public/ are served by the CDN and are not
+  // reliably on a serverless filesystem, but an imported module always is.
+  const manifest = {
+    builtAt: new Date().toISOString(),
+    cards: Object.fromEntries(list.map((p) => [p.slug, p.updatedAt])),
+  };
+  await writeFile(join(OUT, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
+
   console.log(`\n${made} cards written to public/share/`);
+  console.log(`manifest: ${Object.keys(manifest.cards).length} packages stamped`);
 };
 
 main().catch((e) => { console.error(e.message); process.exit(1); });

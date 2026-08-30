@@ -80,8 +80,12 @@ export default async function PackagePage({
   const party = Math.min(12, Math.max(1, Number(sp.travellers) || 2));
 
   const nf = new Intl.NumberFormat(locale, { numberingSystem: 'latn' });
+  // A date-only value parsed as UTC midnight and formatted in local time
+  // falls back a day west of Greenwich: 2026-09-05 renders as "Sep 4" in
+  // Los Angeles. The column is a date, not a moment, so the formatter is
+  // pinned to the same zone the value was written in.
   const df = new Intl.DateTimeFormat(locale, {
-    day: 'numeric', month: 'long', year: 'numeric', numberingSystem: 'latn',
+    day: 'numeric', month: 'long', year: 'numeric', numberingSystem: 'latn', timeZone: 'UTC',
   });
 
   const total = scale(pkg.pricePerPerson, party);
