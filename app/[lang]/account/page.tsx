@@ -4,6 +4,7 @@ import { type Locale } from '@/i18n/routing';
 import { getCurrentUser } from '@/lib/auth/session';
 import { getMyEnquiries } from '@/lib/db/enquiries';
 import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 import { StatusPill } from '@/components/StatusPill';
 
 export const dynamic = 'force-dynamic';
@@ -59,6 +60,7 @@ export default async function Account({ params }: { params: Promise<{ lang: stri
           </ul>
         )}
       </main>
+      <SiteFooter locale={locale} />
     </>
   );
 }

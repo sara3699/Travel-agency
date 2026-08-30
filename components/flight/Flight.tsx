@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { formatMoney, scale, type Money } from '@/lib/money';
+import { prefersReducedMotion } from '@/lib/motion';
 
 /* ====================================================================== *
  * THREE COASTS
@@ -48,6 +49,8 @@ export interface FlightCopy {
   fewer: string;
   more: string;
   partyLive: string;
+  brandName: string;
+  brandMeaning: string;
   sharingNote: string;
   nights: string; // {n}
   forParty: string; // {n}
@@ -57,6 +60,8 @@ export interface FlightCopy {
   skip: string;
   routeLabel: string;
   waypoints: string[];
+  seePrice: string;
+  priceMoved: string;
 }
 
 /** weight = viewport-heights this leg owns. weight / clip-seconds is held at
@@ -103,7 +108,13 @@ export function Flight({
   /** The account control, kept apart so it can sit at the very end of the bar. */
   signInSlot: React.ReactNode;
 }) {
-  const [party, setParty] = useState(2);
+  /* Was an adjustable dial in the top bar. Removed from the landing page on
+     2026-08-28 at the operator's request. The party size still drives the laid
+     table, the figures on the rail and the links into the listing, so it stays
+     as the assumption the catalogue is priced at; it is simply no longer
+     adjustable here. Travellers change it on the package page, where the
+     pricer recomputes and says so. */
+  const party = 2;
   const [leg, setLeg] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -153,7 +164,7 @@ export function Flight({
     const before = LEGS.slice(0, index).reduce((a, l) => a + l.w, 0);
     window.scrollTo({
       top: before * window.innerHeight,
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
     });
   }, []);
 
@@ -263,8 +274,6 @@ export function Flight({
 
             <div className="trips">
               {trips.map((t) => {
-                const total = scale(t.pricePerPerson, party);
-                const excl = t.excludedPerPerson ? scale(t.excludedPerPerson, party) : null;
                 return (
                   <a
                     className="trip"
@@ -277,17 +286,12 @@ export function Flight({
                         {fill(copy.nights, { n: nf.format(t.nights) })} · {t.from}
                       </span>
                     </span>
-                    <span className="trip__total">
-                      {/* The party total IS the price. Refusal list item 11:
-                          never a per-person figure without it. */}
-                      <span className="trip__figure">{fmt(total)}</span>
-                      <span className="trip__for">{fill(copy.forParty, { n: nf.format(party) })}</span>
-                    </span>
-                    <p className="trip__excl">
-                      {excl && excl.amountMinor > 0
-                        ? fill(copy.plusExcluded, { amount: fmt(excl), names: t.excludedNames })
-                        : copy.nothingExcluded}
-                    </p>
+                    {/* No figure here. The operator asked on 2026-08-27 for
+                        prices to live on their own page, where the party and
+                        the length can be set and the number responds. Showing
+                        a total here would either duplicate that or contradict
+                        it once the length is changed. */}
+                    <span className="trip__see">{copy.seePrice}</span>
                     <span className="trip__prov">{t.provenanceLabel}</span>
                   </a>
                 );
@@ -295,7 +299,7 @@ export function Flight({
             </div>
 
             <div className="table-foot">
-              <p className="note">{copy.sharingNote}</p>
+              <p className="note">{copy.priceMoved}</p>
               <a className="ask" href={`/${locale}/destinations?travellers=${party}`}>
                 {copy.askAll}
               </a>
@@ -313,42 +317,13 @@ export function Flight({
         <div className="chrome__top">
         <div className="chrome__bar">
           <a className="wordmark" href={`/${locale}`}>
-            <span className="wordmark__name">Mars</span>
-            <span className="wordmark__tag">{copy.partyLive}</span>
+            <span className="wordmark__name">{copy.brandName}</span>
+            <span className="wordmark__tag">{copy.brandMeaning}</span>
           </a>
 
           <div className="chrome__right">
             {accountSlot}
             {localeSwitcher}
-
-            {/* THE SIGNATURE MOVE. One control, airborne the whole way down,
-                that lays the table on landing. */}
-            <div className="dial">
-              <button
-                type="button"
-                className="dial__btn"
-                onClick={() => setParty((n) => Math.max(1, n - 1))}
-                disabled={party <= 1}
-                aria-label={copy.fewer}
-              >
-                &minus;
-              </button>
-              <span className="dial__label">
-                <span>{copy.travelling}</span>
-                <span className="dial__count" aria-live="polite">
-                  {nf.format(party)}
-                </span>
-              </span>
-              <button
-                type="button"
-                className="dial__btn"
-                onClick={() => setParty((n) => Math.min(8, n + 1))}
-                disabled={party >= 8}
-                aria-label={copy.more}
-              >
-                +
-              </button>
-            </div>
 
             {signInSlot}
           </div>

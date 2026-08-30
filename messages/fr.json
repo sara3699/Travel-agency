@@ -1,7 +1,8 @@
 {
   "brand": {
-    "name": "Mars",
-    "tagline": "Des forfaits au prix honnête."
+    "name": "Anees",
+    "tagline": "Des forfaits au prix honnête.",
+    "meaning": "la bonne compagnie"
   },
   "nav": {
     "packages": "Forfaits",
@@ -13,38 +14,41 @@
     "home": "Accueil",
     "queue": "File",
     "staffArea": "Équipe",
-    "adminArea": "Admin",
+    "adminArea": "Administration",
     "destinations": "Destinations",
     "aboutUs": "À propos",
-    "trips": "Mes voyages"
+    "trips": "Mes voyages",
+    "faq": "Questions",
+    "occasions": "Occasions",
+    "trust": "Confiance"
   },
   "home": {
-    "eyebrow": "Departing from",
+    "eyebrow": "Au départ de",
     "headline": "Dites-nous votre budget. Nous vous dirons jusqu'où il porte.",
     "sub": "Chaque prix ici est le prix complet pour le groupe que vous nous indiquez. Rien n'est ajouté ensuite.",
-    "leavingFrom": "Leaving from",
-    "month": "Month",
-    "nights": "Nights",
-    "budget": "Budget per person",
-    "party": "Who's going",
+    "leavingFrom": "Au départ de",
+    "month": "Mois",
+    "nights": "Nuits",
+    "budget": "Budget par personne",
+    "party": "Qui voyage",
     "submit": "Montrez-moi ce qui correspond",
     "escape": "Ou montrez-moi tout",
-    "resultsLead": "Three trips that fit"
+    "resultsLead": "Trois voyages qui correspondent"
   },
   "card": {
-    "nights": "{count, plural, one {# night} other {# nights}}",
+    "nights": "{count, plural, one {# nuit} other {# nuits}}",
     "perPerson": "par personne",
-    "perDay": "per day",
-    "assumption": "{adults} adults, {sharing} sharing, all fees included",
-    "departs": "Next departure",
+    "perDay": "par jour",
+    "assumption": "{adults} adultes, {sharing} par chambre, tous frais inclus",
+    "departs": "Prochain départ",
     "included": "inclus",
     "notIncluded": "Non inclus",
-    "estimate": "about {amount}",
+    "estimate": "environ {amount}",
     "enquire": "Demander ce voyage",
-    "book": "Book",
-    "partner": "See it on partner site",
-    "notFor": "Not for you if",
-    "specimen": "Specimen data",
+    "book": "Réserver",
+    "partner": "Voir chez le partenaire",
+    "notFor": "Pas pour vous si",
+    "specimen": "Données spécimen",
     "notRequired": "non requis"
   },
   "ledger": {
@@ -53,28 +57,29 @@
     "transfers": "Transferts",
     "breakfast": "Petit-déjeuner",
     "bags": "Bagages",
-    "visa": "Visa"
+    "visa": "Visa",
+    "car": "Location de voiture"
   },
   "facets": {
-    "halal_food_nearby": "Halal food nearby",
-    "prayer_room": "Prayer room",
-    "alcohol_free_property": "Alcohol-free property",
-    "family_section": "Family section",
-    "verifiedBy": "verified {date} by {who}",
-    "unverified": "not checked",
+    "halal_food_nearby": "Restauration halal à proximité",
+    "prayer_room": "Salle de prière",
+    "alcohol_free_property": "Établissement sans alcool",
+    "family_section": "Espace familial",
+    "verifiedBy": "vérifié le {date} par {who}",
+    "unverified": "non vérifié",
     "state_green": "Oui",
     "state_amber": "En partie",
     "state_red": "Non",
     "state_na": "Non vérifié"
   },
   "direction": {
-    "label": "Visual direction",
+    "label": "Direction visuelle",
     "ledger": "Ledger",
     "majlis": "Majlis",
     "atlas": "Atlas"
   },
   "wordmark": {
-    "label": "Arabic wordmark"
+    "label": "Logotype arabe"
   },
   "hero": {
     "eyebrow": "Au départ de Djeddah · Riyad · Dubaï · Koweït",
@@ -113,7 +118,9 @@
   },
   "foot": {
     "rights": "Site spécimen. Forfaits et prix inventés, aucune réservation.",
-    "imagery": "Photographies générées pour cette démonstration."
+    "imagery": "Photographies générées pour cette démonstration.",
+    "navLabel": "Confiance et mentions légales",
+    "builtBy": "Réalisé par"
   },
   "story": {
     "c1e": "Avant l'aéroport",
@@ -152,12 +159,14 @@
     "skip": "Aller aux voyages",
     "routeLabel": "Itinéraire",
     "prov": "Tarif indicatif",
-    "w1": "Caucase",
-    "w2": "Kazbegi",
-    "w3": "Bakou",
-    "w4": "Traversée",
-    "w5": "Samarcande",
-    "w6": "La table"
+    "w1": "Géorgie",
+    "w2": "Kazakhstan",
+    "w3": "Azerbaïdjan",
+    "w4": "Türkiye",
+    "w5": "Ouzbékistan",
+    "w6": "Maroc",
+    "seePrice": "Voir le prix",
+    "priceMoved": "Les prix sont sur la page de chaque voyage, où vous réglez le groupe et la durée et voyez le chiffre bouger."
   },
   "auth": {
     "missingFields": "Remplissez les deux champs.",
@@ -169,7 +178,7 @@
     "signIn": "Se connecter",
     "signUp": "Créer un compte",
     "signOut": "Se déconnecter",
-    "email": "Email",
+    "email": "E-mail",
     "password": "Mot de passe",
     "displayName": "Votre nom",
     "displayNameHint": "Facultatif. Le nom que nous utiliserons pour vous répondre.",
@@ -181,7 +190,10 @@
     "signInLede": "Le compte sert seulement à regrouper vos demandes. Vous pouvez en envoyer une sans.",
     "signUpLede": "Aucun compte n'est nécessaire pour demander. Il regroupe simplement vos demandes ensuite.",
     "working": "En cours...",
-    "account": "Compte"
+    "account": "Compte",
+    "passwordLeaked": "Ce mot de passe est apparu dans une fuite de données connue : c'est donc l'un des premiers que les attaquants essaient. Ce n'est pas une question d'apparence, choisissez-en un autre et il sera accepté.",
+    "passwordCharacters": "Ce mot de passe demande plus de variété. Ajoutez un chiffre, une majuscule ou un symbole.",
+    "passwordWeak": "Ce mot de passe est trop facile à deviner. Allongez-le, ou ajoutez un chiffre ou un symbole."
   },
   "enquiry": {
     "nameRequired": "Il nous faut un nom pour répondre.",
@@ -197,7 +209,7 @@
     "lede": "Nous répondons à la main. Aucun compte requis, et envoyer ceci ne vous engage à rien.",
     "name": "Votre nom",
     "phone": "Téléphone",
-    "email": "Email",
+    "email": "E-mail",
     "contactHint": "Un des deux suffit. Le téléphone est plus rapide.",
     "adults": "Adultes",
     "children": "Enfants",
@@ -293,12 +305,13 @@
     "create": "Ajouter un compte",
     "role": "Rôle",
     "employee": "Employé",
-    "adminRole": "Admin",
+    "adminRole": "Administrateur",
     "granted": "Ajouté",
     "revoke": "Retirer le rôle",
     "revokeSessions": "Le déconnecter partout",
     "passwordOnce": "Transmettez le mot de passe en personne ou par téléphone. Il n'est stocké nulle part où vous pourriez le relire.",
-    "noStaff": "Aucun compte équipe pour l'instant."
+    "noStaff": "Aucun compte équipe pour l'instant.",
+    "catalogueLink": "Modifier le catalogue"
   },
   "dest": {
     "title": "Où voulez-vous aller ?",
@@ -323,7 +336,15 @@
     "view": "Voir ce voyage",
     "totalFor": "Total pour {n}",
     "nightsFrom": "{n} nuits au départ de {city}",
-    "departs": "Départ le {date}"
+    "departs": "Départ le {date}",
+    "perNight": "{amount} par nuit",
+    "allIn": "Tous frais inclus",
+    "plusExcl": "Plus {amount} non inclus",
+    "filters": "Affiner",
+    "crumbHome": "Accueil",
+    "crumbDest": "Destinations",
+    "to": "Destination",
+    "anywhere": "Partout"
   },
   "pkg": {
     "back": "Toutes les destinations",
@@ -368,5 +389,140 @@
     "p4": "Ce site a été conçu en arabe et l'anglais en découle, et non l'inverse. La typographie, la mise en page et le sens de lecture ont été construits ainsi dès le départ.",
     "h5": "Une note sur ce catalogue",
     "p5": "Ces forfaits sont des données de démonstration, et chaque carte le dit. Ils sont inventés sous une marque inventée pour montrer comment l'interface fonctionne. Il n'y a ni avis, ni notes, ni numéros de licence sur ce site, car sur un catalogue inventé ce seraient des documents falsifiés plutôt qu'un design plus faible."
+  },
+  "pricer": {
+    "heading": "Calculez le prix pour votre groupe",
+    "travellers": "Voyageurs",
+    "fewer": "Un voyageur de moins",
+    "more": "Un voyageur de plus",
+    "nights": "Nuits",
+    "nightsSet": "tel que vendu",
+    "shorter": "Une nuit de moins",
+    "longer": "Une nuit de plus",
+    "total": "Total pour {n}",
+    "each": "{amount} par personne",
+    "perNight": "{amount} par nuit",
+    "excl": "Plus {amount} non inclus, pour {n}",
+    "noExcl": "Rien n'est laissé de côté à ce prix.",
+    "asSold": "Ce voyage tel que nous le vendons. Le chiffre est le prix complet pour {n}.",
+    "estimate": "Estimation. Vous avez changé la durée de {sold} à {chosen} nuits ; une personne confirmera le chiffre réel avant tout engagement.",
+    "reset": "Revenir à {n} nuits",
+    "ask": "Demander ce voyage"
+  },
+  "faq": {
+    "title": "Questions et réponses",
+    "lead": "Ce que les gens demandent avant de nous demander. Si votre question n'y est pas, posez-la : nous répondrons puis nous l'ajouterons.",
+    "search": "Rechercher dans les réponses",
+    "searchHint": "Tapez un mot : prix, visa, halal, annuler",
+    "noResults": "Aucun résultat. Posez-nous la question directement.",
+    "results": "{n} réponses",
+    "allTopics": "Tous les sujets",
+    "seeAll": "Voir les {n} de {topic}",
+    "stillHelp": "Toujours besoin d'une réponse ?",
+    "stillBody": "Posez la question avec vos mots. Une personne la lit, pas un robot, et le voyage consulté accompagne le message.",
+    "ask": "Poser une question",
+    "nav": "Questions"
+  },
+  "cal": {
+    "dates": "Dates de départ",
+    "any": "Toutes dates",
+    "prev": "Mois précédent",
+    "next": "Mois suivant",
+    "exact": "Dates exactes",
+    "day": "jour",
+    "days": "jours",
+    "clear": "Effacer les dates",
+    "done": "Terminé",
+    "legend": "Les points marquent les jours où un voyage part réellement",
+    "hasTrip": "un voyage part ce jour"
+  },
+  "occ": {
+    "title": "Pour quelle occasion voyagez-vous ?",
+    "lede": "Une douzaine de voyages n'a pas besoin d'un mur de filtres. Elle a besoin de la raison du départ.",
+    "crumb": "Occasions",
+    "openNow": "Ouverte",
+    "opens": "Ouvre le",
+    "dates": "Dates",
+    "moon": "Le premier jour dépend de l'observation de la lune : cela peut décaler d'un jour.",
+    "nTrips": "{n, plural, =0 {Aucun voyage} one {# voyage} other {# voyages}}",
+    "advice": "Bon à savoir",
+    "none": "Rien dans cette fenêtre pour l'instant. Dites-nous ce que vous avez en tête et nous le chiffrons.",
+    "ask": "Demandez-nous",
+    "all": "Voir tous les voyages"
+  },
+  "trust": {
+    "title": "Confiance et vérification",
+    "lede": "Tout sur cette page est soit vérifiable, soit clairement signalé comme pas encore réel."
+  },
+  "legal": {
+    "updated": "Dernière mise à jour",
+    "changesHeading": "Modifications de cet avis",
+    "changesBody": "Sur la plupart des sites, les documents de politique changent sans bruit. Chaque modification de celui-ci est datée ici.",
+    "privacyShort": "Confidentialité"
+  },
+  "motion": {
+    "legend": "Animations",
+    "system": "Selon mon appareil",
+    "reduce": "Réduites",
+    "full": "Complètes"
+  },
+  "cat": {
+    "title": "Le catalogue",
+    "lede": "Douze séjours. Modifiez un prix, une durée ou une date de départ sans que personne écrive de SQL.",
+    "trip": "Séjour",
+    "status": "Statut",
+    "priceCol": "Par personne",
+    "nights": "Nuits",
+    "departure": "Prochain départ",
+    "edit": "Modifier",
+    "draft": "Brouillon",
+    "published": "Publié",
+    "archived": "Archivé",
+    "past": "Déjà parti",
+    "noDate": "Aucune date",
+    "staleWarning": "Séjours dont la date de départ est passée : {n}. Ils sont toujours en ligne.",
+    "soonWarning": "Séjours qui partent dans moins de trois semaines : {n}.",
+    "scopeNote": "Cet écran modifie le prix, la durée, la date de départ et la visibilité du séjour. Les textes, les exclusions chiffrées et le barème d'annulation se règlent encore dans une migration.",
+    "editLede": "Départ de {city}, hôtel {tier} étoiles.",
+    "viewLive": "Voir ce séjour comme le voit un voyageur",
+    "price": "Prix par personne en {currency}",
+    "priceHint": "Tout compris, pour une personne, à la taille de groupe à laquelle ce séjour est vendu. Le site le multiplie et affiche le total du groupe.",
+    "departureHint": "Une date passée est refusée. C'est l'erreur que cet écran existe pour empêcher.",
+    "save": "Enregistrer",
+    "saved": "Enregistré. Le site est à jour.",
+    "cardNote": "La carte de partage est une image construite à l'avance : un nouveau prix ne l'atteint pas tout seul. Lancez npm run cards pour la reconstruire.",
+    "notFound": "Ce séjour n'est pas au catalogue.",
+    "statusInvalid": "Ce statut n'existe pas.",
+    "priceInvalid": "Écrivez le prix en chiffres, par exemple 5120.00.",
+    "priceZero": "Un prix doit être supérieur à zéro.",
+    "nightsInvalid": "Le nombre de nuits doit être un entier entre 1 et 30.",
+    "dateInvalid": "Ceci n'est pas une date.",
+    "datePast": "Cette date est déjà passée. Choisissez-en une plus tardive.",
+    "cannotPublish": "Ce séjour ne peut pas encore être mis en ligne.",
+    "saveFailed": "L'enregistrement a échoué. Réessayez.",
+    "r_heroImage": "Il n'a pas de photographie.",
+    "r_priceZero": "Son prix est à zéro.",
+    "r_noDeparture": "Il n'a pas de date de départ.",
+    "r_missingAr": "L'arabe manque.",
+    "r_missingEn": "L'anglais manque.",
+    "r_noLedger": "Rien n'est indiqué comme inclus ou exclu.",
+    "r_noLadder": "Il n'a pas de barème d'annulation.",
+    "totalCol": "Total du groupe",
+    "partyTotal": "Affiché aux voyageurs : {amount} pour {n}.",
+    "perNightSum": "Soit {amount} par personne et par nuit, sur {nights} nuits.",
+    "lengthNote": "Le prix a suivi la durée, réparti également sur les nuits. Les coûts réels ne le sont pas : le vol coûte la même chose que le séjour dure six nuits ou sept, donc un séjour plus court fait généralement économiser moins que cela. Vérifiez le chiffre avant d'enregistrer.",
+    "nightsHint": "Modifier ce champ recalcule le prix ci-dessous. Écrivez par-dessus si le nouveau chiffre ne convient pas.",
+    "anchor": "Premier départ",
+    "anchorHint": "La date réelle du premier départ. Elle peut se situer dans le passé : le prochain départ est calculé en avant à partir d'ici, donc le site n'affiche jamais une date écoulée.",
+    "cadence": "Fréquence",
+    "cadenceOnce": "Une seule fois",
+    "cadenceEvery": "Tous les {days} jours",
+    "liveOnce": "Un départ unique. C'est cette date exacte que voient les voyageurs, et il faudra la changer à la main une fois passée.",
+    "liveNext": "Les voyageurs voient {date}. Calculée en avant depuis {anchor}, elle ne se périme jamais.",
+    "cadenceInvalid": "Ce n'est pas une des fréquences proposées.",
+    "cardCol": "Carte",
+    "cardFresh": "À jour",
+    "cardStale": "Périmée",
+    "cardsStale": "Cartes de partage qui ne correspondent plus à leur séjour : {n}. Reconstruisez-les avec"
   }
 }

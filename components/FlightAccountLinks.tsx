@@ -17,6 +17,7 @@ export async function FlightAccountLinks({ locale }: { locale: Locale }) {
     <nav className="chrome__links" aria-label={t('nav.menu')}>
       <a href={`/${locale}/destinations`}>{t('nav.destinations')}</a>
       <a href={`/${locale}/about`}>{t('nav.aboutUs')}</a>
+      <a href={`/${locale}/faq`}>{t('nav.faq')}</a>
       {isStaff(user) && <a href={`/${locale}/staff`}>{t('nav.queue')}</a>}
       {isAdmin(user) && <a href={`/${locale}/admin`}>{t('nav.adminArea')}</a>}
     </nav>

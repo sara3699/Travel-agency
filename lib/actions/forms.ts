@@ -12,6 +12,7 @@ import {
   type StaffStatus,
 } from '@/lib/db/staff';
 import { createEmployee, revokeStaffRole, revokeSessions } from '@/lib/db/admin-users';
+import { updatePackageBasics } from '@/lib/db/catalogue';
 
 /**
  * Adapters between the backend's `(formData) => Result` shape and the
@@ -25,6 +26,9 @@ import { createEmployee, revokeStaffRole, revokeSessions } from '@/lib/db/admin-
 export interface FormState {
   ok: boolean | null;
   errorKey?: string;
+  /** Only the catalogue editor sets this: the database's publish guard returns
+   *  a list of what is missing, and one message key cannot carry a list. */
+  reasons?: string[];
 }
 
 /* ------------------------------------------------------------------ auth */
@@ -124,6 +128,25 @@ export async function revokeSessionsAction(
   const res = await revokeSessions(String(formData.get('userId') ?? ''));
   revalidatePath(`/${localeOf(formData)}/admin`);
   return res.ok ? { ok: true } : { ok: false, errorKey: res.errorKey };
+}
+
+/* ----------------------------------------------------------- catalogue */
+
+export async function savePackageAction(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const res = await updatePackageBasics(formData);
+  if (!res.ok) return { ok: false, errorKey: res.errorKey, reasons: res.reasons };
+
+  // A price or a date does not belong to one page. It moves the homepage rail,
+  // the listing, the package page, the calendar dots, the occasion windows that
+  // match on next_departure, and the sitemap's lastModified. Enumerating those
+  // is a list that goes stale the next time a page is added, so the whole tree
+  // is revalidated: twelve packages do not justify being clever here.
+  revalidatePath('/', 'layout');
+
+  return { ok: true };
 }
 
 /* --------------------------------------------------------------- helpers */

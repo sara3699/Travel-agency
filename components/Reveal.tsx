@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { prefersReducedMotion } from '@/lib/motion';
 
 /** Slow, single-shot entrance. Persistent: once revealed it stays revealed, so
  *  a user scrolling back never sees content vanish. Reduced motion gets the end
@@ -10,7 +11,7 @@ export function Reveal({ children, delay = 0, as: As = 'div' }: { children: Reac
   const [shown, setShown] = useState(false);
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return setShown(true);
+    if (prefersReducedMotion()) return setShown(true);
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(

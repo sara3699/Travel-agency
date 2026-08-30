@@ -24,6 +24,27 @@
  * ==================================================================== */
 
 :root {
+
+  /* ---------------------------------------------------------------- *
+   * Tokens this project uses that the vendored scrollcraft layer does
+   * not define. Found 2026-08-29 by building the design-system page:
+   * --sc-ink-mute had 44 references and no definition, so every one of
+   * them fell through `var(--sc-ink-mute, var(--sc-ink))` to full ink.
+   * The quiet third tier of the type hierarchy did not exist. Dates,
+   * captions, table headers and hints were all rendering at the same
+   * weight as body copy.
+   *
+   * A literal value rather than a color-mix, so the contrast is the
+   * number that was measured and not whatever an interpolation space
+   * produces: 5.08:1 on --sc-ink-mute, which holds AA at the small
+   * sizes this token is actually used at. For comparison, --sc-ink is
+   * 17.00:1 and --sc-ink-soft is 7.44:1 on the same ground.
+   * ---------------------------------------------------------------- */
+  --sc-ink-mute: #8C7F6C;
+
+  /* Aliases. Written as var() so they cannot drift from their source. */
+  --sc-bg:        var(--sc-canvas);
+  --sc-bg-raised: var(--sc-surface);
   /* --- the six colour roles ------------------------------------------ */
   --sc-canvas:     #0B0906;   /* warm near-black. Never #000: no air in it */
   --sc-surface:    #17110A;
@@ -524,6 +545,7 @@ body { overscroll-behavior-y: none; }
  * LOCALE SWITCHER — autonyms, never flags. No flag represents Arabic.
  * ------------------------------------------------------------------ */
 .locales { display: flex; gap: 0.15rem; align-items: center; }
+/* see the stacked override below: three languages read as a column, not a row */
 .locales a {
   font-family: var(--sc-font-mono);
   font-size: 0.68rem;
@@ -579,9 +601,17 @@ body { overscroll-behavior-y: none; }
  * same scroll positions, and the whole story still reads.
  * ------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
-  .settings__glass { animation-duration: 1ms; }
-  .trip:hover, .ask:hover { transform: none; }
+  :root:not([data-motion='full']) .settings__glass { animation-duration: 1ms; }
+  :root:not([data-motion='full']) .trip:hover,
+  :root:not([data-motion='full']) .ask:hover { transform: none; }
 }
+
+/* The footer control, which has to win in both directions: someone whose device
+   says reduce can ask for the full thing, so 'full' is a real state and not
+   just the absence of 'reduce'. */
+:root[data-motion='reduce'] .settings__glass { animation-duration: 1ms; }
+:root[data-motion='reduce'] .trip:hover,
+:root[data-motion='reduce'] .ask:hover { transform: none; }
 
 /* ------------------------------------------------------------------ *
  * ENQUIRE — the handoff stub the flight's CTA lands on.
@@ -1110,11 +1140,11 @@ body { overscroll-behavior-y: none; }
 .locales__item {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.3rem;
 }
 .flag {
-  inline-size: 20px;
-  block-size: 14px;
+  inline-size: 14px;
+  block-size: 10px;
   border-radius: 2px;
   flex: none;
   box-shadow: 0 0 0 1px color-mix(in oklab, var(--sc-ink) 18%, transparent);
@@ -1402,15 +1432,23 @@ body { overscroll-behavior-y: none; }
 }
 .finder__go .btn { white-space: nowrap; }
 
-/* Flags plus names need air between the three, or they read as one string. */
+/* Stacked, not strung out in a row. Three languages side by side ran 302px
+   wide and pushed the navigation into the middle of the bar; column puts them
+   under one another at ~90px and hands that space back to the links, which is
+   what moves the nav to the end of the row. Operator's call, 2026-08-27. */
 .locales {
-  gap: var(--sc-2);
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.08rem;
+  flex-wrap: nowrap;
 }
 .locales__item {
-  padding: 0.3rem 0.55rem;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.66rem;
+  line-height: 1.3;
   border: 1px solid transparent;
-  border-radius: var(--sc-r-pill);
+  border-radius: var(--sc-r-sm, 4px);
+  white-space: nowrap;
 }
 .locales__item:hover {
   border-color: var(--sc-hairline);
@@ -1432,3 +1470,1089 @@ body { overscroll-behavior-y: none; }
   .site-head__account,
   .site-head__nav > .btn--quiet { margin-inline-start: 0; }
 }
+
+/* ==================================================================== *
+ * TRIP PRICER
+ * The price is something you operate, not something you read. Two
+ * steppers, a live figure, and a label that changes register the moment
+ * the length moves off what we actually sell.
+ * ==================================================================== */
+
+.pricer {
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-md, 8px);
+  padding: clamp(1.1rem, 3vw, 1.9rem);
+  margin-block: var(--sc-4, 2rem);
+  background: color-mix(in oklab, var(--sc-ink) 3%, transparent);
+}
+.pricer__h {
+  margin: 0 0 var(--sc-3, 1rem);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sc-ink-mute, var(--sc-ink));
+}
+html[dir="rtl"] .pricer__h { letter-spacing: 0; text-transform: none; }
+
+.pricer__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1rem, 3vw, 2.4rem);
+  padding-block-end: var(--sc-3, 1rem);
+  border-block-end: 1px solid var(--sc-hairline);
+}
+.stepper { display: flex; flex-direction: column; gap: 0.5rem; }
+.stepper__label { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sc-ink-mute, var(--sc-ink)); }
+html[dir="rtl"] .stepper__label { letter-spacing: 0; text-transform: none; }
+.stepper__hint { opacity: 0.75; }
+html[dir="rtl"] .stepper__hint { opacity: 1; }
+.stepper__row { display: flex; align-items: center; gap: 0.2rem; }
+.stepper__row button {
+  inline-size: 2.4rem; block-size: 2.4rem;
+  font: inherit; font-size: 1.15rem; line-height: 1;
+  cursor: pointer;
+  color: var(--sc-ink);
+  background: transparent;
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-pill, 999px);
+  transition: border-color 200ms, background 200ms;
+}
+.stepper__row button:hover:not(:disabled) { border-color: var(--sc-accent, var(--sc-ink)); }
+.stepper__row button:disabled { opacity: 0.35; cursor: not-allowed; }
+html[dir="rtl"] .stepper__row button:disabled { opacity: 1; color: var(--sc-hairline-strong); }
+.stepper__val { min-inline-size: 2.6rem; text-align: center; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+
+.pricer__total {
+  margin: var(--sc-3, 1rem) 0 0;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.pricer__for { margin: 0.35rem 0 0; font-size: 0.9rem; color: var(--sc-ink-soft, var(--sc-ink)); }
+.pricer__unit { margin: 0.2rem 0 0; font-size: 0.8rem; color: var(--sc-ink-mute, var(--sc-ink)); font-variant-numeric: tabular-nums; }
+.pricer__note { margin: var(--sc-3, 1rem) 0 0; font-size: 0.82rem; line-height: 1.6; color: var(--sc-ink-soft, var(--sc-ink)); }
+.pricer__note--est {
+  padding-inline-start: 0.7rem;
+  border-inline-start: 2px solid var(--sc-warn, #c9803f);
+  color: var(--sc-ink);
+}
+.pricer__reset { margin-block-start: 0.4rem; font-size: 0.8rem; }
+.pricer__excl { margin: 0.8rem 0 0; font-size: 0.82rem; color: var(--sc-ink-mute, var(--sc-ink)); }
+.pricer__cta { margin-block-start: var(--sc-3, 1rem); }
+.pkg__provline { margin-block-start: 0.5rem; }
+
+/* ==================================================================== *
+ * QUESTIONS AND ANSWERS
+ * Open prose in disclosure elements, not four collapsed accordions with
+ * the answers hidden behind a heading-interpretation task.
+ * ==================================================================== */
+
+.faq { max-inline-size: 74ch; margin-inline: auto; padding: clamp(1.5rem, 5vw, 4rem) clamp(1.1rem, 5vw, 3rem) 6rem; }
+.faq__head { margin-block-end: var(--sc-4, 2rem); }
+.faq__title { margin: 0; font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1.06; }
+html[dir="rtl"] .faq__title { line-height: 1.3; }
+.faq__lead { margin: var(--sc-3, 1rem) 0 0; font-size: 1.05rem; line-height: 1.65; color: var(--sc-ink-soft, var(--sc-ink)); }
+
+.faq__jump { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-block-end: var(--sc-4, 2rem); }
+.faq__jump a {
+  font-size: 0.8rem; text-decoration: none; color: var(--sc-ink-soft, var(--sc-ink));
+  padding: 0.35rem 0.7rem; border: 1px solid var(--sc-hairline); border-radius: var(--sc-r-pill, 999px);
+}
+.faq__jump a:hover { border-color: var(--sc-accent, var(--sc-ink)); color: var(--sc-ink); }
+
+.faq__search { margin-block-end: var(--sc-4, 2rem); }
+.faq__search label { display: block; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sc-ink-mute, var(--sc-ink)); margin-block-end: 0.45rem; }
+html[dir="rtl"] .faq__search label { letter-spacing: 0; text-transform: none; }
+.faq__search .field { inline-size: 100%; }
+.faq__count { margin: 0.5rem 0 0; font-size: 0.8rem; color: var(--sc-ink-mute, var(--sc-ink)); min-block-size: 1.2em; }
+.faq__empty { padding-block: 2rem; color: var(--sc-ink-soft, var(--sc-ink)); }
+
+.faq__topic { margin-block-end: clamp(2rem, 6vh, 3.4rem); scroll-margin-block-start: 5rem; }
+.faq__topicH { margin: 0; font-size: clamp(1.25rem, 3vw, 1.7rem); }
+.faq__topicBlurb { margin: 0.4rem 0 var(--sc-3, 1rem); font-size: 0.9rem; color: var(--sc-ink-mute, var(--sc-ink)); }
+.faq__list { border-block-start: 1px solid var(--sc-hairline); }
+
+.qa { border-block-end: 1px solid var(--sc-hairline); }
+.qa__q {
+  cursor: pointer; list-style: none;
+  padding-block: 0.95rem; padding-inline-end: 2rem;
+  font-size: 1rem; line-height: 1.5; position: relative;
+}
+.qa__q::-webkit-details-marker { display: none; }
+.qa__q::after {
+  content: "+"; position: absolute; inset-inline-end: 0; inset-block-start: 0.85rem;
+  font-size: 1.15rem; color: var(--sc-accent, var(--sc-ink)); line-height: 1;
+}
+.qa[open] .qa__q::after { content: "\2212"; }
+.qa__q:hover { color: var(--sc-accent-ink, var(--sc-ink)); }
+.qa__a { margin: 0 0 1.1rem; padding-inline-end: 2rem; font-size: 0.94rem; line-height: 1.7; color: var(--sc-ink-soft, var(--sc-ink)); }
+
+.faq__still {
+  margin-block-start: clamp(2.5rem, 8vh, 4rem);
+  padding: clamp(1.2rem, 4vw, 2rem);
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-md, 8px);
+}
+.faq__still h2 { margin: 0; font-size: 1.2rem; }
+.faq__still p { margin: 0.6rem 0 1.2rem; color: var(--sc-ink-soft, var(--sc-ink)); line-height: 1.6; }
+
+/* ==================================================================== *
+ * LISTING — the reference site's shape, our identity
+ * Measured 2026-08-28: 1188px column, 288px rail, 28px gap, result rows
+ * with a right-aligned price block. See
+ * docs/ui-ux/research/2026-08-28-travelocity-visual-analysis.md
+ * ==================================================================== */
+
+.crumbs { margin-block-end: var(--sc-3, 1rem); }
+.crumbs ol { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; margin: 0; padding: 0; font-size: 0.82rem; }
+.crumbs li { display: flex; align-items: center; gap: 0.5rem; color: var(--sc-ink-mute, var(--sc-ink)); }
+.crumbs li + li::before { content: "\203A"; color: var(--sc-hairline-strong); }
+html[dir="rtl"] .crumbs li + li::before { content: "\2039"; }
+.crumbs a { color: var(--sc-ink-soft, var(--sc-ink)); text-decoration: none; }
+.crumbs a:hover { color: var(--sc-accent-ink, var(--sc-ink)); text-decoration: underline; }
+.crumbs [aria-current] { color: var(--sc-ink); }
+
+.dest__cols { display: grid; gap: 28px; align-items: start; }
+@media (min-width: 900px) { .dest__cols { grid-template-columns: 288px minmax(0, 1fr); } }
+
+.dest__rail {
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-md, 8px);
+  padding: 1.1rem;
+  position: sticky; top: 5.5rem;
+}
+@media (max-width: 899px) { .dest__rail { position: static; } }
+.dest__railH {
+  margin: 0 0 0.9rem; font-size: 0.72rem; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--sc-ink-mute, var(--sc-ink));
+}
+html[dir="rtl"] .dest__railH { letter-spacing: 0; text-transform: none; }
+/* The finder was a horizontal row; in the rail it stacks. */
+.dest__rail .finder {
+  display: flex; flex-direction: column; gap: 0.9rem;
+  /* the horizontal finder aligned to `end`, which in a column pushes every
+     control to the far side of the rail */
+  align-items: stretch;
+}
+.dest__rail .finder .field { margin: 0; }
+.dest__rail .finder select, .dest__rail .finder input { inline-size: 100%; }
+.dest__rail .finder__go { display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-start; }
+
+.dest__results { min-inline-size: 0; }
+.trows { display: flex; flex-direction: column; gap: 1rem; }
+
+.trow {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr) auto;
+  gap: 1.2rem;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-md, 8px);
+  overflow: hidden;
+  background: color-mix(in oklab, var(--sc-ink) 2%, transparent);
+  transition: border-color 260ms, transform 260ms;
+}
+.trow:hover { border-color: var(--sc-accent, var(--sc-ink)); transform: translateY(-1px); }
+@media (max-width: 760px) { .trow { grid-template-columns: 1fr; } }
+
+.trow__shot { position: relative; min-block-size: 190px; background: var(--sc-hairline); }
+.trow__body { display: flex; flex-direction: column; gap: 0.3rem; padding-block: 1.1rem; min-inline-size: 0; }
+.trow__dest { font-size: 1.25rem; font-weight: 500; line-height: 1.2; }
+.trow__country { font-size: 0.86rem; color: var(--sc-ink-mute, var(--sc-ink)); }
+.trow__meta { font-size: 0.86rem; color: var(--sc-ink-soft, var(--sc-ink)); }
+.trow__diff { font-size: 0.88rem; color: var(--sc-accent-ink, var(--sc-accent)); margin-block-start: 0.3rem; line-height: 1.45; }
+.trow__inc { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-block-start: 0.5rem; }
+.chip {
+  font-size: 0.7rem; padding: 0.18rem 0.5rem;
+  border: 1px solid var(--sc-hairline); border-radius: var(--sc-r-pill, 999px);
+  color: var(--sc-ink-soft, var(--sc-ink));
+}
+.trow__foot { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin-block-start: auto; padding-block-start: 0.6rem; font-size: 0.74rem; color: var(--sc-ink-mute, var(--sc-ink)); }
+
+/* The price block. Their nightly rate is regular and the total is bold; the
+   heavier figure is the one you pay, so the total gets the weight here too. */
+.trow__price {
+  display: flex; flex-direction: column; align-items: flex-end;
+  justify-content: center; gap: 0.15rem;
+  padding: 1.1rem 1.2rem; text-align: end;
+  border-inline-start: 1px solid var(--sc-hairline);
+  min-inline-size: 12rem;
+}
+@media (max-width: 760px) {
+  .trow__price { align-items: flex-start; text-align: start; border-inline-start: 0; border-block-start: 1px solid var(--sc-hairline); }
+}
+.trow__unit { font-size: 0.85rem; font-weight: 400; color: var(--sc-ink-mute, var(--sc-ink)); }
+.trow__total { font-size: 1.45rem; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.trow__for { font-size: 0.78rem; color: var(--sc-ink-soft, var(--sc-ink)); }
+.trow__allin { font-size: 0.72rem; color: var(--sc-accent-ink, var(--sc-accent)); }
+.trow__excl { font-size: 0.72rem; color: var(--sc-ink-mute, var(--sc-ink)); margin-block-start: 0.3rem; }
+
+/* FAQ topics as the reference's compact three-column card grid, not pills. */
+.faq__topics { display: grid; gap: 12px; margin-block-end: var(--sc-4, 2rem); }
+@media (min-width: 700px) { .faq__topics { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1040px) { .faq__topics { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.faq__topicCard {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.8rem;
+  min-block-size: 64px; padding: 0.8rem 1rem;
+  border: 1px solid var(--sc-hairline); border-radius: var(--sc-r-md, 8px);
+  text-decoration: none; color: var(--sc-ink);
+  transition: border-color 220ms, background 220ms;
+}
+.faq__topicCard:hover { border-color: var(--sc-accent, var(--sc-ink)); background: color-mix(in oklab, var(--sc-ink) 4%, transparent); }
+.faq__topicCard span { font-size: 0.95rem; line-height: 1.3; }
+.faq__topicCard::after { content: "›"; color: var(--sc-accent, var(--sc-ink)); font-size: 1.2rem; line-height: 1; }
+html[dir="rtl"] .faq__topicCard::after { content: "‹"; }
+.faq__topicN { font-size: 0.72rem !important; color: var(--sc-ink-mute, var(--sc-ink)); }
+
+/* A topic page answers in the open: the subject is already chosen. */
+.faq__open { margin-block-end: clamp(2rem, 6vh, 3.4rem); }
+.qaOpen { padding-block: 1.4rem; border-block-end: 1px solid var(--sc-hairline); scroll-margin-block-start: 5rem; }
+.qaOpen__q { margin: 0 0 0.6rem; font-size: 1.12rem; font-weight: 500; line-height: 1.35; }
+.qaOpen__a { margin: 0; font-size: 0.95rem; line-height: 1.7; color: var(--sc-ink-soft, var(--sc-ink)); }
+
+/* ==================================================================== *
+ * DEPARTURE CALENDAR
+ * Two months side by side with a flexibility row, the shape the
+ * reference site uses. Weekday order and weekend shading come from the
+ * locale, because Saudi's weekend is Fri-Sat and the UAE's is Sat-Sun.
+ * ==================================================================== */
+
+.cal { position: relative; display: flex; flex-direction: column; gap: 0.45rem; }
+.cal__label { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sc-ink-mute, var(--sc-ink)); }
+html[dir="rtl"] .cal__label { letter-spacing: 0; text-transform: none; }
+.cal__trigger {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+  cursor: pointer; text-align: start; inline-size: 100%;
+}
+.cal__flexTag {
+  font-size: 0.68rem; padding: 0.1rem 0.4rem; border-radius: var(--sc-r-pill, 999px);
+  background: color-mix(in oklab, var(--sc-accent) 22%, transparent); color: var(--sc-ink);
+}
+
+.cal__pop {
+  position: absolute; inset-block-start: calc(100% + 0.4rem); inset-inline-start: 0; z-index: 200;
+  inline-size: max(320px, 34rem); max-inline-size: 92vw;
+  background: var(--sc-bg, #14110d);
+  border: 1px solid var(--sc-hairline-strong, var(--sc-hairline));
+  border-radius: var(--sc-r-md, 8px);
+  box-shadow: 0 24px 60px -24px rgba(0,0,0,.7);
+  padding: 0.9rem;
+}
+@media (max-width: 900px) { .cal__pop { inline-size: min(92vw, 22rem); } }
+
+.cal__nav { display: flex; justify-content: space-between; margin-block-end: 0.2rem; }
+.cal__nav button {
+  inline-size: 2rem; block-size: 2rem; font-size: 1.1rem; line-height: 1; cursor: pointer;
+  color: var(--sc-ink); background: transparent;
+  border: 1px solid var(--sc-hairline); border-radius: var(--sc-r-pill, 999px);
+}
+.cal__nav button:hover { border-color: var(--sc-accent); }
+/* No row-reverse: an RTL container already lays a flex row right-to-left, so
+   reversing again would desync DOM order from visual order. Only the glyphs
+   need to mirror, and `content` is the one property with no logical form. */
+.cal__nav button:first-child::before { content: "\2039"; }
+.cal__nav button:last-child::before { content: "\203A"; }
+html[dir="rtl"] .cal__nav button:first-child::before { content: "\203A"; }
+html[dir="rtl"] .cal__nav button:last-child::before { content: "\2039"; }
+
+.cal__months { display: grid; gap: 1.1rem; }
+@media (min-width: 560px) { .cal__months { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 900px) { .cal__months { grid-template-columns: 1fr; } }
+
+.cal__mhead { margin: 0 0 0.5rem; text-align: center; font-size: 0.88rem; font-weight: 500; }
+.cal__hijri { display: block; font-size: 0.68rem; color: var(--sc-ink-mute, var(--sc-ink)); font-weight: 400; }
+
+.cal__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal__wd {
+  text-align: center; font-size: 0.62rem; padding-block: 0.3rem;
+  color: var(--sc-ink-mute, var(--sc-ink)); text-transform: uppercase; letter-spacing: 0.04em;
+}
+html[dir="rtl"] .cal__wd { text-transform: none; letter-spacing: 0; }
+.cal__pad { aspect-ratio: 1; }
+.cal__day {
+  position: relative; aspect-ratio: 1; min-block-size: 2rem;
+  display: flex; align-items: center; justify-content: center;
+  font: inherit; font-size: 0.8rem; font-variant-numeric: tabular-nums;
+  cursor: pointer; color: var(--sc-ink);
+  background: transparent; border: 1px solid transparent; border-radius: var(--sc-r-sm, 4px);
+}
+.cal__day:hover { border-color: var(--sc-accent); }
+.cal__day.is-weekend { color: var(--sc-accent-ink, var(--sc-accent)); }
+.cal__day.is-in { background: color-mix(in oklab, var(--sc-accent) 16%, transparent); }
+.cal__day.is-end { background: var(--sc-accent); color: var(--sc-bg, #14110d); font-weight: 600; }
+/* A dot on days something actually leaves. Marking real availability stops the
+   calendar proposing a combination that returns nothing by construction. */
+.cal__day.has-trip::after {
+  content: ""; position: absolute; inset-block-end: 3px; inline-size: 4px; block-size: 4px;
+  border-radius: 50%; background: var(--sc-accent);
+}
+.cal__day.is-end.has-trip::after { background: var(--sc-bg, #14110d); }
+
+.cal__flex {
+  display: flex; flex-wrap: wrap; gap: 0.35rem;
+  margin-block-start: 0.9rem; padding-block-start: 0.8rem;
+  border-block-start: 1px solid var(--sc-hairline);
+}
+.cal__chip {
+  font: inherit; font-size: 0.74rem; cursor: pointer;
+  padding: 0.3rem 0.7rem; border-radius: var(--sc-r-pill, 999px);
+  color: var(--sc-ink-soft, var(--sc-ink)); background: transparent;
+  border: 1px solid var(--sc-hairline);
+}
+.cal__chip:hover { border-color: var(--sc-accent); }
+.cal__chip.is-on { border-color: var(--sc-accent); color: var(--sc-ink); background: color-mix(in oklab, var(--sc-accent) 16%, transparent); }
+
+.cal__foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-block-start: 0.8rem; }
+.btn--sm { padding: 0.4rem 0.9rem; font-size: 0.82rem; }
+.cal__legend { display: flex; align-items: center; gap: 0.4rem; margin: 0.6rem 0 0; font-size: 0.68rem; color: var(--sc-ink-mute, var(--sc-ink)); }
+.cal__dot { inline-size: 4px; block-size: 4px; border-radius: 50%; background: var(--sc-accent); flex: none; }
+
+/* ==================================================================== *
+ * SEARCH BAR
+ * Across the top, the way the reference site does it. The calendar was
+ * opening out of a 288px rail with nowhere to go and colliding with the
+ * results; up here it has the width it needs.
+ * ==================================================================== */
+
+.searchbar {
+  /* Above the results, and its own stacking context, so the calendar
+     popover is never trapped under a card. */
+  position: relative;
+  z-index: 40;
+  margin-block: var(--sc-4, 2rem);
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-md, 8px);
+  background: color-mix(in oklab, var(--sc-ink) 3%, transparent);
+}
+.searchbar__row {
+  display: grid;
+  gap: 1rem 1.2rem;
+  align-items: end;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 780px) {
+  .searchbar__row { grid-template-columns: 1fr 1fr 1.2fr 0.6fr auto; }
+}
+.field--sb { margin: 0; display: flex; flex-direction: column; gap: 0.45rem; min-inline-size: 0; }
+.field--sb > label,
+.field--sb .cal__label {
+  font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--sc-ink-mute, var(--sc-ink));
+}
+html[dir="rtl"] .field--sb > label,
+html[dir="rtl"] .field--sb .cal__label { letter-spacing: 0; text-transform: none; }
+.field--sb select, .field--sb input, .field--sb .cal__trigger { inline-size: 100%; }
+.searchbar__go { white-space: nowrap; block-size: 2.9rem; }
+
+/* The rail is secondary filters now, so it no longer needs to host a popover. */
+.dest__rail { z-index: 1; }
+
+/* ==================================================================== *
+ * HEADER — nav and utilities as two clusters, not one wrapping list
+ * ==================================================================== */
+
+.site-head { gap: var(--sc-3); flex-wrap: nowrap; }
+@media (max-width: 900px) { .site-head { flex-wrap: wrap; } }
+
+.site-head__nav { gap: 1.35rem; flex-wrap: nowrap; min-inline-size: 0; }
+.site-head__nav a { white-space: nowrap; }
+@media (max-width: 760px) { .site-head__nav { display: none; } }
+
+.site-head__utils {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  /* end of the inline axis: the right in English, the left in Arabic */
+  margin-inline-start: auto;
+  flex: none;
+}
+.site-head__utils .locales { flex: none; }
+.site-head__utils .site-head__account { gap: 0.9rem; }
+
+/* Give the phrases room. Copy that sits tight to its neighbours reads as
+   unfinished however good the words are. */
+.sheet__head { margin-block-end: var(--sc-4, 2rem); }
+.sheet__title { margin-block-end: 0.7rem; line-height: 1.08; }
+html[dir="rtl"] .sheet__title { line-height: 1.3; }
+.sheet__lede { max-inline-size: 62ch; line-height: 1.65; }
+.trow__body { gap: 0.36rem; padding-inline-start: 0.2rem; }
+.trow__diff { margin-block-start: 0.45rem; }
+.trow__inc { margin-block-start: 0.65rem; gap: 0.35rem; }
+.finder__count { margin-block: 0 1rem; }
+
+/* The date control is a button, and the .field rules are written for the <p>
+   wrapper the other controls use, so it inherited no box at all and read as
+   loose text next to three proper fields. Match the selects exactly. */
+.cal__trigger {
+  block-size: 2.9rem;
+  padding-block: 0.65rem;
+  padding-inline: 0.8rem;
+  background: var(--sc-bg-raised, #17110a);
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-sm, 4px);
+  color: var(--sc-ink);
+  font: inherit;
+  font-size: 0.95rem;
+}
+.cal__trigger:hover { border-color: var(--sc-accent); }
+.searchbar select, .searchbar input { block-size: 2.9rem; }
+
+/* ==================================================================== *
+ * OCCASIONS
+ * ==================================================================== */
+
+.occ__grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .occ__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1080px) { .occ__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.occ__card {
+  display: flex; flex-direction: column; gap: 0.6rem;
+  padding: 1.3rem; text-decoration: none; color: inherit;
+  border: 1px solid var(--sc-hairline); border-radius: var(--sc-r-md, 8px);
+  background: color-mix(in oklab, var(--sc-ink) 2%, transparent);
+  transition: border-color 260ms, transform 260ms;
+}
+.occ__card:hover { border-color: var(--sc-accent); transform: translateY(-2px); }
+.occ__cardHead { display: flex; align-items: baseline; justify-content: space-between; gap: 0.8rem; flex-wrap: wrap; }
+.occ__name { font-size: 1.18rem; font-weight: 500; }
+.occ__state { font-size: 0.7rem; color: var(--sc-ink-mute, var(--sc-ink)); white-space: nowrap; }
+.occ__state.is-open { color: var(--sc-accent-ink, var(--sc-accent)); }
+.occ__intent { font-size: 0.88rem; line-height: 1.6; color: var(--sc-ink-soft, var(--sc-ink)); }
+.occ__count { margin-block-start: auto; padding-block-start: 0.5rem; font-size: 0.74rem; color: var(--sc-ink-mute, var(--sc-ink)); }
+
+.occ__head { max-inline-size: 68ch; }
+.occ__window {
+  margin-block-start: 1.4rem; padding: 0.9rem 1.1rem;
+  border: 1px solid var(--sc-hairline); border-radius: var(--sc-r-md, 8px);
+}
+.occ__window.is-open { border-color: var(--sc-accent); }
+.occ__windowLine { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.7rem; margin: 0; }
+.occ__windowK { font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sc-ink-mute, var(--sc-ink)); }
+html[dir="rtl"] .occ__windowK { letter-spacing: 0; text-transform: none; }
+.occ__badge {
+  font-size: 0.66rem; padding: 0.14rem 0.5rem; border-radius: var(--sc-r-pill, 999px);
+  border: 1px solid var(--sc-hairline); color: var(--sc-ink-soft, var(--sc-ink));
+}
+.occ__window.is-open .occ__badge { border-color: var(--sc-accent); color: var(--sc-accent-ink, var(--sc-accent)); }
+.occ__moon, .occ__closed { margin: 0.6rem 0 0; font-size: 0.82rem; line-height: 1.6; color: var(--sc-ink-mute, var(--sc-ink)); }
+.occ__advice {
+  margin-block: 1.6rem; padding: 1rem 1.2rem;
+  border-inline-start: 2px solid var(--sc-accent);
+  background: color-mix(in oklab, var(--sc-ink) 3%, transparent);
+}
+.occ__advice h2 { margin: 0 0 0.4rem; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sc-ink-mute, var(--sc-ink)); }
+html[dir="rtl"] .occ__advice h2 { letter-spacing: 0; text-transform: none; }
+.occ__advice p { margin: 0; font-size: 0.92rem; line-height: 1.65; }
+.occ__foot { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; margin-block-start: 2rem; }
+
+/* ==================================================================== *
+ * TRUST
+ * ==================================================================== */
+
+.trust { max-inline-size: 74ch; }
+.trust__specimen {
+  margin-block: 0 2.4rem; padding: 0.9rem 1.1rem;
+  border: 1px dashed var(--sc-hairline-strong, var(--sc-hairline));
+  border-radius: var(--sc-r-md, 8px);
+  font-size: 0.9rem; line-height: 1.65; color: var(--sc-ink-soft, var(--sc-ink));
+}
+.trust__block { margin-block-end: 2.6rem; }
+.trust__block h2 { margin: 0 0 0.7rem; font-size: 1.22rem; font-weight: 500; }
+.trust__block p { margin: 0 0 0.8rem; line-height: 1.7; color: var(--sc-ink-soft, var(--sc-ink)); }
+.trust__note { font-size: 0.85rem !important; color: var(--sc-ink-mute, var(--sc-ink)) !important; }
+
+.trust__people { list-style: none; margin: 1.1rem 0; padding: 0; display: grid; gap: 0.9rem; }
+.trust__people li { display: flex; gap: 0.9rem; align-items: flex-start; padding: 0.9rem 1rem; border: 1px solid var(--sc-hairline); border-radius: var(--sc-r-md, 8px); }
+.trust__avatar {
+  inline-size: 2.4rem; block-size: 2.4rem; flex: none;
+  display: grid; place-items: center; border-radius: 50%;
+  background: color-mix(in oklab, var(--sc-accent) 20%, transparent);
+  font-size: 1rem; font-weight: 600;
+}
+.trust__personBody { display: flex; flex-direction: column; gap: 0.16rem; }
+.trust__meta { font-size: 0.78rem; color: var(--sc-ink-mute, var(--sc-ink)); }
+
+/* Reads as a gap on purpose. A number here would be a forged document. */
+.trust__placeholder {
+  display: inline-block; margin-block: 0.4rem 0.8rem !important;
+  padding: 0.5rem 0.9rem; font-family: var(--sc-mono, ui-monospace, monospace);
+  font-size: 0.8rem; letter-spacing: 0.04em;
+  border: 1px dashed var(--sc-warn, #c9803f); border-radius: var(--sc-r-sm, 4px);
+  color: var(--sc-warn, #c9803f) !important;
+}
+
+.trust__promises { margin: 1rem 0 0; display: grid; gap: 1rem; }
+.trust__promises dt { font-weight: 500; margin-block-end: 0.25rem; color: var(--sc-ink); }
+.trust__promises dd { margin: 0; font-size: 0.9rem; line-height: 1.65; color: var(--sc-ink-mute, var(--sc-ink)); }
+.trust__threshold { font-size: 0.9rem !important; color: var(--sc-ink) !important; border-inline-start: 2px solid var(--sc-accent); padding-inline-start: 0.8rem; }
+.trust__log { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 0.6rem; }
+.trust__log li { display: flex; gap: 0.9rem; font-size: 0.88rem; }
+.trust__log time { flex: none; color: var(--sc-ink-mute, var(--sc-ink)); font-variant-numeric: tabular-nums; }
+.trust__block--absent { border-block-start: 1px solid var(--sc-hairline); padding-block-start: 1.6rem; }
+
+/* ==================================================================== *
+ * SHARE CARD — 1200x630, screenshotted by Chromium at publish time
+ * Laid out by a browser engine because satori reverses Arabic word order.
+ * ==================================================================== */
+
+.card1200 {
+  position: relative;
+  inline-size: 1200px;
+  block-size: 630px;
+  overflow: hidden;
+  background: #14110d;
+  color: #f6ecdc;
+}
+.card1200__bg {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  transform: scale(1.04);
+}
+/* A gradient angle has no logical form, so the direction is carried in one
+   custom property and only that flips. Restating the whole background per
+   direction is how the two copies drift apart. */
+.card1200__veil {
+  --veil-angle: 105deg;
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(var(--veil-angle), rgba(14,11,8,.95) 0%, rgba(14,11,8,.86) 42%, rgba(14,11,8,.32) 78%),
+    linear-gradient(to top, rgba(14,11,8,.75), transparent 55%);
+}
+html[dir="rtl"] .card1200__veil { --veil-angle: 255deg; }
+.card1200__inner {
+  position: relative;
+  block-size: 100%;
+  padding: 64px 72px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.card1200__top { display: flex; align-items: center; justify-content: space-between; }
+.card1200__mark { font-size: 30px; font-weight: 600; letter-spacing: -0.01em; }
+.card1200__spec {
+  font-size: 19px; padding: 7px 18px; border-radius: 999px;
+  border: 1px solid #6b5836; color: #e0b872;
+}
+.card1200__mid { max-inline-size: 26ch; }
+.card1200__from { margin: 0 0 14px; font-size: 26px; color: #c6b49a; }
+.card1200__dest { margin: 0; font-size: 92px; font-weight: 600; line-height: 1.05; }
+html[dir="rtl"] .card1200__dest { line-height: 1.25; }
+.card1200__country { margin: 10px 0 0; font-size: 30px; color: #c6b49a; }
+.card1200__foot { display: flex; align-items: flex-end; justify-content: space-between; }
+.card1200__price { display: flex; flex-direction: column; gap: 6px; }
+.card1200__total { font-size: 68px; font-weight: 600; color: #f0d9a8; line-height: 1; }
+.card1200__for { font-size: 24px; color: #c6b49a; }
+.card1200__unit { display: flex; flex-direction: column; gap: 6px; text-align: end; font-size: 26px; color: #c6b49a; }
+.card1200__allin { font-size: 22px; color: #8f7d66; }
+
+
+/* ------------------------------------------------------------------ *
+ * SITE FOOTER
+ * Small on purpose. "Mega-footer" is item 10 on the generic-competitor
+ * list, so this carries the specimen sentence, four links, the motion
+ * control and one maker line, and nothing else.
+ * ------------------------------------------------------------------ */
+.site-foot {
+  display: grid;
+  gap: var(--sc-4);
+  padding: var(--sc-6) var(--sc-gutter);
+  border-block-start: 1px solid var(--sc-hairline);
+  color: var(--sc-ink-soft);
+  font-size: 0.9rem;
+}
+
+/* The load-bearing sentence: the chips say the fare is illustrative, this
+   says the agency is. Given the weight of body text rather than the grey of
+   small print, because grey small print is how the category hides things. */
+.site-foot__specimen {
+  color: var(--sc-ink);
+  max-inline-size: var(--sc-measure);
+  margin: 0;
+}
+
+.site-foot__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sc-4);
+}
+.site-foot__nav a {
+  color: var(--sc-ink-soft);
+  text-decoration: none;
+  border-block-end: 1px solid var(--sc-hairline);
+  padding-block-end: 0.1rem;
+}
+.site-foot__nav a:hover,
+.site-foot__nav a:focus-visible { color: var(--sc-ink); }
+
+.site-foot__imagery,
+.site-foot__maker {
+  margin: 0;
+  color: var(--sc-ink-mute);
+  font-size: 0.82rem;
+}
+.site-foot__maker a { color: var(--sc-ink-soft); }
+
+/* ---- the motion control ---- */
+.motion {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sc-3);
+}
+.motion__legend {
+  padding: 0;
+  font-family: var(--sc-font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sc-ink-mute);
+}
+.motion__opts { display: flex; flex-wrap: wrap; gap: var(--sc-3); }
+.motion__opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  /* 24px is the WCAG 2.2 target-size floor, and a radio in a footer is
+     exactly the control that gets shipped at 12. */
+  min-block-size: 24px;
+}
+.motion__opt input { inline-size: 16px; block-size: 16px; accent-color: var(--sc-accent); }
+
+/* Arabic sets no letter-spacing and no uppercase: neither means anything in a
+   script with no case, and tracking breaks the joins. */
+[dir='rtl'] .motion__legend { letter-spacing: 0; text-transform: none; }
+
+/* ------------------------------------------------------------------ *
+ * LEGAL DOCUMENTS
+ * Same measure and rhythm as the trust page, because a privacy notice
+ * that looks like a different site is a privacy notice nobody believes
+ * came from this one.
+ * ------------------------------------------------------------------ */
+.legal { max-inline-size: 74ch; }
+.legal__updated {
+  margin-block-start: 0.8rem;
+  font-family: var(--sc-font-mono);
+  font-size: 0.78rem;
+  color: var(--sc-ink-mute, var(--sc-ink));
+  font-variant-numeric: tabular-nums;
+}
+.legal__block { margin-block-end: 2.6rem; }
+.legal__block h2 { margin: 0 0 0.7rem; font-size: 1.22rem; font-weight: 500; }
+.legal__block p { margin: 0 0 0.8rem; line-height: 1.7; color: var(--sc-ink-soft, var(--sc-ink)); }
+.legal__changes { border-block-start: 1px solid var(--sc-hairline); padding-block-start: 1.6rem; }
+.legal__log { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 0.6rem; }
+.legal__log li { display: flex; gap: 0.9rem; font-size: 0.88rem; }
+.legal__log time { flex: none; color: var(--sc-ink-mute, var(--sc-ink)); font-variant-numeric: tabular-nums; }
+
+[dir='rtl'] .legal__updated { letter-spacing: 0; }
+
+/* ------------------------------------------------------------------ *
+ * CATALOGUE ADMIN
+ * The screen that lets a price and a date be changed without a
+ * migration. Internal, so it borrows the document styles rather than
+ * earning its own vocabulary.
+ * ------------------------------------------------------------------ */
+.admin__jump { margin-block: 0 var(--sc-5); }
+
+.cat__alert {
+  margin-block: 0 var(--sc-4);
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--sc-hairline-strong, var(--sc-hairline));
+  border-radius: var(--sc-r-md, 8px);
+  font-size: 0.9rem;
+  color: var(--sc-ink);
+}
+/* A departure that has already gone is the one state on this screen that is
+   actively wrong rather than merely worth knowing, so it is the only thing
+   that gets the accent. */
+.cat__alert--bad {
+  border-color: var(--sc-accent);
+  background: color-mix(in oklab, var(--sc-accent) 12%, transparent);
+}
+
+.cat {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.cat th,
+.cat td {
+  padding: 0.7rem 0.8rem;
+  border-block-end: 1px solid var(--sc-hairline);
+  text-align: start;
+  vertical-align: baseline;
+}
+.cat th {
+  font-family: var(--sc-font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sc-ink-mute, var(--sc-ink));
+  font-weight: 400;
+}
+/* Figures line up per column so a wrong price is visible as a shape, which is
+   how anyone actually scans a price list. */
+.cat__num { text-align: end; font-family: var(--sc-font-mono); font-variant-numeric: tabular-nums; }
+.cat__slug { display: block; }
+.cat__iata {
+  font-family: var(--sc-font-mono);
+  font-size: 0.72rem;
+  color: var(--sc-ink-mute, var(--sc-ink));
+}
+.cat__row--past td { color: var(--sc-ink-mute, var(--sc-ink)); }
+.cat__past {
+  display: inline-block;
+  margin-inline-start: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--sc-accent);
+}
+.cat__status { font-size: 0.82rem; }
+.cat__status--draft { color: var(--sc-ink-mute, var(--sc-ink)); }
+.cat__status--archived { color: var(--sc-ink-mute, var(--sc-ink)); text-decoration: line-through; }
+
+@media (max-width: 700px) {
+  .cat, .cat thead, .cat tbody, .cat tr, .cat td { display: block; }
+  .cat thead { display: none; }
+  .cat tr { border-block-end: 1px solid var(--sc-hairline); padding-block: 0.6rem; }
+  .cat td { border: 0; padding: 0.2rem 0; }
+  .cat__num { text-align: start; }
+}
+
+/* ---- the editor ---- */
+.pkged__blockers {
+  margin: 0 0 var(--sc-4);
+  padding: 0.8rem 1rem;
+  padding-inline-start: 2rem;
+  border: 1px solid var(--sc-accent);
+  border-radius: var(--sc-r-md, 8px);
+  font-size: 0.9rem;
+  display: grid;
+  gap: 0.35rem;
+}
+.pkged__saved {
+  margin: 0 0 var(--sc-4);
+  font-size: 0.9rem;
+  color: var(--sc-accent);
+}
+
+[dir='rtl'] .cat th { letter-spacing: 0; text-transform: none; }
+
+.cat__total { white-space: nowrap; }
+.cat__party {
+  margin-inline-start: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--sc-ink-mute, var(--sc-ink));
+}
+.pkged__total {
+  margin-block: -0.4rem 0;
+  font-size: 0.85rem;
+  color: var(--sc-ink-soft, var(--sc-ink));
+}
+
+.pkged__sums {
+  margin-block: -0.4rem var(--sc-4);
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--sc-ink-soft, var(--sc-ink));
+}
+.pkged__sums p { margin: 0; }
+/* Shown only while the length differs from what is saved, so it reads as a
+   consequence of the edit rather than as permanent chrome. */
+.pkged__warn {
+  margin-block-start: 0.3rem !important;
+  padding: 0.6rem 0.8rem;
+  border-inline-start: 2px solid var(--sc-accent);
+  color: var(--sc-ink);
+}
+
+/* ------------------------------------------------------------------ *
+ * /BUILD — the practitioner layer
+ * Master doc 14.4. Reading matter, so it is set for reading: one
+ * column, generous measure, no cards.
+ * ------------------------------------------------------------------ */
+.build { max-inline-size: 46rem; }
+.build__note {
+  margin-block: 0 var(--sc-6);
+  padding: 0.9rem 1.1rem;
+  border-inline-start: 2px solid var(--sc-accent);
+  font-size: 0.9rem;
+  color: var(--sc-ink-soft, var(--sc-ink));
+}
+.build__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sc-6); }
+.build__list a { text-decoration: none; color: inherit; display: block; }
+.build__list h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: var(--sc-leading-tight, 1.2);
+}
+.build__list a:hover h2 { color: var(--sc-accent); }
+.build__list p { margin: 0; color: var(--sc-ink-soft, var(--sc-ink)); line-height: 1.65; }
+.build__meta {
+  margin-block-start: 0.7rem !important;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  font-family: var(--sc-font-mono);
+  font-size: 0.72rem;
+  color: var(--sc-ink-mute, var(--sc-ink)) !important;
+}
+
+/* ---- an essay ---- */
+.essay { max-inline-size: 42rem; }
+.essay__sub {
+  margin-block-end: var(--sc-5);
+  padding: 0.7rem 0.9rem;
+  border: 1px dashed var(--sc-hairline-strong, var(--sc-hairline));
+  border-radius: var(--sc-r-md, 8px);
+  font-size: 0.85rem;
+  color: var(--sc-ink-mute, var(--sc-ink));
+}
+.essay__date {
+  font-family: var(--sc-font-mono);
+  font-size: 0.75rem;
+  color: var(--sc-ink-mute, var(--sc-ink));
+}
+.essay__body p { line-height: 1.75; margin-block: 0 1.15rem; }
+.essay__h {
+  margin-block: 2.6rem 0.9rem;
+  font-size: 1.32rem;
+  font-weight: 500;
+  line-height: var(--sc-leading-tight, 1.25);
+}
+.essay__note {
+  padding: 0.8rem 1rem;
+  border-inline-start: 2px solid var(--sc-hairline-strong, var(--sc-hairline));
+  font-size: 0.88rem;
+  color: var(--sc-ink-mute, var(--sc-ink));
+}
+.essay__list { margin-block: 0 1.15rem; padding-inline-start: 1.2rem; }
+.essay__list li { line-height: 1.7; margin-block-end: 0.6rem; }
+
+/* Code is always left-to-right, in every locale. */
+.essay__code { margin: 0 0 1.4rem; }
+.essay__code pre {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-md, 8px);
+  background: var(--sc-bg-raised, transparent);
+  font-family: var(--sc-font-mono);
+  font-size: 0.78rem;
+  line-height: 1.6;
+  text-align: start;
+}
+.essay__code figcaption {
+  margin-block-start: 0.45rem;
+  font-size: 0.76rem;
+  color: var(--sc-ink-mute, var(--sc-ink));
+}
+
+/* The demonstration. The sample keeps its own direction, so the wrong example
+   stays wrong on screen instead of being silently reordered by the paragraph
+   around it. */
+.essay__sample {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.9rem;
+  margin-block: 0 0.8rem !important;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-md, 8px);
+}
+.essay__sample-label {
+  font-family: var(--sc-font-mono);
+  font-size: 0.7rem;
+  color: var(--sc-ink-mute, var(--sc-ink));
+  flex: none;
+}
+.essay__sample-text { font-size: 1.35rem; margin-inline-start: auto; }
+
+.essay__other {
+  margin-block-start: var(--sc-6);
+  padding-block-start: var(--sc-4);
+  border-block-start: 1px solid var(--sc-hairline);
+  font-family: var(--sc-font-mono);
+  font-size: 0.75rem;
+}
+.essay__other a { margin-inline-start: 0.6rem; }
+
+[dir='rtl'] .build__meta,
+[dir='rtl'] .essay__date,
+[dir='rtl'] .essay__other { letter-spacing: 0; }
+
+/* ---- the live token table on /build/design-system ---- */
+.tokens { margin-block: 0 1.6rem; }
+.tokens__pending { color: var(--sc-ink-mute); font-size: 0.85rem; }
+.tokens table { inline-size: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.tokens th,
+.tokens td {
+  padding: 0.55rem 0.6rem;
+  border-block-end: 1px solid var(--sc-hairline);
+  text-align: start;
+  vertical-align: middle;
+}
+.tokens thead th {
+  font-family: var(--sc-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sc-ink-mute);
+  font-weight: 400;
+}
+.tokens tbody th { font-weight: 400; }
+.tokens code { font-family: var(--sc-font-mono); font-size: 0.76rem; }
+.tokens__swatch {
+  display: block;
+  inline-size: 1.6rem;
+  block-size: 1.6rem;
+  border-radius: var(--sc-r-sm, 6px);
+  border: 1px solid var(--sc-hairline-strong);
+}
+.tokens__ratio { font-family: var(--sc-font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tokens__pass { color: var(--sc-ink-mute); }
+.tokens__warn { color: var(--sc-accent); }
+.tokens__use { color: var(--sc-ink-soft); }
+/* A token with no definition is the finding, so it is drawn as one. */
+.tokens__missing { background: color-mix(in oklab, var(--sc-accent) 10%, transparent); }
+.tokens__foot {
+  margin-block-start: 0.9rem;
+  font-size: 0.78rem;
+  color: var(--sc-ink-mute);
+  line-height: 1.6;
+}
+@media (max-width: 640px) {
+  .tokens { overflow-x: auto; }
+  .tokens table { min-inline-size: 34rem; }
+}
+.tokens__pair { color: var(--sc-ink-mute); font-size: 0.72rem; }
+.cat__cadence { font-size: 0.8rem; color: var(--sc-ink-soft); white-space: nowrap; }
+.cat__ok { font-size: 0.78rem; color: var(--sc-ink-mute); }
+
+/* ---- the motion contract's live panel ---- */
+.motionstate { margin-block: 0 1.6rem; }
+.motionstate__grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem 1rem;
+  margin: 0 0 0.9rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-md);
+  font-size: 0.86rem;
+}
+.motionstate__grid dt { color: var(--sc-ink-soft); margin: 0; }
+.motionstate__grid dd { margin: 0; text-align: end; font-family: var(--sc-font-mono); font-size: 0.8rem; }
+.motionstate__resolved { color: var(--sc-accent) !important; }
+.motionstate__hint { font-size: 0.82rem; color: var(--sc-ink-mute); line-height: 1.6; }
+.tokens__inline { inline-size: 100%; border-collapse: collapse; margin-block-start: 1rem; }
+.tokens__inline caption {
+  text-align: start;
+  font-family: var(--sc-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sc-ink-mute);
+  padding-block-end: 0.5rem;
+}
+.tokens__inline th,
+.tokens__inline td {
+  padding: 0.4rem 0.6rem;
+  border-block-end: 1px solid var(--sc-hairline);
+  text-align: start;
+  font-weight: 400;
+}
+.tokens__inline code { font-size: 0.76rem; }
+
+/* ---- the accessibility checks ---- */
+.a11y { margin-block: 0 1.6rem; }
+.a11y__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+.a11y__list li {
+  display: grid;
+  grid-template-columns: 2.2rem 1fr;
+  gap: 0.2rem 0.8rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--sc-hairline);
+  border-radius: var(--sc-r-md);
+}
+.a11y__count {
+  grid-row: span 2;
+  font-family: var(--sc-font-mono);
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+  align-self: center;
+  text-align: center;
+}
+.a11y__ok .a11y__count { color: var(--sc-ink-mute); }
+/* Anything above zero is the finding, so it is the only thing drawn in accent. */
+.a11y__flag { border-color: var(--sc-accent); }
+.a11y__flag .a11y__count { color: var(--sc-accent); }
+.a11y__label { font-size: 0.9rem; }
+.a11y__detail { font-size: 0.8rem; color: var(--sc-ink-mute); line-height: 1.55; }
+.a11y__foot {
+  margin-block-start: 0.9rem;
+  font-size: 0.8rem;
+  color: var(--sc-ink-mute);
+  line-height: 1.6;
+}
+
+[dir='rtl'] .tokens__inline caption { letter-spacing: 0; text-transform: none; }
+
+/* ---- the performance budget table ---- */
+.perf { margin-block: 0 1.6rem; }
+.perf table { inline-size: 100%; border-collapse: collapse; font-size: 0.84rem; }
+.perf th,
+.perf td {
+  padding: 0.7rem 0.6rem;
+  border-block-end: 1px solid var(--sc-hairline);
+  text-align: start;
+  vertical-align: baseline;
+}
+.perf thead th {
+  font-family: var(--sc-font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sc-ink-mute);
+  font-weight: 400;
+}
+.perf tbody th { font-weight: 500; inline-size: 45%; }
+.perf__note {
+  display: block;
+  margin-block-start: 0.3rem;
+  font-weight: 400;
+  font-size: 0.76rem;
+  color: var(--sc-ink-mute);
+  line-height: 1.5;
+}
+.perf__budget { color: var(--sc-ink-soft); white-space: nowrap; }
+.perf__val {
+  font-family: var(--sc-font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+/* Only a breach is coloured. A page where every row is green teaches nothing,
+   and a page where every row shouts teaches less. */
+.perf__val--over { color: var(--sc-accent); }
+.perf__val--unmeasured { color: var(--sc-ink-mute); }
+.perf__foot {
+  margin-block-start: 0.9rem;
+  font-size: 0.78rem;
+  color: var(--sc-ink-mute);
+  line-height: 1.6;
+}
+@media (max-width: 640px) {
+  .perf { overflow-x: auto; }
+  .perf table { min-inline-size: 30rem; }
+}
+
+[dir='rtl'] .perf thead th { letter-spacing: 0; text-transform: none; }
+.perf__foot--warn { border-inline-start: 2px solid var(--sc-accent); padding-inline-start: 0.7rem; }

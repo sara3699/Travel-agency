@@ -5,7 +5,11 @@ import { type Locale } from '@/i18n/routing';
 import { getPackageBySlug, getCancellationLadder } from '@/lib/db/packages';
 import { formatMoney, scale } from '@/lib/money';
 import { ctaKindFor, needsProvenanceChip } from '@/lib/provenance';
+import type { Metadata } from 'next';
 import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
+import { alternates, canonicalFor, SITE } from '@/lib/seo';
+import { TripPricer } from '@/components/destinations/TripPricer';
 
 export const revalidate = 300;
 
@@ -15,6 +19,46 @@ export const revalidate = 300;
    key at build time to save one render. With revalidate set, the first request
    for a slug renders it and the rest are served from cache, which is the same
    outcome for a crawler. */
+
+/**
+ * Per-package share card, never a single global og:image. Because the OG spec
+ * prefers the FIRST og:image it finds, a card set in a root layout silently
+ * overrides every per-route card added later — which renders the sameness
+ * failure straight into the channel this market actually shares in.
+ *
+ * The card is a static JPEG built by scripts/build-share-cards.mjs, per locale,
+ * so the Arabic one is laid out by a browser engine rather than by satori.
+ */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string; slug: string }>;
+}): Promise<Metadata> {
+  const { lang, slug } = await params;
+  const locale = lang as Locale;
+  const pkg = await getPackageBySlug(slug);
+  if (!pkg) return {};
+
+  const path = `/destinations/${slug}`;
+  const title = `${pkg.destination[locale]} — ${pkg.country[locale]}`;
+  const description = pkg.differenceLine[locale];
+  const card = `${SITE}/share/${locale}/${slug}.jpg`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: canonicalFor(locale, path), ...alternates(path) },
+    openGraph: {
+      title,
+      description,
+      url: canonicalFor(locale, path),
+      locale,
+      type: 'website',
+      images: [{ url: card, width: 1200, height: 630, alt: title }],
+    },
+    twitter: { card: 'summary_large_image', title, description, images: [card] },
+  };
+}
 
 export default async function PackagePage({
   params,
@@ -36,11 +80,23 @@ export default async function PackagePage({
   const party = Math.min(12, Math.max(1, Number(sp.travellers) || 2));
 
   const nf = new Intl.NumberFormat(locale, { numberingSystem: 'latn' });
+  // A date-only value parsed as UTC midnight and formatted in local time
+  // falls back a day west of Greenwich: 2026-09-05 renders as "Sep 4" in
+  // Los Angeles. The column is a date, not a moment, so the formatter is
+  // pinned to the same zone the value was written in.
   const df = new Intl.DateTimeFormat(locale, {
-    day: 'numeric', month: 'long', year: 'numeric', numberingSystem: 'latn',
+    day: 'numeric', month: 'long', year: 'numeric', numberingSystem: 'latn', timeZone: 'UTC',
   });
 
   const total = scale(pkg.pricePerPerson, party);
+  // Per-person sum of what the ledger says is NOT included, so the pricer can
+  // scale it with the party the same way the headline figure scales.
+  const excludedTotal = pkg.ledger.reduce<{ amountMinor: number; currency: string } | null>((acc, l) => {
+    if (l.included || !l.estimate || l.estimate.amountMinor <= 0) return acc;
+    return acc
+      ? { amountMinor: acc.amountMinor + l.estimate.amountMinor, currency: acc.currency }
+      : { amountMinor: l.estimate.amountMinor, currency: l.estimate.currency };
+  }, null);
   const included = pkg.ledger.filter((l) => l.included);
   const excluded = pkg.ledger.filter((l) => !l.included);
 
@@ -72,21 +128,25 @@ export default async function PackagePage({
           </div>
         </header>
 
-        <section className="pkg__price">
-          <p className="pkg__figure">{formatMoney(total, locale, { compact: true })}</p>
-          <p className="pkg__allin">{t('pkg.allIn', { n: nf.format(party) })}</p>
-          <p className="note">
-            {t('pkg.perPerson', {
-              amount: formatMoney(pkg.pricePerPerson, locale, { compact: true }),
-            })}
-          </p>
-          {needsProvenanceChip(pkg.provenance) && (
-            <span className="trip__prov">{t('flight.prov')}</span>
-          )}
-          <a className="btn" href={`/${locale}/enquire?trip=${pkg.slug}&party=${party}`}>
-            {verb === 'book' ? t('card.book') : verb === 'partner' ? t('card.partner') : t('pkg.ask')}
-          </a>
-        </section>
+        {/* The price is now something you operate, not something you read.
+            Travellers and nights are the two things every caller changes
+            first, so they belong on the page rather than in a query string. */}
+        <TripPricer
+          slug={pkg.slug}
+          locale={locale}
+          perPerson={{ amountMinor: pkg.pricePerPerson.amountMinor, currency: pkg.pricePerPerson.currency }}
+          soldNights={pkg.nights}
+          excludedPerPerson={
+            excludedTotal && excludedTotal.amountMinor > 0
+              ? { amountMinor: excludedTotal.amountMinor, currency: excludedTotal.currency }
+              : null
+          }
+          initialParty={party}
+          enquireHref={`/${locale}/enquire?trip=${pkg.slug}`}
+        />
+        {needsProvenanceChip(pkg.provenance) && (
+          <p className="pkg__provline"><span className="trip__prov">{t('flight.prov')}</span></p>
+        )}
 
         <dl className="facts pkg__facts">
           <div>
@@ -199,6 +259,7 @@ export default async function PackagePage({
           </section>
         )}
       </main>
+      <SiteFooter locale={locale} />
     </>
   );
 }

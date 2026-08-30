@@ -1,7 +1,8 @@
 {
   "brand": {
-    "name": "Mars",
-    "tagline": "Packages, priced honestly."
+    "name": "Anees",
+    "tagline": "Packages, priced honestly.",
+    "meaning": "the good company"
   },
   "nav": {
     "packages": "Packages",
@@ -16,7 +17,10 @@
     "adminArea": "Admin",
     "destinations": "Destinations",
     "aboutUs": "About us",
-    "trips": "Trips"
+    "trips": "Trips",
+    "faq": "Questions",
+    "occasions": "Occasions",
+    "trust": "Trust"
   },
   "home": {
     "eyebrow": "Departing from",
@@ -53,7 +57,8 @@
     "transfers": "Transfers",
     "breakfast": "Breakfast",
     "bags": "Bags",
-    "visa": "Visa"
+    "visa": "Visa",
+    "car": "Car hire"
   },
   "facets": {
     "halal_food_nearby": "Halal food nearby",
@@ -113,7 +118,9 @@
   },
   "foot": {
     "rights": "Specimen site. Invented packages, invented prices, no bookings taken.",
-    "imagery": "Photography generated for this demonstration."
+    "imagery": "Photography generated for this demonstration.",
+    "navLabel": "Trust and legal",
+    "builtBy": "Built by"
   },
   "story": {
     "c1e": "Before the airport",
@@ -152,12 +159,14 @@
     "skip": "Skip to the trips",
     "routeLabel": "Route",
     "prov": "Illustrative fare",
-    "w1": "Caucasus",
-    "w2": "Kazbegi",
-    "w3": "Baku",
-    "w4": "Crossing",
-    "w5": "Samarkand",
-    "w6": "The table"
+    "w1": "Georgia",
+    "w2": "Kazakhstan",
+    "w3": "Azerbaijan",
+    "w4": "Türkiye",
+    "w5": "Uzbekistan",
+    "w6": "Morocco",
+    "seePrice": "See the price",
+    "priceMoved": "Prices live on each trip's own page, where you can set your party and length and watch the figure move."
   },
   "auth": {
     "missingFields": "Fill in both fields.",
@@ -181,7 +190,10 @@
     "signInLede": "An account is only for keeping your enquiries in one place. You can send one without it.",
     "signUpLede": "You do not need an account to enquire. It just keeps your enquiries together afterwards.",
     "working": "Working...",
-    "account": "Account"
+    "account": "Account",
+    "passwordLeaked": "That password has appeared in a known data breach, so it is one attackers try first. It is not about how it looks: pick a different one and it will be accepted.",
+    "passwordCharacters": "That password needs a wider mix. Add a number, or a capital letter, or a symbol.",
+    "passwordWeak": "That password is too easy to guess. Try a longer one, or add a number or a symbol."
   },
   "enquiry": {
     "nameRequired": "We need a name to reply to.",
@@ -298,7 +310,8 @@
     "revoke": "Revoke role",
     "revokeSessions": "Sign them out everywhere",
     "passwordOnce": "Hand the password over in person or by phone. It is not stored anywhere you can read it back.",
-    "noStaff": "No staff accounts yet."
+    "noStaff": "No staff accounts yet.",
+    "catalogueLink": "Edit the catalogue"
   },
   "dest": {
     "title": "Where do you want to go?",
@@ -323,7 +336,15 @@
     "view": "See this trip",
     "totalFor": "Total for {n}",
     "nightsFrom": "{n} nights from {city}",
-    "departs": "Departs {date}"
+    "departs": "Departs {date}",
+    "perNight": "{amount} per night",
+    "allIn": "All fees included",
+    "plusExcl": "Plus {amount} not included",
+    "filters": "Narrow it down",
+    "crumbHome": "Home",
+    "crumbDest": "Destinations",
+    "to": "Going to",
+    "anywhere": "Anywhere"
   },
   "pkg": {
     "back": "All destinations",
@@ -368,5 +389,140 @@
     "p4": "This site was designed in Arabic and the English follows from it, rather than the other way round. The type, the layout and the direction were all built that way from the start.",
     "h5": "A note on this catalogue",
     "p5": "These packages are specimen data, and every card says so. They are invented under an invented house brand to show how the interface works. There are no reviews, no ratings and no licence numbers on this site, because on an invented catalogue those would be fabricated records rather than a weaker design."
+  },
+  "pricer": {
+    "heading": "Price it for your party",
+    "travellers": "Travellers",
+    "fewer": "One fewer traveller",
+    "more": "One more traveller",
+    "nights": "Nights",
+    "nightsSet": "as sold",
+    "shorter": "One night fewer",
+    "longer": "One night more",
+    "total": "Total for {n}",
+    "each": "{amount} each",
+    "perNight": "{amount} per night",
+    "excl": "Plus {amount} not included, for {n}",
+    "noExcl": "Nothing left out at this price.",
+    "asSold": "This is the trip as we sell it. The figure is the whole price for {n}.",
+    "estimate": "Estimate. You have changed the length from {sold} nights to {chosen}, so a person confirms the real figure before anything is committed.",
+    "reset": "Back to {n} nights",
+    "ask": "Ask about this trip"
+  },
+  "faq": {
+    "title": "Questions and answers",
+    "lead": "The things people ask before they ask us. If your question is not here, ask it and we will answer it and then add it.",
+    "search": "Search the answers",
+    "searchHint": "Type a word — price, visa, halal, cancel",
+    "noResults": "Nothing matched that. Ask us directly and we will answer.",
+    "results": "{n} answers",
+    "allTopics": "All topics",
+    "seeAll": "See all {n} in {topic}",
+    "stillHelp": "Still need an answer?",
+    "stillBody": "Ask the question in your own words. A person reads it, not a bot, and the trip you were looking at comes with the message.",
+    "ask": "Ask a question",
+    "nav": "Questions"
+  },
+  "cal": {
+    "dates": "Departure dates",
+    "any": "Any dates",
+    "prev": "Previous month",
+    "next": "Next month",
+    "exact": "Exact dates",
+    "day": "day",
+    "days": "days",
+    "clear": "Clear dates",
+    "done": "Done",
+    "legend": "Dots mark days a trip actually leaves",
+    "hasTrip": "a trip leaves this day"
+  },
+  "occ": {
+    "title": "What are you travelling for?",
+    "lede": "A dozen trips does not need a wall of filters. It needs the reason you are going.",
+    "crumb": "Occasions",
+    "openNow": "Open now",
+    "opens": "Opens",
+    "dates": "Dates",
+    "moon": "The first day depends on the moon sighting, so this can shift by a day.",
+    "nTrips": "{n, plural, =0 {No trips yet} one {# trip} other {# trips}}",
+    "advice": "Worth knowing",
+    "none": "Nothing in this window yet. Tell us what you had in mind and we will price it.",
+    "ask": "Ask us instead",
+    "all": "See every trip"
+  },
+  "trust": {
+    "title": "Trust and verify",
+    "lede": "Everything on this page is either something you can check, or something clearly marked as not yet real."
+  },
+  "legal": {
+    "updated": "Last updated",
+    "changesHeading": "Changes to this notice",
+    "changesBody": "Policy documents change quietly on most sites. Every change to this one is dated here.",
+    "privacyShort": "Privacy"
+  },
+  "motion": {
+    "legend": "Motion",
+    "system": "Match my device",
+    "reduce": "Reduce",
+    "full": "Full"
+  },
+  "cat": {
+    "title": "The catalogue",
+    "lede": "Twelve trips. Change a price, a length or a departure date without anyone writing SQL.",
+    "trip": "Trip",
+    "status": "Status",
+    "priceCol": "Per person",
+    "nights": "Nights",
+    "departure": "Next departure",
+    "edit": "Edit",
+    "draft": "Draft",
+    "published": "Published",
+    "archived": "Archived",
+    "past": "Already gone",
+    "noDate": "No date set",
+    "staleWarning": "{n, plural, one {# trip has a departure date that has passed, and it is still on the site.} other {# trips have departure dates that have passed, and they are still on the site.}}",
+    "soonWarning": "{n, plural, one {# trip leaves within three weeks.} other {# trips leave within three weeks.}}",
+    "scopeNote": "This screen changes the price, the length, the departure date, and whether a trip is visible. The wording, the priced exclusions and the cancellation ladder are still set in a migration.",
+    "editLede": "Departing {city}, {tier} star.",
+    "viewLive": "See this trip the way a traveller does",
+    "price": "Price per person in {currency}",
+    "priceHint": "All in, for one person, at the party size this trip is sold at. The site multiplies it up and shows the party total.",
+    "departureHint": "A date in the past is refused. That is the mistake this screen exists to stop.",
+    "save": "Save",
+    "saved": "Saved. The site is updated.",
+    "cardNote": "The share card is a picture built ahead of time, so a new price does not reach it on its own. Run npm run cards to rebuild it.",
+    "notFound": "That trip is not in the catalogue.",
+    "statusInvalid": "That is not a status.",
+    "priceInvalid": "Write the price in digits, for example 5120.00.",
+    "priceZero": "A price has to be more than zero.",
+    "nightsInvalid": "Nights has to be a whole number between 1 and 30.",
+    "dateInvalid": "That is not a date.",
+    "datePast": "That date has already passed. Pick a later one.",
+    "cannotPublish": "This trip cannot go on the site yet.",
+    "saveFailed": "That did not save. Try again.",
+    "r_heroImage": "It has no photograph.",
+    "r_priceZero": "Its price is zero.",
+    "r_noDeparture": "It has no departure date.",
+    "r_missingAr": "The Arabic is missing.",
+    "r_missingEn": "The English is missing.",
+    "r_noLedger": "Nothing is listed as included or excluded.",
+    "r_noLadder": "It has no cancellation ladder.",
+    "totalCol": "Total for the party",
+    "partyTotal": "Shown to travellers as {amount} for {n}.",
+    "perNightSum": "That is {amount} per person, per night, over {nights} nights.",
+    "lengthNote": "The price moved with the length, spread evenly across the nights. Real costs are not spread evenly: the flight is the same whether the trip is six nights or seven, so a shorter trip usually saves less than this. Check the figure before you save.",
+    "nightsHint": "Changing this recalculates the price below. Type over it if the new figure is wrong.",
+    "anchor": "First departure",
+    "anchorHint": "The real date this trip first runs. It may sit in the past: the next departure is counted forward from here, so the site never shows a date that has gone.",
+    "cadence": "Runs",
+    "cadenceOnce": "Once only",
+    "cadenceEvery": "Every {days} days",
+    "liveOnce": "A one-off. This exact date is what travellers see, and it will need changing by hand once it passes.",
+    "liveNext": "Travellers see {date}. Counted forward from {anchor}, so it never goes out of date.",
+    "cadenceInvalid": "That is not one of the available rhythms.",
+    "cardCol": "Card",
+    "cardFresh": "Current",
+    "cardStale": "Out of date",
+    "cardsStale": "{n, plural, one {# share card no longer matches its trip. Rebuild with} other {# share cards no longer match their trips. Rebuild with}}"
   }
 }

@@ -5,6 +5,7 @@ import { getMessages, setRequestLocale, getTranslations } from 'next-intl/server
 import { Readex_Pro, IBM_Plex_Mono } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import { locales, localeDirection, type Locale } from '@/i18n/routing';
+import { MOTION_BOOT_SCRIPT } from '@/lib/motion';
 import '../globals.css';
 
 /* Two families, which is the cap. Readex Pro is one design covering Arabic and
@@ -44,7 +45,7 @@ export async function generateMetadata({
   setRequestLocale(locale);
   const t = await getTranslations();
   return {
-    title: `Mars (${t('flight.partyLive')})`,
+    title: t('brand.name'),
     description: t('flight.heroBody'),
     alternates: {
       languages: Object.fromEntries(locales.map((l) => [l, `/${l}`])),
@@ -75,6 +76,11 @@ export default async function LangLayout({
       className={`${readex.variable} ${plexMono.variable}`}
     >
       <body>
+        {/* Replays the footer's motion choice before anything paints. Same
+            reasoning as dir above: deciding this in an effect means the page
+            animates once and then stops, which is the exact thing the person
+            who set the preference asked not to happen. */}
+        <script dangerouslySetInnerHTML={{ __html: MOTION_BOOT_SCRIPT }} />
         <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
         {/* Vercel Web Analytics. Renders no markup and sets no cookie, so it sits
             outside the provider and owes the consent story nothing. Counts page

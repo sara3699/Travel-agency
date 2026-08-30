@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { prefersReducedMotion } from '@/lib/motion';
 
 /**
  * Scroll-DRIVEN, never scroll-JACKED.
@@ -51,11 +52,21 @@ export function useScrollProgress<T extends HTMLElement>() {
 export function useReducedMotion() {
   const [reduced, setReduced] = useState(false);
   useEffect(() => {
+    const read = () => setReduced(prefersReducedMotion());
+    read();
+
+    // Two things can change the answer. The device preference, and the footer
+    // control writing <html data-motion>. Watching only the media query would
+    // leave the flight animating after someone had just asked it not to.
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReduced(mq.matches);
-    const on = () => setReduced(mq.matches);
-    mq.addEventListener('change', on);
-    return () => mq.removeEventListener('change', on);
+    mq.addEventListener('change', read);
+    const obs = new MutationObserver(read);
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-motion'] });
+
+    return () => {
+      mq.removeEventListener('change', read);
+      obs.disconnect();
+    };
   }, []);
   return reduced;
 }

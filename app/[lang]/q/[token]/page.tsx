@@ -3,6 +3,7 @@ import { type Locale } from '@/i18n/routing';
 import { getEnquiryByToken } from '@/lib/db/enquiries';
 import { getPackageBySlug } from '@/lib/db/packages';
 import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 import { StatusPill } from '@/components/StatusPill';
 
 /* The account-free journey: the link someone opens after arriving from
@@ -35,6 +36,7 @@ export default async function EnquiryStatus({
             {t('nav.home')}
           </a>
         </main>
+      <SiteFooter locale={locale} />
       </>
     );
   }
@@ -105,6 +107,7 @@ export default async function EnquiryStatus({
             leaving fields out of this markup. */}
         <p className="note note--rule">{t('q.privacy')}</p>
       </main>
+      <SiteFooter locale={locale} />
     </>
   );
 }

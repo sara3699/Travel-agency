@@ -3,6 +3,7 @@ import { locales, type Locale } from '@/i18n/routing';
 import { getPublishedPackages } from '@/lib/db/packages';
 import { EnquiryForm } from '@/components/EnquiryForm';
 import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -51,6 +52,7 @@ export default async function Enquire({
           utm={{ source: sp.utm_source, medium: sp.utm_medium, campaign: sp.utm_campaign }}
         />
       </main>
+      <SiteFooter locale={locale} />
     </>
   );
 }

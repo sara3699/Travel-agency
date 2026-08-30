@@ -5,6 +5,7 @@ import { getCurrentUser, isStaff, isAdmin } from '@/lib/auth/session';
 import { getEnquiryQueue, getNotes, getResponseTimes } from '@/lib/db/staff';
 import { getPublishedPackages } from '@/lib/db/packages';
 import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 import { QueueItem, type QueueRow, type Note } from '@/components/staff/QueueItem';
 
 export const dynamic = 'force-dynamic';
@@ -113,6 +114,7 @@ export default async function Staff({ params }: { params: Promise<{ lang: string
           </ul>
         )}
       </main>
+      <SiteFooter locale={locale} />
     </>
   );
 }

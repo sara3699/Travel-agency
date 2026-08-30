@@ -6,9 +6,15 @@ import { defineRouting } from 'next-intl/routing';
 export const locales = ['ar', 'en', 'fr'] as const;
 export type Locale = (typeof locales)[number];
 
-// Which locales carry full content at launch is an OPEN decision (2026-08-23).
-// The architecture does not depend on the answer.
-export const shippingLocales: readonly Locale[] = ['ar', 'en'];
+// Settled 2026-08-28: French joins the shipping set. The open question was
+// content scope, not architecture, and the content now exists — the interface
+// strings, the whole question set and the catalogue all carry French. The
+// asterisk this list drives was telling readers a working locale was broken.
+//
+// The catalogue's French rows are still marked translated rather than natively
+// written, which is a content-provenance fact recorded per row, not a reason to
+// hide the locale.
+export const shippingLocales: readonly Locale[] = ['ar', 'en', 'fr'];
 
 export const localeDirection: Record<Locale, 'rtl' | 'ltr'> = {
   ar: 'rtl',

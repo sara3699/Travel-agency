@@ -2,6 +2,7 @@ import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { type Locale } from '@/i18n/routing';
 import { AuthForm } from '@/components/AuthForm';
 import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,6 +26,7 @@ export default async function SignUp({ params }: { params: Promise<{ lang: strin
           <a href={`/${locale}/account/sign-in`}>{t('auth.signIn')}</a>
         </p>
       </main>
+      <SiteFooter locale={locale} />
     </>
   );
 }

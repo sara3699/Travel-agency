@@ -4,6 +4,7 @@ import { type Locale } from '@/i18n/routing';
 import { getCurrentUser, isAdmin } from '@/lib/auth/session';
 import { listStaff } from '@/lib/db/admin-users';
 import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 import { StaffAdmin, type StaffRow } from '@/components/admin/StaffAdmin';
 
 export const dynamic = 'force-dynamic';
@@ -37,8 +38,16 @@ export default async function Admin({ params }: { params: Promise<{ lang: string
           <h1 className="sheet__title">{t('admin.title')}</h1>
           <p className="sheet__lede">{t('admin.lede')}</p>
         </header>
+
+        <p className="admin__jump">
+          <a className="btn btn--quiet" href={`/${locale}/admin/catalogue`}>
+            {t('admin.catalogueLink')}
+          </a>
+        </p>
+
         <StaffAdmin rows={rows} locale={locale} />
       </main>
+      <SiteFooter locale={locale} />
     </>
   );
 }

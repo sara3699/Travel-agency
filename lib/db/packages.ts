@@ -3,6 +3,7 @@ import { money, type CurrencyCode } from '../money';
 import type { Provenance } from '../provenance';
 import type { TravelPackage, LedgerLine, Facet, FacetState } from '../packages';
 import { ledgerOrder } from '../packages';
+import { nextDeparture } from '../departures';
 
 /**
  * Reads the catalogue and returns the SAME TravelPackage shape that
@@ -25,7 +26,7 @@ type LocaleKey = 'ar' | 'en' | 'fr';
 const SELECT = `
   slug, provenance, hero_image, nights, hotel_tier, board_basis,
   price_minor, price_currency, party_adults, party_sharing,
-  departure_iata, next_departure,
+  departure_iata, next_departure, departure_interval_days,
   package_i18n ( locale, destination, destination_latin, country,
                  departure_city, difference_line, not_for ),
   package_ledger_lines ( key, position, included, estimate_minor,
@@ -136,7 +137,13 @@ function toTravelPackage(row: any): TravelPackage {
       fr: city('fr'),
       iata: row.departure_iata,
     },
-    nextDeparture: row.next_departure ?? '',
+    // The stored column is the ANCHOR and may sit in the past on purpose.
+    // Everything downstream, the rail, the listing, the calendar dots and the
+    // sitemap, wants the live date, so the roll-forward happens once here
+    // rather than at each of those call sites.
+    nextDeparture: nextDeparture(row.next_departure, row.departure_interval_days) ?? '',
+    departureAnchor: row.next_departure ?? '',
+    departureIntervalDays: row.departure_interval_days ?? null,
     // Minor units straight from bigint. Never divided here: the exponent
     // belongs to formatMoney, and KWD/BHD/OMR/TND have three decimals.
     pricePerPerson: money(Number(row.price_minor), row.price_currency as CurrencyCode),
