@@ -125,6 +125,14 @@ body { overscroll-behavior-y: none; }
   gap: var(--sc-4);
   padding-inline: var(--sc-gutter);
   padding-block-end: clamp(0.7rem, 1.6vw, 1.1rem);
+  /* One row on a wide screen, and it has to stop being one on a narrow screen.
+     Every link carries `white-space: nowrap`, the chrome is `position: fixed`,
+     and the page does not scroll sideways - so anything that does not fit is
+     not merely cramped, it is clipped and unreachable. Measured at 375px with
+     the full five-link set: the nav ran 340px wide starting at x = -121, which
+     put "About" and "Trust" off the edge entirely.
+     Wrapping is a no-op above the breakpoint, where the row fits as designed. */
+  flex-wrap: wrap;
 }
 
 /* The wordmark is deliberately provisional. The agency name is an open
@@ -157,7 +165,15 @@ body { overscroll-behavior-y: none; }
 /* No caps, no tracking on Arabic. Refusal list item 38. */
 [dir="rtl"] .wordmark__tag { text-transform: none; letter-spacing: 0; }
 
-.chrome__right { display: flex; align-items: center; gap: var(--sc-3); }
+.chrome__right {
+  display: flex;
+  align-items: center;
+  gap: var(--sc-3);
+  /* Wraps with the bar, and keeps the utilities at the end of the inline axis
+     when it does: the end is the right in English and the left in Arabic. */
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
 
 /* ------------------------------------------------------------------ *
  * THE PARTY DIAL — the signature move
@@ -1104,7 +1120,7 @@ body { overscroll-behavior-y: none; }
 /* Chrome links on the flight. Same weight as the locale switcher: neither is
    the point of the page, and a loud account link over a film reads as a
    product trying to enrol you before it has shown you anything. */
-.chrome__links { display: flex; align-items: center; gap: var(--sc-3); }
+.chrome__links { display: flex; align-items: center; gap: var(--sc-3); flex-wrap: wrap; }
 .chrome__links a {
   font-family: var(--sc-font-mono);
   font-size: 0.68rem;
