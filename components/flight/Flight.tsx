@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { formatMoney, scale, type Money } from '@/lib/money';
 import { prefersReducedMotion } from '@/lib/motion';
+import { ChromeMenu } from '@/components/flight/ChromeMenu';
 
 /* ====================================================================== *
  * THREE COASTS
@@ -59,6 +60,7 @@ export interface FlightCopy {
   askAll: string;
   skip: string;
   routeLabel: string;
+  menuLabel: string;
   waypoints: string[];
   seePrice: string;
   priceMoved: string;
@@ -321,12 +323,16 @@ export function Flight({
             <span className="wordmark__tag">{copy.brandMeaning}</span>
           </a>
 
-          <div className="chrome__right">
+          {/* All three collapse together on a small screen. Collapsing only
+              the links would leave the language switcher and the sign-in
+              button competing for the same row that could not hold them in
+              the first place. */}
+          <ChromeMenu label={copy.menuLabel}>
             {accountSlot}
             {localeSwitcher}
 
             {signInSlot}
-          </div>
+          </ChromeMenu>
         </div>
 
         {/* ---- the map. The grammar requires the nav to be one, and requires

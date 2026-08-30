@@ -88,6 +88,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     askAll: t('flight.askAll'),
     skip: t('flight.skip'),
     routeLabel: t('flight.routeLabel'),
+    menuLabel: t('nav.menu'),
     waypoints: [1, 2, 3, 4, 5, 6].map((i) => t(`flight.w${i}`)),
     seePrice: t('flight.seePrice'),
     priceMoved: t('flight.priceMoved'),

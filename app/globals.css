@@ -1487,6 +1487,106 @@ body { overscroll-behavior-y: none; }
   .site-head__nav > .btn--quiet { margin-inline-start: 0; }
 }
 
+/* The small-screen menu lives HERE, after the base .chrome__links, .locales
+   and .chrome__signin rules, and not up beside them. It overrides
+   `align-items` and `flex-direction` on all three at equal specificity, so
+   source order is the only thing deciding it. Placed earlier in the file the
+   column layout silently lost its alignment to the row rule below it, and the
+   panel's links sat centred instead of filling their row. */
+/* ---- the small-screen menu -------------------------------------------
+   Above the breakpoint the wrapper is not a box at all, so the bar keeps the
+   two-child flex layout it was designed with: wordmark at the start,
+   utilities at the end, nothing between them. */
+.chrome__menu { display: contents; }
+.chrome__menu-btn { display: none; }
+
+/* 1100, which looks far too wide for a "mobile" menu until you measure the
+   bar. Its contents are a wordmark, five links, three stacked languages and a
+   sign-in button, and the widest locale is French, not Arabic: measured
+   2026-08-30, French needs 1033px to sit on one row and still wrapped at
+   1025. English gives up between 900 and 1000, Arabic at 762. The breakpoint
+   follows the worst locale, because a bar that fits in Arabic and wraps in
+   French is not a bar that fits. */
+@media (max-width: 1100px) {
+  .chrome__menu { display: block; position: relative; }
+
+  .chrome__menu-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sc-2);
+    /* 2.5.8 asks for 24 by 24 and this is well past it, because on this
+       screen the control is the only route to the navigation. */
+    min-block-size: 44px;
+    padding-inline: var(--sc-3);
+    font-family: var(--sc-font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    color: var(--sc-ink);
+    background: color-mix(in oklab, var(--sc-ink) 8%, transparent);
+    border: 1px solid var(--sc-hairline);
+    border-radius: var(--sc-r-sm);
+    cursor: pointer;
+  }
+
+  .chrome__right {
+    position: absolute;
+    inset-inline-end: 0;
+    inset-block-start: calc(100% + var(--sc-2));
+    z-index: 1;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--sc-3);
+    min-inline-size: 13rem;
+    padding: var(--sc-4);
+    background: var(--sc-surface);
+    border: 1px solid var(--sc-hairline);
+    border-radius: var(--sc-r-md);
+    /* Shut is the resting state, so a panel that somehow never receives its
+       open flag stays shut rather than hanging over the film. Visibility is
+       what takes the links out of the tab order and off the screen reader;
+       opacity alone would leave a keyboard user tabbing through an invisible
+       menu. It is delayed by one duration so the fade out is seen. */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-0.35rem);
+    transition:
+      opacity var(--sc-d-fast) var(--sc-ease-out),
+      transform var(--sc-d-fast) var(--sc-ease-out),
+      visibility 0s linear var(--sc-d-fast);
+  }
+  .chrome__right[data-open] {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity var(--sc-d-fast) var(--sc-ease-out),
+      transform var(--sc-d-fast) var(--sc-ease-out),
+      visibility 0s;
+  }
+
+  /* In the panel the links stack and stop competing for a row they cannot
+     have. 44px because this is the touch target for the whole navigation,
+     not a row of quiet tertiary links over a film any more. */
+  .chrome__links { flex-direction: column; align-items: stretch; }
+  .chrome__links a,
+  .locales__item {
+    display: flex;
+    align-items: center;
+    min-block-size: 44px;
+    font-size: 0.8rem;
+  }
+  .chrome__signin { justify-content: center; min-block-size: 44px; }
+}
+
+/* Reduce means cross-fade, not freeze: the panel still resolves, it just
+   stops travelling. Killing the transition outright is the mistake the motion
+   contract names, and `animation: none !important` is on the refusal list. */
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) .chrome__right { transform: none; }
+}
+:root[data-motion='reduce'] .chrome__right { transform: none; }
+
+
 /* ==================================================================== *
  * TRIP PRICER
  * The price is something you operate, not something you read. Two
