@@ -26,7 +26,32 @@ const PRIVATE = [
   ]),
 ];
 
+/**
+ * 2026-08-30: the site is deliberately kept out of search. The switch lives in
+ * next.config.mjs, which inlines it here, so the robots file and the noindex
+ * header can never disagree.
+ */
+const INDEXABLE = process.env.SITE_INDEXABLE === 'true';
+
 export default function robots(): MetadataRoute.Robots {
+  if (!INDEXABLE) {
+    /**
+     * Crawling is ALLOWED here on purpose, while every response carries
+     * `X-Robots-Tag: noindex, nofollow` from next.config.mjs.
+     *
+     * The intuitive move is `Disallow: /`, and it is the wrong one. Disallow
+     * stops a crawler FETCHING the page, which means it never reads the
+     * noindex. A URL that gets shared - on Instagram, in a message, from
+     * anywhere Google can see a link - can then still surface as a bare,
+     * snippetless result that nothing on the site can retract. Letting Google
+     * fetch the page and read "noindex" is what actually keeps it out.
+     *
+     * The private paths stay disallowed regardless. Those should not be
+     * fetched at all, indexed or not.
+     */
+    return { rules: [{ userAgent: '*', allow: '/', disallow: PRIVATE }] };
+  }
+
   return {
     rules: [
       { userAgent: '*', allow: '/', disallow: PRIVATE },
