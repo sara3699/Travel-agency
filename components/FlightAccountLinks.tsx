@@ -34,6 +34,10 @@ export async function FlightAccountLinks({ locale }: { locale: Locale }) {
       <a href={`/${locale}/about`}>{t('nav.aboutUs')}</a>
       <a href={`/${locale}/trust`}>{t('nav.trust')}</a>
       {isStaff(user) && <a href={`/${locale}/staff`}>{t('nav.queue')}</a>}
+      {/* Kept in step with SiteHeader, per the note at the top of this file. */}
+      {isAdmin(user) && (
+        <a href={`/${locale}/admin/catalogue`}>{t('nav.catalogue')}</a>
+      )}
       {isAdmin(user) && <a href={`/${locale}/admin`}>{t('nav.adminArea')}</a>}
     </nav>
   );

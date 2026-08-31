@@ -31,6 +31,16 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
         <a href={`/${locale}/about`}>{t('nav.aboutUs')}</a>
         <a href={`/${locale}/trust`}>{t('nav.trust')}</a>
         {isStaff(user) && <a href={`/${locale}/staff`}>{t('nav.queue')}</a>}
+        {/* Catalogue before Admin, because it is the screen that gets used.
+            "Admin" lands on Staff - accounts and permissions, touched maybe
+            twice a year - while changing a price, the actual daily job, sat a
+            level down behind a button. The operator went looking for prices,
+            found a staff form, and asked where the prices were. Conventional
+            labels are real: a visitor has to be able to predict what is behind
+            a link, and "Admin" does not predict "Staff". */}
+        {isAdmin(user) && (
+          <a href={`/${locale}/admin/catalogue`}>{t('nav.catalogue')}</a>
+        )}
         {isAdmin(user) && <a href={`/${locale}/admin`}>{t('nav.adminArea')}</a>}
       </nav>
 
