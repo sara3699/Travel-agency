@@ -14,6 +14,19 @@ import type { Database } from '../database.types';
  * logged out mid-session.
  */
 export async function refreshSession(request: NextRequest, response: NextResponse) {
+  // A signed-out visitor carries no Supabase cookie, so there is no session to
+  // refresh and nothing for getUser() to verify. Calling it anyway spent an
+  // intercontinental round trip on every anonymous page view - which is nearly
+  // all of them on a site whose job is to be shared as a link - and put a
+  // network dependency in front of pages that need no auth at all.
+  //
+  // Supabase writes its auth cookies under an `sb-` prefix. No such cookie
+  // means no session, and the response goes back untouched.
+  const hasSupabaseCookie = request.cookies
+    .getAll()
+    .some((c) => c.name.startsWith('sb-'));
+  if (!hasSupabaseCookie) return response;
+
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
@@ -34,7 +47,35 @@ export async function refreshSession(request: NextRequest, response: NextRespons
   // Must be getUser(), not getSession(). getSession() reads the cookie without
   // verifying it against the auth server, so it can be spoofed. getUser()
   // revalidates and is the only safe check in middleware.
-  await supabase.auth.getUser();
+  //
+  // Guarded twice, because this one call is the only thing in the whole
+  // middleware that touches the network, and the middleware runs in front of
+  // every page. On 2026-08-30 it timed out and the site answered
+  // 504 MIDDLEWARE_INVOCATION_TIMEOUT on the landing page - not one route,
+  // all of them.
+  try {
+    await Promise.race([
+      supabase.auth.getUser(),
+      // Resolve, do not reject: a slow auth server should cost this request
+      // its cookie refresh, never the page. The visitor's existing token stays
+      // valid, and every protected page calls getUser() again server-side, so
+      // nothing is trusted that was not verified there.
+      new Promise((resolve) => setTimeout(resolve, AUTH_TIMEOUT_MS)),
+    ]);
+  } catch {
+    // A network failure is the same story: serve the page.
+  }
 
   return response;
 }
+
+/**
+ * Long enough that a healthy round trip always wins, short enough that a sick
+ * one cannot reach the platform's own middleware ceiling and turn a slow
+ * session refresh into a site-wide outage.
+ *
+ * Part 7 of the master document names geography as the largest architectural
+ * risk here: the database has no Middle East region, so every one of these is
+ * an intercontinental round trip for the audience this site is for.
+ */
+const AUTH_TIMEOUT_MS = 2500;
